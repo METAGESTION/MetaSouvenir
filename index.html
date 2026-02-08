@@ -21,8 +21,6 @@
             background-color: var(--white); 
             height: 100vh; 
             width: 100vw;
-            display: flex; 
-            justify-content: center; 
             overflow: hidden; 
         }
 
@@ -37,39 +35,36 @@
         .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 30px; letter-spacing: -1.5px; }
         input { width: 100%; max-width: 350px; padding: 14px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 16px; }
         .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* --- STRUCTURE APP --- */
-        #main-app { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--white); }
-        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; z-index: 10; }
+        #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
+        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; }
 
-        .content-area { flex: 1; overflow-y: auto; background: var(--bg-color); scrollbar-width: none; }
-        .content-area::-webkit-scrollbar { display: none; }
+        /* Correction du défilement : Chaque section gère son propre scroll */
+        .content-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-color); }
+        .section { display: none; height: 100%; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .section.active { display: block; }
 
-        /* --- FEED --- */
+        /* --- FEED (PHOTOS) --- */
         .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); width: 100%; }
         .post-header { padding: 12px; display: flex; align-items: center; font-size: 0.95rem; font-weight: 600; }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #eee; margin-right: 12px; }
-        .post-img-container img { width: 100%; display: block; max-height: 85vh; object-fit: cover; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #ddd; margin-right: 12px; }
+        .post-img-container img { width: 100%; display: block; min-height: 200px; background: #eee; object-fit: cover; }
         .post-actions { padding: 12px; font-size: 1.5rem; display: flex; gap: 18px; }
-        .post-caption { padding: 0 12px 18px 12px; font-size: 0.95rem; line-height: 1.4; }
+        .post-caption { padding: 0 12px 18px 12px; font-size: 0.95rem; }
 
         /* --- VIDEOS (TIKTOK STYLE) --- */
-        #videos-section { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; background: #000; scrollbar-width: none; }
-        #videos-section::-webkit-scrollbar { display: none; }
-        .video-card { height: calc(100vh - 65px); width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+        #videos-section { scroll-snap-type: y mandatory; background: #000; overflow-y: scroll; }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         .video-card video { width: 100%; height: 100%; object-fit: contain; }
-        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 5; }
+        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
 
         /* --- NAVIGATION --- */
         nav { height: 65px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); flex-shrink: 0; }
         nav i { font-size: 1.6rem; cursor: pointer; color: #8e8e8e; }
         nav i.active { color: var(--text-main); }
-
-        .section { display: none; height: 100%; }
-        .section.active { display: block; }
-        .logout-btn { background: #ff3b30; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 250px; }
+        
+        .logout-btn { background: #ff3b30; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -77,21 +72,21 @@
 <div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
-        <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off">
+        <input type="text" id="username" placeholder="Nom d'utilisateur">
         <input type="password" id="password" placeholder="Mot de passe">
         <button class="login-btn" onclick="handleLogin()">Se connecter</button>
-        <p id="error-msg" style="color:#ff3b30; display:none; margin-top:15px;">Identifiants incorrects</p>
     </div>
-
-    <div id="loading-screen" style="display:none;"><div class="spinner"></div></div>
 
     <div id="main-app">
         <header id="top-header">Meta Service</header>
-        <div class="content-area" id="main-scroll-area">
-            <div id="feed-section" class="section active"><div id="photo-list"></div></div>
-            <div id="videos-section" class="section"><div id="video-list"></div></div>
+        <div class="content-area">
+            <div id="feed-section" class="section active">
+                <div id="photo-list"></div>
+            </div>
+            <div id="videos-section" class="section">
+                <div id="video-list"></div>
+            </div>
             <div id="profile-section" class="section" style="padding: 40px 20px; text-align: center;">
-                <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user fa-3x" style="color:#ccc"></i></div>
                 <h2 id="display-user">User</h2>
                 <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
             </div>
@@ -105,15 +100,16 @@
 </div>
 
 <script>
+    // --- Liens mis à jour avec des images réelles pour le test ---
     const LISTE_PHOTOS = [
-        { url: "https://i.pinimg.com/736x/4a/de/80/4ade80badb9841cffa0fe2498ed7f33f.jpg", auteur: "META SERVICE", bio: "Bienvenue à toi sur notre plateforme, ravi de t’avoir parmi nous !" }
-    ];
-    { url: "https://i.pinimg.com/736x/c3/3a/82/c33a82158de5b1f1c0b8bfc559273aa1.jpg", auteur: "META SERVICE", bio: "SUUUUUUE" }
+        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Première photo test !" },
+        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Ça défile enfin ?" },
+        { url: "https://picsum.photos/800/1000?random=3", auteur: "walid_hchm", bio: "Test scroll 3" }
     ];
 
     const LISTE_VIDEOS = [
-        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Vidéo 1 #Meta" },
-        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo 2 #Cool" }
+        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Vidéo 1" },
+        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo 2" }
     ];
 
     const USERS = { "walid_hchm": "Walid.123", "mazine2.0": "Mazine.123", "amineg": "Amine.123", "user": "12345" };
@@ -126,7 +122,7 @@
         LISTE_PHOTOS.forEach(photo => {
             photoDiv.innerHTML += `<div class="post">
                 <div class="post-header"><div class="user-avatar"></div>${photo.auteur}</div>
-                <div class="post-img-container"><img src="${photo.url}"></div>
+                <div class="post-img-container"><img src="${photo.url}" alt="Image"></div>
                 <div class="post-actions"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
                 <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
             </div>`;
@@ -138,25 +134,17 @@
                 <div class="video-info"><h3>@${vid.auteur}</h3><p>${vid.legende}</p></div>
             </div>`;
         });
-
         initVideoObserver();
     }
 
-    // --- LE CŒUR DU SYSTÈME TIKTOK (Stop & Go) ---
     function initVideoObserver() {
-        const options = { threshold: 0.6 }; // Se lance quand 60% de la vidéo est visible
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
-                if (entry.isIntersecting) {
-                    video.play().catch(() => {}); // Play si visible
-                } else {
-                    video.pause(); // Stop si on scroll ailleurs
-                    video.currentTime = 0; // Reset au début
-                }
+                if (entry.isIntersecting) video.play().catch(() => {});
+                else { video.pause(); video.currentTime = 0; }
             });
-        }, options);
-
+        }, { threshold: 0.6 });
         document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
     }
 
@@ -164,19 +152,12 @@
         const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
         if (USERS[u] && USERS[u] === p) {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("loading-screen").style.display = "flex";
-            setTimeout(() => {
-                localStorage.setItem("metaUser", u);
-                startApp(u);
-            }, 1000);
-        } else {
-            document.getElementById("error-msg").style.display = "block";
-        }
+            localStorage.setItem("metaUser", u);
+            startApp(u);
+        } else alert("Identifiants incorrects");
     }
 
     function startApp(user) {
-        document.getElementById("loading-screen").style.display = "none";
         document.getElementById("login-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
         document.getElementById("display-user").innerText = user;
@@ -189,7 +170,6 @@
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
         document.getElementById('nav-' + tab).classList.add('active');
 
-        // Stop toutes les vidéos si on quitte l'onglet Vidéo
         if(tab !== 'videos') {
             document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
             document.getElementById('top-header').style.display = "flex";
@@ -206,7 +186,6 @@
     document.addEventListener("DOMContentLoaded", () => {
         const saved = localStorage.getItem("metaUser");
         if(saved) startApp(saved);
-        document.addEventListener('contextmenu', e => e.preventDefault());
     });
 </script>
 </body>
