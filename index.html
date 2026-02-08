@@ -36,7 +36,6 @@
         .post-actions { padding: 12px; display: flex; justify-content: flex-end; }
         .post-actions i { font-size: 1.8rem; cursor: pointer; } 
 
-        /* --- VIDEOS (SWIPE TIKTOK) --- */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; }
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
@@ -154,6 +153,11 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
+        // --- LOGIQUE ALÉATOIRE AJOUTÉE ICI ---
+        LISTE_PHOTOS.sort(() => Math.random() - 0.5);
+        LISTE_VIDEOS.sort(() => Math.random() - 0.5);
+        // -------------------------------------
+
         LISTE_PHOTOS.forEach(photo => {
             photoDiv.innerHTML += `<div class="post"><div style="padding:10px; font-weight:bold;">${photo.auteur}</div><div class="post-img-container"><img src="${photo.url}"></div><div class="post-actions"><i class="${savedItems.includes(photo.id) ? 'fas' : 'far'} fa-bookmark" onclick="toggleSave('${photo.id}', this)"></i></div></div>`;
         });
