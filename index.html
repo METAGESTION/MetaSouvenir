@@ -49,11 +49,8 @@
         /* --- PHOTOS --- */
         .post { background: var(--white); border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
         .post-img-container img { width: 100%; max-height: 70vh; display: block; object-fit: cover; }
-        
-        /* BOUTON ENREGISTRER AGRANDI */
         .post-actions { padding: 12px; display: flex; justify-content: flex-end; }
         .post-actions i { font-size: 1.8rem; cursor: pointer; transition: transform 0.2s; } 
-        .post-actions i:active { transform: scale(1.2); }
 
         /* --- VIDEOS --- */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
@@ -61,7 +58,7 @@
         .video-overlay { position: absolute; top: 0; left: 0; width: 80%; height: 100%; z-index: 5; }
         .video-info { position: absolute; bottom: 100px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 10; pointer-events: none; }
 
-        /* --- NAV iOS SWIPE --- */
+        /* --- NAV SWIPE SYNC --- */
         nav { 
             height: calc(85px + env(safe-area-inset-bottom)); 
             padding-bottom: env(safe-area-inset-bottom); 
@@ -71,15 +68,17 @@
             backdrop-filter: blur(20px); 
             position: relative; 
             gap: 60px; 
-            touch-action: pan-x; /* Crucial pour le swipe horizontal */
+            padding-left: 10px;
+            touch-action: none; /* Désactive scroll navigateur pour un swipe propre */
         }
         .nav-indicator {
             position: absolute; bottom: calc(25px + env(safe-area-inset-bottom)); left: 0;
             width: 55px; height: 45px; background: rgba(0, 149, 246, 0.12);
-            border-radius: 18px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 18px; 
             z-index: 0; pointer-events: none;
             box-shadow: 0 5px 15px var(--blue-glow);
             border: 1px solid rgba(0, 149, 246, 0.15);
+            /* Transition désactivée pendant le drag manuel pour plus de réactivité */
         }
         nav i { 
             font-size: 1.5rem; color: #b0b0b0; cursor: pointer; z-index: 1; 
@@ -163,18 +162,46 @@
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let currentIdx = 0;
 
-    // --- LOGIQUE DE SWIPE iOS ---
+    // --- LOGIQUE SWIPE RÉACTIONNEL (LA BULLE SUIT LE DOIGT) ---
     const navbar = document.getElementById('navbar');
+    const indicator = document.getElementById('nav-indicator');
+    let isDragging = false;
     let startX = 0;
-    navbar.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+    let initialLeft = 0;
+
+    navbar.addEventListener('touchstart', e => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        initialLeft = parseFloat(indicator.style.left);
+        indicator.style.transition = 'none'; // Pas de transition quand on touche
+    });
+
+    navbar.addEventListener('touchmove', e => {
+        if (!isDragging) return;
+        let currentX = e.touches[0].clientX;
+        let deltaX = currentX - startX;
+        let newPos = initialLeft + deltaX;
+        
+        // Limiter la bulle aux bords de la nav
+        const minPos = document.querySelectorAll('nav i')[0].offsetLeft - 2;
+        const maxPos = document.querySelectorAll('nav i')[2].offsetLeft + 2;
+        if (newPos >= minPos && newPos <= maxPos) {
+            indicator.style.left = newPos + 'px';
+        }
+    });
+
     navbar.addEventListener('touchend', e => {
+        isDragging = false;
         let endX = e.changedTouches[0].clientX;
         let diff = startX - endX;
-        if (Math.abs(diff) > 40) { // Seuil de swipe
-            if (diff > 0 && currentIdx < 2) currentIdx++; // Swipe gauche
-            else if (diff < 0 && currentIdx > 0) currentIdx--; // Swipe droite
-            updateFromIdx();
+        
+        indicator.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'; // Remet la transition fluide
+
+        if (Math.abs(diff) > 30) {
+            if (diff > 0 && currentIdx < 2) currentIdx++;
+            else if (diff < 0 && currentIdx > 0) currentIdx--;
         }
+        updateFromIdx();
     });
 
     function updateFromIdx() {
@@ -197,14 +224,14 @@
         document.getElementById("display-user").innerText = user;
         genererContenu();
         renderSavedGrid();
-        setTimeout(() => moveIndicator(0), 100);
+        setTimeout(() => { indicator.style.transition = 'none'; moveIndicator(0); }, 100);
     }
 
     function moveIndicator(index) {
         const icons = document.querySelectorAll('nav i');
-        const indicator = document.getElementById('nav-indicator');
         const icon = icons[index];
-        indicator.style.left = (icon.offsetLeft + icon.offsetWidth / 2 - indicator.offsetWidth / 2) + 'px';
+        const targetLeft = (icon.offsetLeft + icon.offsetWidth / 2 - indicator.offsetWidth / 2);
+        indicator.style.left = targetLeft + 'px';
     }
 
     function genererContenu() {
