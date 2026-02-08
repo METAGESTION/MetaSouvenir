@@ -6,65 +6,59 @@
     <title>Meta Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --bg-color: #fafafa; 
-            --white: #ffffff; 
-            --border: #dbdbdb; 
-            --text-main: #262626; 
-            --blue: #0095f6; 
-        }
-
+        :root { --bg-color: #fafafa; --white: #ffffff; --border: #dbdbdb; --text-main: #262626; --blue: #0095f6; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--white); 
-            height: 100vh; 
-            width: 100vw;
-            overflow: hidden; 
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--white); height: 100vh; width: 100vw; overflow: hidden; }
 
-        #app-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
+        #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* --- LOGIN & LOADING --- */
-        #login-screen, #loading-screen { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--white); z-index: 1000; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; 
-        }
-        .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 30px; letter-spacing: -1.5px; }
-        input { width: 100%; max-width: 350px; padding: 14px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 16px; }
-        .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        /* --- LOGIN --- */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 30px; }
+        input { width: 100%; max-width: 350px; padding: 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; }
+        .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; }
 
-        /* --- STRUCTURE APP --- */
+        /* --- APP STRUCTURE --- */
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; }
+        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; flex-shrink: 0; background: var(--white); z-index: 10; }
 
-        /* Correction du défilement : Chaque section gère son propre scroll */
-        .content-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-color); }
-        .section { display: none; height: 100%; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .section.active { display: block; }
-
-        /* --- FEED (PHOTOS) --- */
-        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); width: 100%; }
-        .post-header { padding: 12px; display: flex; align-items: center; font-size: 0.95rem; font-weight: 600; }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #ddd; margin-right: 12px; }
-        .post-img-container img { width: 100%; display: block; min-height: 200px; background: #eee; object-fit: cover; }
-        .post-actions { padding: 12px; font-size: 1.5rem; display: flex; gap: 18px; }
-        .post-caption { padding: 0 12px 18px 12px; font-size: 0.95rem; }
-
-        /* --- VIDEOS (TIKTOK STYLE) --- */
-        #videos-section { scroll-snap-type: y mandatory; background: #000; overflow-y: scroll; }
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
-        .video-card video { width: 100%; height: 100%; object-fit: contain; }
-        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
-
-        /* --- NAVIGATION --- */
-        nav { height: 65px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); flex-shrink: 0; }
-        nav i { font-size: 1.6rem; cursor: pointer; color: #8e8e8e; }
-        nav i.active { color: var(--text-main); }
+        .content-area { flex: 1; position: relative; overflow: hidden; }
         
-        .logout-btn { background: #ff3b30; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        /* SECTION ACCUEIL (Scroll classique) */
+        #feed-section { height: 100%; overflow-y: auto; background: var(--bg-color); }
+        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        .post-caption { padding: 12px; font-size: 0.95rem; }
+
+        /* SECTION VIDEOS (TikTok Style - FULL SCREEN) */
+        #videos-section { 
+            height: 100%; 
+            width: 100%;
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory; 
+            background: #000; 
+            display: none; /* Masqué par défaut */
+        }
+        #videos-section.active { display: block; }
+        
+        .video-card { 
+            height: 100%; /* Prend toute la hauteur disponible de content-area */
+            width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-card video { width: 100%; height: 100%; object-fit: contain; }
+        .video-info { position: absolute; bottom: 20px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
+
+        /* --- NAV --- */
+        nav { height: 65px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); }
+        nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; }
+        nav i.active { color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -80,16 +74,20 @@
     <div id="main-app">
         <header id="top-header">Meta Service</header>
         <div class="content-area">
+            
             <div id="feed-section" class="section active">
                 <div id="photo-list"></div>
             </div>
+
             <div id="videos-section" class="section">
-                <div id="video-list"></div>
+                <div id="video-list" style="height: 100%;"></div>
             </div>
-            <div id="profile-section" class="section" style="padding: 40px 20px; text-align: center;">
-                <h2 id="display-user">User</h2>
-                <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
+
+            <div id="profile-section" class="section" style="padding: 20px; text-align: center; display:none;">
+                <h2 id="display-user"></h2>
+                <button onclick="handleLogout()" style="margin-top:20px; color:red; border:none; background:none; font-weight:bold;">Déconnexion</button>
             </div>
+
         </div>
         <nav>
             <i class="fas fa-home active" id="nav-feed" onclick="switchTab('feed')"></i>
@@ -100,16 +98,14 @@
 </div>
 
 <script>
-    // --- Liens mis à jour avec des images réelles pour le test ---
     const LISTE_PHOTOS = [
-        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Première photo test !" },
-        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Ça défile enfin ?" },
-        { url: "https://picsum.photos/800/1000?random=3", auteur: "walid_hchm", bio: "Test scroll 3" }
+        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Les photos fonctionnent !" },
+        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Le scroll est fluide ici." }
     ];
 
     const LISTE_VIDEOS = [
-        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Vidéo 1" },
-        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo 2" }
+        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Vidéo TikTok 1" },
+        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo TikTok 2" }
     ];
 
     const USERS = { "walid_hchm": "Walid.123", "mazine2.0": "Mazine.123", "amineg": "Amine.123", "user": "12345" };
@@ -121,9 +117,8 @@
 
         LISTE_PHOTOS.forEach(photo => {
             photoDiv.innerHTML += `<div class="post">
-                <div class="post-header"><div class="user-avatar"></div>${photo.auteur}</div>
-                <div class="post-img-container"><img src="${photo.url}" alt="Image"></div>
-                <div class="post-actions"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
+                <div class="post-header" style="padding:10px; font-weight:bold;">${photo.auteur}</div>
+                <div class="post-img-container"><img src="${photo.url}"></div>
                 <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
             </div>`;
         });
@@ -144,7 +139,7 @@
                 if (entry.isIntersecting) video.play().catch(() => {});
                 else { video.pause(); video.currentTime = 0; }
             });
-        }, { threshold: 0.6 });
+        }, { threshold: 0.8 });
         document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
     }
 
@@ -154,7 +149,7 @@
         if (USERS[u] && USERS[u] === p) {
             localStorage.setItem("metaUser", u);
             startApp(u);
-        } else alert("Identifiants incorrects");
+        } else alert("Erreur identifiants");
     }
 
     function startApp(user) {
@@ -165,16 +160,24 @@
     }
 
     function switchTab(tab) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(tab + '-section').classList.add('active');
+        // Cacher toutes les sections
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
+        
+        // Afficher la bonne
+        const target = document.getElementById(tab + '-section');
+        target.style.display = (tab === 'videos') ? 'block' : 'block';
+        if(tab === 'feed') target.style.display = 'block';
+        if(tab === 'profile') target.style.display = 'block';
+
         document.getElementById('nav-' + tab).classList.add('active');
 
-        if(tab !== 'videos') {
-            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
-            document.getElementById('top-header').style.display = "flex";
-        } else {
+        // Spécifique Vidéo
+        if(tab === 'videos') {
             document.getElementById('top-header').style.display = "none";
+        } else {
+            document.getElementById('top-header').style.display = "flex";
+            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
         }
     }
 
