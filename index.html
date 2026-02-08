@@ -41,7 +41,7 @@
         .video-card iframe { width: 100%; height: 100%; border: none; }
         .video-info { position: absolute; bottom: 40px; left: 15px; color: white; z-index: 10; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
 
-        /* OVERLAYS (Profil des autres, Media, Paramètres) */
+        /* OVERLAYS FULLSCREEN */
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; }
 
         nav { height: calc(85px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); backdrop-filter: blur(20px); position: relative; }
@@ -120,8 +120,11 @@
             </div>
 
             <div id="settings-overlay" class="overlay-page">
-                <div style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);"><i class="fas fa-arrow-left" onclick="toggleSettings(false)"></i><h2 style="margin-left: 20px;">Paramètres</h2></div>
-                <div style="padding:20px; display:flex; justify-content:space-between;"><span>Mode Sombre</span><input type="checkbox" id="theme-toggle" onchange="toggleTheme()"></div>
+                <div style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);"><i class="fas fa-arrow-left" onclick="toggleSettings(false)" style="cursor:pointer;"></i><h2 style="margin-left: 20px;">Paramètres</h2></div>
+                <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background: var(--white); border-bottom: 1px solid var(--border);">
+                    <span>Mode Sombre</span>
+                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                </div>
             </div>
         </div>
 
@@ -137,8 +140,8 @@
 
 <script>
     const LISTE_VIDEOS = [
-        { id: "v1", auteur: "walid_hchm", drive_url: "URL_1", legende: "Vidéo 1", date: 700 },
-        { id: "v2", auteur: "user", drive_url: "URL_2", legende: "Vidéo 2", date: 650 }
+        { id: "v1", auteur: "walid_hchm", drive_url: "", legende: "Vidéo 1", date: 700 },
+        { id: "v2", auteur: "user", drive_url: "", legende: "Vidéo 2", date: 650 }
     ];
     const LISTE_PHOTOS = [
         { id: "p1", url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", date: 550 },
@@ -164,15 +167,26 @@
         switchTab('feed', 0);
     }
 
+    // --- FERMETURE AUTOMATIQUE DES BUG ---
+    function closeAllOverlays() {
+        document.getElementById('settings-overlay').style.display = 'none';
+        document.getElementById('external-profile-overlay').style.display = 'none';
+        document.getElementById('media-view-overlay').style.display = 'none';
+    }
+
     function switchTab(t, i) {
+        // 1. Fermer tous les menus ouverts avant de changer
+        closeAllOverlays();
+        
+        // 2. Changer de section
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
+        
+        // 3. Update UI
         document.querySelectorAll('nav i').forEach((icon, idx) => icon.classList.toggle('active', idx === i));
         document.getElementById('top-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
-        // Ferme les profils externes quand on change d'onglet principal
-        closeExternalProfile();
     }
 
     function moveIndicator(i) {
@@ -181,26 +195,18 @@
         if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 25) + 'px';
     }
 
-    // --- LOGIQUE PROFIL EXTERNE ---
+    // --- PROFIL EXTERNE ---
     function openExternalProfile(username) {
         if(username === loggedUser) { switchTab('own-profile', 3); return; }
-        
         const overlay = document.getElementById('external-profile-overlay');
         document.getElementById('ext-user-title').innerText = username;
         document.getElementById('ext-display-name').innerText = username;
-        
         const grid = document.getElementById('ext-posts-grid');
         grid.innerHTML = "";
-        
-        const allMedia = [
-            ...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})),
-            ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))
-        ].sort((a,b) => b.date - a.date);
-
+        const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
         allMedia.forEach(m => {
             grid.innerHTML += `<div class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</div>`;
         });
-        
         overlay.style.display = 'block';
     }
 
@@ -211,15 +217,8 @@
         const gridPosts = document.getElementById('my-posts-grid');
         const gridSaved = document.getElementById('my-saved-grid');
         gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
-
-        // Mes posts
-        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => {
-            gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`;
-        });
-        // Mes enregistrés
-        LISTE_PHOTOS.forEach(p => {
-            if(savedItems.includes(p.id)) gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`;
-        });
+        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
+        LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
     }
 
     function switchMyTab(t) {
@@ -229,16 +228,14 @@
         document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none';
     }
 
-    // --- CONTENU GENERAL ---
+    // --- CONTENU ---
     function genererContenu() {
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-        
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')">@${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
-
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
             videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.drive_url}"></iframe><div class="video-info"><h3 onclick="openExternalProfile('${v.auteur}')">@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
         });
@@ -253,6 +250,8 @@
     }
 
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
+    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
+    
     function filtrerRecherche() {
         const q = document.getElementById('search-input').value.toLowerCase();
         const res = document.getElementById('search-results');
@@ -274,7 +273,6 @@
         localStorage.setItem('metaTheme', isDark ? 'dark' : 'light');
     }
 
-    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
