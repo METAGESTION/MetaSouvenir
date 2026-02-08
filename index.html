@@ -11,91 +11,88 @@
         
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--white); height: 100vh; width: 100vw; overflow: hidden; }
 
-        /* --- ÉCRAN DE CHARGEMENT --- */
+        /* --- LOADER --- */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* --- LOGIN DESIGN --- */
+        /* --- LOGIN --- */
         #login-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(135deg, #f0f4f8, #d9e2ec); 
-            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            padding: 40px; 
+            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; 
         }
-        #login-screen .logo { margin-top: 100px; }
-
+        #login-screen .logo { margin-top: 85px; }
         .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue); animation: float 3s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         input { width: 100%; max-width: 350px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 16px; background: var(--white); }
         .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
         #login-error { color: var(--error); font-size: 14px; margin-top: 15px; font-weight: 500; display: none; }
 
-        /* --- APP STRUCTURE --- */
+        /* --- HEADER --- */
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         header { 
-            height: calc(100px + env(safe-area-inset-top)); 
-            padding-top: calc(40px + env(safe-area-inset-top)); 
+            height: calc(85px + env(safe-area-inset-top)); 
+            padding-top: calc(30px + env(safe-area-inset-top)); 
             border-bottom: 1px solid var(--border); 
             display: flex; justify-content: space-between; align-items: center; 
-            padding-left: 20px; padding-right: 20px;
-            font-weight: bold; background: var(--white); z-index: 10; flex-shrink: 0;
+            padding-left: 20px; padding-right: 20px; font-weight: bold; background: var(--white); z-index: 10; flex-shrink: 0;
         }
-
         #custom-header-btn { background: var(--blue); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; text-decoration: none; }
 
         .content-area { flex: 1; position: relative; overflow: hidden; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
         .section.active { display: block; }
 
+        /* --- PHOTOS --- */
+        .post { background: var(--white); border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
+        .post-img-container img { width: 100%; max-height: 70vh; display: block; object-fit: cover; }
+        
+        /* BOUTON ENREGISTRER AGRANDI */
+        .post-actions { padding: 12px; display: flex; justify-content: flex-end; }
+        .post-actions i { font-size: 1.8rem; cursor: pointer; transition: transform 0.2s; } 
+        .post-actions i:active { transform: scale(1.2); }
+
         /* --- VIDEOS --- */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; padding-top: 40px; }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; padding-top: 25px; }
         .video-overlay { position: absolute; top: 0; left: 0; width: 80%; height: 100%; z-index: 5; }
         .video-info { position: absolute; bottom: 100px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 10; pointer-events: none; }
 
-        /* --- NAV LIQUID GLASS (AMÉLIORÉ) --- */
+        /* --- NAV iOS SWIPE --- */
         nav { 
-            height: calc(80px + env(safe-area-inset-bottom)); 
+            height: calc(85px + env(safe-area-inset-bottom)); 
             padding-bottom: env(safe-area-inset-bottom); 
             border-top: 1px solid var(--border); 
-            display: flex; justify-content: space-around; align-items: center; 
-            background: rgba(255, 255, 255, 0.85); 
-            backdrop-filter: blur(15px); 
+            display: flex; justify-content: center; align-items: center; 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(20px); 
             position: relative; 
+            gap: 60px; 
+            touch-action: pan-x; /* Crucial pour le swipe horizontal */
         }
-        
         .nav-indicator {
-            position: absolute; 
-            bottom: calc(20px + env(safe-area-inset-bottom)); 
-            left: 0;
-            width: 55px; height: 45px; 
-            background: rgba(0, 149, 246, 0.12);
-            border-radius: 20px; 
-            /* Effet élastique Liquid Glass */
-            transition: all 0.5s cubic-bezier(0.5, 1.4, 0.3, 1.1);
+            position: absolute; bottom: calc(25px + env(safe-area-inset-bottom)); left: 0;
+            width: 55px; height: 45px; background: rgba(0, 149, 246, 0.12);
+            border-radius: 18px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 0; pointer-events: none;
-            box-shadow: 0 8px 20px var(--blue-glow), inset 0 0 10px rgba(255,255,255,0.5);
-            border: 1px solid rgba(0, 149, 246, 0.2);
+            box-shadow: 0 5px 15px var(--blue-glow);
+            border: 1px solid rgba(0, 149, 246, 0.15);
         }
-
         nav i { 
             font-size: 1.5rem; color: #b0b0b0; cursor: pointer; z-index: 1; 
-            transition: all 0.4s ease; width: 60px; height: 50px; 
-            display: flex; align-items: center; justify-content: center; 
+            transition: all 0.3s ease; width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center;
         }
-        nav i.active { color: var(--blue); transform: scale(1.15) translateY(-2px); text-shadow: 0 0 8px var(--blue-glow); }
+        nav i.active { color: var(--blue); transform: scale(1.1); }
 
-        /* --- PHOTOS & PROFILE --- */
-        .post { background: var(--white); border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
-        .post-img-container img { width: 100%; max-height: 70vh; display: block; object-fit: cover; }
+        /* --- PROFILE --- */
         .profile-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--white); }
         .p-tab { flex: 1; padding: 15px; text-align: center; color: #8e8e8e; cursor: pointer; font-weight: bold; }
         .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
         #saved-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1/1; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -130,16 +127,16 @@
                     <div id="tab-info" class="p-tab active" onclick="switchProfileTab('info')">INFO</div>
                     <div id="tab-saved" class="p-tab" onclick="switchProfileTab('saved')">ENREGISTRÉ</div>
                 </div>
-                <div id="profile-info-content" style="padding: 20px; text-align:center; color:#8e8e8e;">Bienvenue sur votre profil.</div>
+                <div id="profile-info-content" style="padding: 20px; text-align:center; color:#8e8e8e;">Bienvenue.</div>
                 <div id="saved-grid" style="display:none;"></div>
             </div>
         </div>
 
-        <nav>
+        <nav id="navbar">
             <div class="nav-indicator" id="nav-indicator"></div>
-            <i class="fas fa-home active" id="nav-feed" onclick="switchTab('feed', 0)"></i>
-            <i class="fas fa-play" id="nav-videos" onclick="switchTab('videos', 1)"></i>
-            <i class="fas fa-user" id="nav-profile" onclick="switchTab('profile', 2)"></i>
+            <i class="fas fa-home active" onclick="switchTab('feed', 0)"></i>
+            <i class="fas fa-play" onclick="switchTab('videos', 1)"></i>
+            <i class="fas fa-user" onclick="switchTab('profile', 2)"></i>
         </nav>
     </div>
 </div>
@@ -147,7 +144,6 @@
 <script>
     const NOM_BOUTON = "Vérifier"; 
     const LIEN_BOUTON = "https://google.com"; 
-
     document.getElementById('custom-header-btn').innerText = NOM_BOUTON;
     document.getElementById('custom-header-btn').href = LIEN_BOUTON;
 
@@ -165,10 +161,26 @@
 
     const USERS = { "walid_hchm": "Walid.123", "mazine2.0": "Mazine.123", "amineg": "Amine.123", "user": "12345" };
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
+    let currentIdx = 0;
 
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
+    // --- LOGIQUE DE SWIPE iOS ---
+    const navbar = document.getElementById('navbar');
+    let startX = 0;
+    navbar.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+    navbar.addEventListener('touchend', e => {
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+        if (Math.abs(diff) > 40) { // Seuil de swipe
+            if (diff > 0 && currentIdx < 2) currentIdx++; // Swipe gauche
+            else if (diff < 0 && currentIdx > 0) currentIdx--; // Swipe droite
+            updateFromIdx();
+        }
     });
+
+    function updateFromIdx() {
+        const tabs = ['feed', 'videos', 'profile'];
+        switchTab(tabs[currentIdx], currentIdx);
+    }
 
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
@@ -200,11 +212,10 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         LISTE_PHOTOS.forEach(photo => {
-            const isSaved = savedItems.includes(photo.id);
             photoDiv.innerHTML += `<div class="post">
                 <div style="padding:10px; font-weight:bold;">${photo.auteur}</div>
                 <div class="post-img-container"><img src="${photo.url}"></div>
-                <div class="post-actions"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark" onclick="toggleSave('${photo.id}', this)"></i></div>
+                <div class="post-actions"><i class="${savedItems.includes(photo.id) ? 'fas' : 'far'} fa-bookmark" onclick="toggleSave('${photo.id}', this)"></i></div>
             </div>`;
         });
         LISTE_VIDEOS.forEach(vid => {
@@ -227,9 +238,7 @@
         const grid = document.getElementById('saved-grid');
         grid.innerHTML = "";
         LISTE_PHOTOS.forEach(item => {
-            if (savedItems.includes(item.id)) {
-                grid.innerHTML += `<div class="grid-item"><img src="${item.url}"></div>`;
-            }
+            if (savedItems.includes(item.id)) grid.innerHTML += `<div style="aspect-ratio:1/1;overflow:hidden;"><img src="${item.url}" style="width:100%;height:100%;object-fit:cover;"></div>`;
         });
     }
 
@@ -241,10 +250,12 @@
     }
 
     function switchTab(tab, index) {
+        currentIdx = index;
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(tab + '-section').classList.add('active');
-        document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
-        document.getElementById('nav-' + tab).classList.add('active');
+        document.querySelectorAll('nav i').forEach((i, idx) => {
+            i.classList.toggle('active', idx === index);
+        });
         document.getElementById('top-header').style.display = tab === 'videos' ? "none" : "flex";
         moveIndicator(index);
     }
