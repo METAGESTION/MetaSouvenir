@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg-color: #fafafa; --white: #ffffff; --border: #dbdbdb; --text-main: #262626; --text-secondary: #8e8e8e; --blue: #0095f6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; justify-content: center; overflow: hidden; }
+
+        #app-container { width: 100%; max-width: 450px; background: var(--white); height: 100%; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+
+        /* Login & Loading */
+        #login-screen, #loading-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .logo { font-size: 2.5rem; font-weight: bold; margin-bottom: 30px; letter-spacing: -1px; }
+        input { width: 100%; padding: 12px; background: #fafafa; border: 1px solid var(--border); border-radius: 5px; margin-bottom: 10px; }
+        .login-btn { width: 100%; background: var(--blue); color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Main App */
+        #main-app { display: none; flex-direction: column; height: 100%; }
+        header { height: 50px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; background: var(--white); }
+        
+        .content-area { flex: 1; overflow-y: auto; background: var(--bg-color); scroll-behavior: smooth; }
+        
+        /* Posts Style */
+        .post { background: var(--white); margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .post-header { padding: 10px; display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; }
+        .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: #eee; margin-right: 10px; }
+        .post-img-container { width: 100%; background: #efefef; min-height: 250px; }
+        .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        .post-actions { padding: 10px; font-size: 1.4rem; display: flex; gap: 15px; }
+        .post-caption { padding: 0 10px 15px 10px; font-size: 0.9rem; line-height: 1.4; }
+
+        /* Video Style */
+        .video-container { width: 100%; background: #000; margin-bottom: 5px; position: relative; }
+        .video-container video { width: 100%; display: block; max-height: 80vh; }
+
+        /* Nav */
+        nav { height: 50px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); flex-shrink: 0; }
+        nav i { font-size: 1.4rem; cursor: pointer; color: #555; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .logout-btn { color: #ed4956; border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 10px; background: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="login-screen">
+        <div class="logo">Meta Service</div>
+        <input type="text" id="username" placeholder="Nom d'utilisateur">
+        <input type="password" id="password" placeholder="Mot de passe">
+        <button class="login-btn" onclick="handleLogin()">Se connecter</button>
+        <p id="error-msg" style="color:red; display:none; margin-top:10px;">Identifiants incorrects</p>
+    </div>
+
+    <div id="loading-screen" style="display:none;">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="main-app">
+        <header id="top-header">Meta Service</header>
+        <div class="content-area" id="main-scroll-area">
+            
+            <div id="feed-section" class="section active">
+                <div id="photo-list"></div>
+            </div>
+
+            <div id="videos-section" class="section">
+                <div id="video-list"></div>
+            </div>
+
+            <div id="profile-section" class="section" style="padding: 20px; text-align: center;">
+                <div id="profile-pic-circle" style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px;"></div>
+                <h2 id="display-user">User</h2>
+                <button class="logout-btn" onclick="handleLogout()">Se déconnecter</button>
+            </div>
+
+        </div>
+        <nav>
+            <i class="fas fa-home" onclick="switchTab('feed')"></i>
+            <i class="fas fa-play-circle" onclick="switchTab('videos')"></i>
+            <i class="fas fa-user" onclick="switchTab('profile')"></i>
+        </nav>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURATION CONTENUS ---
+    const LISTE_PHOTOS = [
+        { url: "https://via.placeholder.com/600x600", auteur: "walid_hchm", bio: "Exemple de photo 1" },
+        { url: "https://via.placeholder.com/600x800", auteur: "mazine2.0", bio: "C'est Mazine sur la photo !" }
+    ];
+
+    const LISTE_VIDEOS = [
+        { url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+    ];
+
+    // --- BASE DE DONNÉES UTILISATEURS ---
+    // Note: On stocke les clés en minuscules pour faciliter la comparaison
+    const USERS = { 
+        "walid_hchm": "Walid.123", 
+        "user": "12345",
+        "mazine2.0": "Mazine.123",
+        "amineg": "Amine.123"
+    };
+
+    function genererContenu() {
+        const photoDiv = document.getElementById('photo-list');
+        const videoDiv = document.getElementById('video-list');
+        photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
+
+        LISTE_PHOTOS.forEach(photo => {
+            photoDiv.innerHTML += `
+                <div class="post">
+                    <div class="post-header"><div class="user-avatar"></div>${photo.auteur}</div>
+                    <div class="post-img-container"><img src="${photo.url}"></div>
+                    <div class="post-actions"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
+                    <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
+                </div>`;
+        });
+
+        LISTE_VIDEOS.forEach(vid => {
+            videoDiv.innerHTML += `
+                <div class="video-container">
+                    <video controls loop><source src="${vid.url}" type="video/mp4"></video>
+                </div>`;
+        });
+    }
+
+    function handleLogin() {
+        // .trim() enlève les espaces / .toLowerCase() transforme en minuscules
+        const uRaw = document.getElementById("username").value;
+        const u = uRaw.trim().toLowerCase();
+        const p = document.getElementById("password").value; // Le mot de passe reste sensible à la casse (sécurité)
+
+        if (USERS[u] && USERS[u] === p) {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("loading-screen").style.display = "flex";
+            setTimeout(() => {
+                localStorage.setItem("metaUser", u);
+                startApp(u);
+            }, 1200);
+        } else {
+            document.getElementById("error-msg").style.display = "block";
+        }
+    }
+
+    function startApp(user) {
+        document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("main-app").style.display = "flex";
+        document.getElementById("display-user").innerText = user;
+        genererContenu();
+    }
+
+    function handleLogout() {
+        localStorage.removeItem("metaUser");
+        location.reload();
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tab + '-section').classList.add('active');
+        document.getElementById('main-scroll-area').scrollTop = 0;
+        document.getElementById('top-header').innerText = tab === 'feed' ? 'Meta Service' : (tab === 'videos' ? 'Vidéos' : 'Profil');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const saved = localStorage.getItem("metaUser");
+        if(saved) startApp(saved);
+        
+        // Sécurité blocage inspecteur
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false; }
+    });
+</script>
+
+</body>
+</html>
