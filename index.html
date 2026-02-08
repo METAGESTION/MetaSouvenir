@@ -72,17 +72,19 @@
         .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .post-actions i.fas { color: #f9d71c; }
 
-        /* SCROLL TIKTOK VIMEO */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; } 
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
         .video-card iframe { width: 100%; height: 100%; border: none; }
         .video-info { position: absolute; bottom: 30px; left: 15px; color: white; z-index: 10; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none; }
 
         .overlay-page { 
             display: none; 
             position: absolute; 
-            top: 0; left: 0; width: 100%; height: 100%; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
             background: var(--bg-color); 
             z-index: 600; 
             overflow-y: auto; 
@@ -191,20 +193,29 @@
 </div>
 
 <script>
-    // UTILISATION DE VIMEO
+    // LISTE DES VIDÉOS AVEC TES LIENS VIMEO
     const LISTE_VIDEOS = [
         { 
             id: "v1", 
             auteur: "mazine2.0", 
             vimeo_url: "https://player.vimeo.com/video/1163079929?badge=0&autopause=0&player_id=0&app_id=58479", 
-            legende: "Nouveau projet 2026 🚀", 
+            legende: "WhatsApp Video 2026-02-08", 
             date: 700 
+    
+        }
+         { 
+            id: "v2", 
+            auteur: "mazine2.0", 
+            vimeo_url: "https://player.vimeo.com/video/1163082666?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479", 
+            legende: "WhatsApp Video 2026-02-08", 
+            date: 700 
+    
         }
     ];
 
     const LISTE_PHOTOS = [
-        { id: "p1", url: "https://picsum.photos/800/1000?random=11", auteur: "mazine2.0", date: 550 },
-        { id: "p2", url: "https://picsum.photos/800/1000?random=22", auteur: "walid_hchm", date: 350 },
+        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 550 },
+        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 350 },
         { id: "p3", url: "https://picsum.photos/800/1000?random=33", auteur: "user", date: 150 }
     ];
 
@@ -240,9 +251,6 @@
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
-        
-        // Si on quitte l'onglet vidéo, on force l'arrêt des iframes
-        if (t !== 'videos') stopAllVideos();
     }
 
     function moveIndicator(i) {
@@ -286,11 +294,11 @@
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-        [...LISTE_PHOTOS].sort((a,b) => b.date - a.date).forEach(p => {
+        [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
-        [...LISTE_VIDEOS].forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.vimeo_url}" allow="autoplay; fullscreen" allowfullscreen></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
+        [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
+            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.vimeo_url}" allow="autoplay; fullscreen; picture-in-picture"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
         });
     }
 
@@ -302,8 +310,16 @@
         overlay.style.display = 'block';
     }
 
-    function closeMediaView() { stopAllVideos(); document.getElementById('media-view-overlay').style.display = 'none'; }
+    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
     function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
+    
+    function filtrerRecherche() {
+        const q = document.getElementById('search-input').value.toLowerCase();
+        const res = document.getElementById('search-results');
+        res.innerHTML = "";
+        if(q.length < 1) return;
+        USERS_DB.forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle" style="font-size:1.5rem; color:var(--text-sec);"></i> <b>${u}</b></div>`; });
+    }
 
     function toggleSave(id, btn) {
         if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); }
@@ -318,18 +334,15 @@
         localStorage.setItem('metaTheme', isDark ? 'dark' : 'light');
     }
 
-    function handleLogout() { stopAllVideos(); localStorage.removeItem("metaUser"); location.reload(); }
+    function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
-    // FONCTION POUR STOPPER LES VIDEOS
-    function stopAllVideos() {
-        document.querySelectorAll('iframe').forEach(iframe => {
-            const s = iframe.src; iframe.src = ""; iframe.src = s;
-        });
-    }
-
-    // COUPE LES VIDEOS QUAND ON QUITTE L'ONGLET OU L'APP
+    // COUPE LES VIDÉOS QUAND ON QUITTE L'ONGLET
     document.addEventListener("visibilitychange", () => {
-        if (document.hidden) stopAllVideos();
+        if (document.hidden) {
+            document.querySelectorAll('iframe').forEach(iframe => {
+                const s = iframe.src; iframe.src = ""; iframe.src = s;
+            });
+        }
     });
 
     window.addEventListener('load', () => {
