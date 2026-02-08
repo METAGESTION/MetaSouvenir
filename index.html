@@ -32,16 +32,15 @@
 
         .content-area { flex: 1; position: relative; overflow: hidden; }
         
-        /* --- FEED CORRIGÉ POUR PC --- */
+        /* --- FEED CORRIGÉ (PLUS DE BORDURES NOIRES) --- */
         #feed-section { height: 100%; overflow-y: auto; background: var(--bg-color); }
         .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); margin-left: auto; margin-right: auto; max-width: 600px; }
         .post-img-container { background: #eee; display: flex; justify-content: center; }
         .post-img-container img { 
             width: 100%; 
-            max-height: 70vh; /* Empêche l'image d'être trop géante sur PC */
+            max-height: 70vh; 
             display: block; 
-            object-fit: contain; /* Garde l'image entière sans la déformer */
-            background: #000; /* Fond noir si l'image ne remplit pas tout le cadre */
+            object-fit: cover; /* REMPLACÉ contain PAR cover POUR REMPLIR SANS BORDURE */
         }
         .post-caption { padding: 12px; font-size: 0.95rem; }
 
@@ -128,8 +127,8 @@
 
 <script>
     const LISTE_PHOTOS = [
-        { url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", bio: "Taille d'image optimisée pour PC et Mobile." },
-        { url: "https://picsum.photos/800/800?random=2", auteur: "amineg", bio: "On voit enfin la bio sans trop scroller !" }
+        { url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", bio: "Plus de bordures noires ici !" },
+        { url: "https://picsum.photos/800/600?random=2", auteur: "amineg", bio: "L'image remplit bien le cadre." }
     ];
 
     const LISTE_VIDEOS = [
