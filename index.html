@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Meta Service | TikTok Scroll</title>
+    <title>Meta Service | TikTok Random</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <style>
@@ -316,12 +316,13 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
+        // Randomisation des photos
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
 
-        // Génération des vidéos
-        LISTE_VIDEOS.forEach(v => {
+        // --- MODIFICATION ICI : Randomisation des vidéos ---
+        [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
             videoDiv.innerHTML += `
                 <div class="video-card">
                     <iframe src="${v.vimeo_url}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture;" title="${v.legende}"></iframe>
@@ -332,7 +333,7 @@
                 </div>`;
         });
 
-        // APPEL DE LA FONCTION MAGIQUE DE SCROLL
+        // APPEL DE LA FONCTION MAGIQUE DE SCROLL (toujours à la fin)
         setTimeout(observeVideos, 500);
     }
 
@@ -350,10 +351,9 @@
                 const player = new Vimeo.Player(iframe);
 
                 if (entry.isIntersecting) {
-                    // La vidéo est visible : on peut essayer de la lancer
-                    // Note: Les navigateurs bloquent souvent le son auto, donc ça lancera peut-être sans son ou demandera un clic.
-                    // player.play().catch(e => console.log('Autoplay bloqué par le navigateur', e));
-                    console.log("Vidéo visible");
+                    // console.log("Vidéo visible");
+                    // Tu peux décommenter ci-dessous si tu veux tenter l'autoplay (bloqué parfois par Chrome)
+                    // player.play().catch(e => console.log('Autoplay bloqué', e));
                 } else {
                     // La vidéo n'est PLUS visible : ON PAUSE OBLIGATOIREMENT
                     player.pause().then(() => {
