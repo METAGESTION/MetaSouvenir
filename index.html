@@ -59,27 +59,17 @@
         .post-actions { padding: 12px; display: flex; justify-content: flex-end; align-items: center; font-size: 1.5rem; }
         .save-btn { cursor: pointer; transition: 0.2s; color: var(--text-main); }
 
-        /* --- VIDEOS (TIKTOK STYLE CORRIGÉ) --- */
+        /* --- VIDEOS (TIKTOK STYLE) --- */
         #videos-section { 
             background: #000; 
             overflow-y: scroll; 
             scroll-snap-type: y mandatory; 
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Pour un scroll fluide sur iOS */
+            -webkit-overflow-scrolling: touch; 
             scrollbar-width: none;
         }
         #videos-section::-webkit-scrollbar { display: none; }
-        
-        .video-card { 
-            height: 100%; 
-            width: 100%; 
-            scroll-snap-align: start; 
-            scroll-snap-stop: always; 
-            position: relative; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-        }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
         .video-card video { width: 100%; height: 100%; object-fit: contain; }
         .video-info { position: absolute; bottom: calc(40px + env(safe-area-inset-bottom)); left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); pointer-events: none; }
 
@@ -91,7 +81,7 @@
         .grid-item { aspect-ratio: 1/1; background: #eee; overflow: hidden; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- NAV iOS 26 SAFE --- */
+        /* --- NAV --- */
         nav { 
             height: calc(85px + env(safe-area-inset-bottom)); 
             padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
@@ -102,9 +92,7 @@
         nav i.active { color: var(--text-main); transform: scale(1.1); }
     </style>
 </head>
-<body>
-
-<div id="app-container">
+<body oncontextmenu="return false;"> <div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
         <input type="text" id="username" placeholder="Nom d'utilisateur" oninput="hideError()">
@@ -140,6 +128,13 @@
 </div>
 
 <script>
+    /* --- SÉCURITÉ ANTI-INSPECTION --- */
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false; // I, J, C
+        if (e.ctrlKey && e.keyCode == 85) return false; // U (Source)
+    });
+
     const LISTE_PHOTOS = [
         { id: "p1", url: "https://picsum.photos/800/1200?random=11", auteur: "mazine2.0", bio: "Clean & Simple." },
         { id: "p2", url: "https://picsum.photos/800/800?random=12", auteur: "walid_hchm", bio: "Enregistrement photo actif." },
@@ -185,7 +180,6 @@
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-
         shuffle([...LISTE_PHOTOS]).forEach(photo => {
             const isSaved = savedItems.includes(photo.id);
             photoDiv.innerHTML += `
@@ -198,7 +192,6 @@
                     <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
                 </div>`;
         });
-
         shuffle([...LISTE_VIDEOS]).forEach(vid => {
             videoDiv.innerHTML += `
                 <div class="video-card">
@@ -250,7 +243,7 @@
                     else { video.pause(); video.currentTime = 0; }
                 }
             });
-        }, { threshold: 0.8 }); // Seuil augmenté pour plus de précision sur le snap
+        }, { threshold: 0.8 });
         document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
     }
 
@@ -261,7 +254,6 @@
         document.getElementById('nav-' + tab).classList.add('active');
         if(tab === 'videos') {
             document.getElementById('top-header').style.display = "none";
-            // Repositionne au début si besoin
             document.getElementById('videos-section').scrollTop = 0;
         } else {
             document.getElementById('top-header').style.display = "flex";
