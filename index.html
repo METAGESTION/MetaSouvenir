@@ -10,33 +10,44 @@
         body.dark-mode { --bg-color: #121212; --white: #1e1e1e; --border: #333333; --text-main: #f5f5f5; --nav-bg: rgba(30, 30, 30, 0.9); }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--white); height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); transition: background 0.3s; }
+        
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
         #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f0f4f8, #d9e2ec); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
         .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue); }
         input { width: 100%; max-width: 350px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 16px; background: var(--white); color: var(--text-main); }
         .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         header { height: calc(85px + env(safe-area-inset-top)); padding-top: calc(30px + env(safe-area-inset-top)); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-left: 20px; padding-right: 20px; font-weight: bold; background: var(--white); z-index: 10; flex-shrink: 0; }
+        
         .content-area { flex: 1; position: relative; overflow: hidden; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
         .section.active { display: block; }
+        
         .post { background: var(--white); border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
-        .post-user { padding:12px; font-weight:bold; cursor: pointer; color: var(--blue); font-size: 1.1rem; }
+        .post-user { padding:12px; font-weight:bold; cursor: pointer; color: var(--blue); }
         .post-img-container img { width: 100%; max-height: 75vh; display: block; object-fit: cover; }
+        
         .post-actions { padding: 15px; display: flex; justify-content: flex-end; }
         .post-actions i { font-size: 2.2rem; cursor: pointer; }
+        
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-        .video-info { position: absolute; bottom: 40px; left: 15px; color: white; z-index: 10; }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
+        .video-info { position: absolute; bottom: 40px; left: 15px; color: white; z-index: 10; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+
         #settings-overlay, #media-view-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 500; }
         #media-view-overlay { background: var(--bg-color); }
+
         nav { height: calc(85px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); backdrop-filter: blur(20px); position: relative; }
         .nav-indicator { position: absolute; bottom: calc(25px + env(safe-area-inset-bottom)); left: 0; width: 50px; height: 45px; background: rgba(0, 149, 246, 0.12); border-radius: 18px; z-index: 0; transition: all 0.3s; }
         nav i { font-size: 1.4rem; color: #b0b0b0; cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
         nav i.active { color: var(--blue); }
+
         .profile-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--white); }
         .p-tab { flex: 1; padding: 15px; text-align: center; color: #8e8e8e; cursor: pointer; font-weight: bold; }
         .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
@@ -79,7 +90,7 @@
                     <button id="logout-btn" onclick="handleLogout()" style="color:#ed4956; border:1px solid var(--border); padding:8px 20px; border-radius:8px; background:none; display:none; margin: 0 auto;">Déconnexion</button>
                 </div>
                 <div class="profile-tabs">
-                    <div id="tab-info" class="p-tab active" onclick="switchProfileTab('info')">RÉCENT</div>
+                    <div id="tab-info" class="p-tab active" onclick="switchProfileTab('info')">PUBLIÉ</div>
                     <div id="tab-saved-btn" class="p-tab" onclick="switchProfileTab('saved')" style="display:none;">ENREGISTRÉ</div>
                 </div>
                 <div id="profile-info-grid" class="content-grid"></div>
@@ -111,20 +122,30 @@
 </div>
 
 <script>
-    // Ajout de dates (Plus le nombre est grand, plus c'est récent)
+    // --- SECTION VIDÉOS ---
+    // Remplace "LIEN_PARTAGE_GOOGLE_DRIVE" par l'URL de partage de ta vidéo
+    // Note : Pour Drive, utilise le lien "Intégrer l'élément" (qui ressemble à .../file/d/ID/preview)
     const LISTE_VIDEOS = [
-        { id: "v1", auteur: "user", legende: "Vidéo ancienne", date: 100 },
-        { id: "v2", auteur: "walid_hchm", legende: "Style #trend", date: 300 },
-        { id: "v3", auteur: "mazine2.0", legende: "Nouveau !", date: 500 },
-        { id: "v4", auteur: "metaservice", legende: "Update 2.0", date: 400 },
-        { id: "v5", auteur: "meta actu", legende: "News", date: 600 }
+        { 
+            id: "v1", 
+            auteur: "walid_hchm", 
+            drive_url: "LIEN_GOOGLE_DRIVE_ICI", // Exemple: https://drive.google.com/file/d/XXXX/preview
+            legende: "Ma vidéo Google Drive", 
+            date: 700 
+        },
+        { 
+            id: "v2", 
+            auteur: "user", 
+            drive_url: "AUTRE_LIEN_ICI", 
+            legende: "Test vidéo 2", 
+            date: 650 
+        }
     ];
+
     const LISTE_PHOTOS = [
         { id: "p1", url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", date: 550 },
         { id: "p2", url: "https://picsum.photos/800/800?random=2", auteur: "walid_hchm", date: 350 },
-        { id: "p3", url: "https://picsum.photos/800/800?random=3", auteur: "user", date: 150 },
-        { id: "p4", url: "https://picsum.photos/800/800?random=4", auteur: "meta actu", date: 650 },
-        { id: "p5", url: "https://picsum.photos/800/800?random=5", auteur: "metaservice", date: 450 }
+        { id: "p3", url: "https://picsum.photos/800/800?random=3", auteur: "user", date: 150 }
     ];
 
     const USERS_DB = ["user", "walid_hchm", "mazine2.0", "metaservice", "meta actu"];
@@ -140,31 +161,36 @@
     function startApp() {
         document.getElementById("login-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
-        genererContenuAleatoire();
+        genererContenu();
         switchTab('feed', 0);
     }
 
-    // ACCUEIL : TOUT EST ALÉATOIRE
-    function genererContenuAleatoire() {
+    function genererContenu() {
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
-            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="goToProfile('${p.auteur}')">@${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id) ? 'fas' : 'far'} fa-bookmark" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
+            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="goToProfile('${p.auteur}')">@${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
 
+        // Affichage des vidéos via iframe (pour Drive)
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><div class="video-info"><h3 onclick="goToProfile('${v.auteur}')">@${v.auteur}</h3><p>${v.legende}</p></div><i class="fas fa-play" style="color:white; font-size:2rem;"></i></div>`;
+            videoDiv.innerHTML += `
+                <div class="video-card">
+                    <iframe src="${v.drive_url}" allow="autoplay"></iframe>
+                    <div class="video-info">
+                        <h3 onclick="goToProfile('${v.auteur}')">@${v.auteur}</h3>
+                        <p>${v.legende}</p>
+                    </div>
+                </div>`;
         });
     }
 
-    // PROFIL : CLASSÉ PAR DATE (DU PLUS RÉCENT AU PLUS ANCIEN)
+    // -- LOGIQUE DE PROFIL & TRI --
     function renderUserGrid(username) {
         const grid = document.getElementById('profile-info-grid');
         grid.innerHTML = "";
-        
-        // Fusionner photos et vidéos de l'utilisateur et trier par date décroissante
         const allMedia = [
             ...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type: 'photo'})),
             ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type: 'video'}))
@@ -192,7 +218,24 @@
         switchProfileTab('info');
     }
 
-    // FONCTIONS STANDARDS (Générique)
+    function openMediaView(id, type) {
+        const overlay = document.getElementById('media-view-overlay');
+        const content = document.getElementById('media-view-content');
+        overlay.style.display = 'block';
+        let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
+        
+        let html = `<div class="post"><div class="post-user">@${item.auteur}</div>`;
+        if(type === 'photo') {
+            html += `<img src="${item.url}" style="width:100%">`;
+        } else {
+            html += `<div style="height:400px;"><iframe src="${item.drive_url}" style="width:100%;height:100%;"></iframe></div>`;
+        }
+        html += `<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+        content.innerHTML = html;
+    }
+
+    // -- AUTRES FONCTIONS --
+    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
     function switchTab(t, i) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
@@ -201,22 +244,12 @@
         document.getElementById('global-cog').style.display = (t === 'profile' && viewedUser === loggedUser) ? "block" : "none";
         moveIndicator(i);
     }
-
     function moveIndicator(i) {
         const icons = document.querySelectorAll('nav i');
         const indicator = document.getElementById('nav-indicator');
         if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 25) + 'px';
     }
-
     function goToOwnProfile() { goToProfile(loggedUser); }
-    function openMediaView(id, type) {
-        const overlay = document.getElementById('media-view-overlay');
-        const content = document.getElementById('media-view-content');
-        overlay.style.display = 'block';
-        let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        content.innerHTML = `<div class="post"><div class="post-user">@${item.auteur}</div>${type==='photo' ? `<img src="${item.url}" style="width:100%">` : `<div style="height:300px; background:#000; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-play"></i></div>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
-    }
-    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
     function toggleSave(id, btn) {
         if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); }
         else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
