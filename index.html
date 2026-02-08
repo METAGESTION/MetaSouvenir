@@ -13,11 +13,16 @@
 
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* --- LOGIN DESIGN --- */
+        /* --- LOGIN DESIGN - CORRIGÉ POUR DYNAMIC ISLAND --- */
         #login-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(135deg, #f0f4f8, #d9e2ec); 
-            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; 
+            z-index: 1000; 
+            display: flex; flex-direction: column; 
+            justify-content: center; /* Centrage vertical parfait */
+            align-items: center; 
+            /* Ajout de padding safe area pour repousser le contenu des bords haut/bas */
+            padding: env(safe-area-inset-top) 40px env(safe-area-inset-bottom) 40px; 
         }
         .logo { 
             font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue);
@@ -61,12 +66,8 @@
 
         /* --- VIDEOS (TIKTOK STYLE) --- */
         #videos-section { 
-            background: #000; 
-            overflow-y: scroll; 
-            scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; 
-            scrollbar-width: none;
+            background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
         #videos-section::-webkit-scrollbar { display: none; }
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -92,7 +93,9 @@
         nav i.active { color: var(--text-main); transform: scale(1.1); }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="app-container">
+<body oncontextmenu="return false;">
+
+<div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
         <input type="text" id="username" placeholder="Nom d'utilisateur" oninput="hideError()">
@@ -128,11 +131,11 @@
 </div>
 
 <script>
-    /* --- SÉCURITÉ ANTI-INSPECTION --- */
+    // Sécurité clavier
     document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123) return false; // F12
-        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false; // I, J, C
-        if (e.ctrlKey && e.keyCode == 85) return false; // U (Source)
+        if (e.keyCode == 123) return false;
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
+        if (e.ctrlKey && e.keyCode == 85) return false;
     });
 
     const LISTE_PHOTOS = [
