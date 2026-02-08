@@ -18,8 +18,7 @@
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--white); /* Plus de fond noir derrière l'app */
-            color: var(--text-main); 
+            background-color: var(--white); 
             height: 100vh; 
             width: 100vw;
             display: flex; 
@@ -27,17 +26,9 @@
             overflow: hidden; 
         }
 
-        /* Container Principal : Occupe désormais TOUT l'écran sans exception */
-        #app-container { 
-            width: 100%; 
-            height: 100%; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: none; /* Suppression de l'ombre */
-        }
+        #app-container { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
 
-        /* --- ÉCRANS DE CONNEXION --- */
+        /* --- LOGIN & LOADING --- */
         #login-screen, #loading-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: var(--white); z-index: 1000; 
@@ -51,68 +42,33 @@
 
         /* --- STRUCTURE APP --- */
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--white); }
-        
-        header { 
-            height: 60px; border-bottom: 1px solid var(--border); 
-            display: flex; justify-content: center; align-items: center; 
-            font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; z-index: 10;
-        }
+        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; z-index: 10; }
 
-        .content-area { 
-            flex: 1; overflow-y: auto; background: var(--bg-color); 
-            scrollbar-width: none;
-        }
+        .content-area { flex: 1; overflow-y: auto; background: var(--bg-color); scrollbar-width: none; }
         .content-area::-webkit-scrollbar { display: none; }
 
-        /* --- SECTION ACCUEIL --- */
+        /* --- FEED --- */
         .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); width: 100%; }
         .post-header { padding: 12px; display: flex; align-items: center; font-size: 0.95rem; font-weight: 600; }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); margin-right: 12px; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #eee; margin-right: 12px; }
         .post-img-container img { width: 100%; display: block; max-height: 85vh; object-fit: cover; }
         .post-actions { padding: 12px; font-size: 1.5rem; display: flex; gap: 18px; }
         .post-caption { padding: 0 12px 18px 12px; font-size: 0.95rem; line-height: 1.4; }
 
-        /* --- SECTION VIDEOS (PLEIN ÉCRAN TOTAL) --- */
-        #videos-section { 
-            height: 100%; 
-            overflow-y: scroll; 
-            scroll-snap-type: y mandatory;
-            background: #000;
-        }
-        .video-card { 
-            height: calc(100vh - 125px); /* Ajusté pour Header + Nav */
-            width: 100vw;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            position: relative;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-card video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; /* Remplit tout l'écran comme TikTok */
-        }
-        .video-info {
-            position: absolute; bottom: 20px; left: 15px; color: white;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 5;
-        }
+        /* --- VIDEOS (TIKTOK STYLE) --- */
+        #videos-section { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; background: #000; scrollbar-width: none; }
+        #videos-section::-webkit-scrollbar { display: none; }
+        .video-card { height: calc(100vh - 65px); width: 100vw; scroll-snap-align: start; scroll-snap-stop: always; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+        .video-card video { width: 100%; height: 100%; object-fit: contain; }
+        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 5; }
 
-        /* --- BARRE DE NAVIGATION --- */
-        nav { 
-            height: 65px; border-top: 1px solid var(--border); 
-            display: flex; justify-content: space-around; align-items: center; 
-            background: var(--white); flex-shrink: 0; 
-        }
+        /* --- NAVIGATION --- */
+        nav { height: 65px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); flex-shrink: 0; }
         nav i { font-size: 1.6rem; cursor: pointer; color: #8e8e8e; }
         nav i.active { color: var(--text-main); }
 
         .section { display: none; height: 100%; }
         .section.active { display: block; }
-
-        /* --- PROFIL --- */
         .logout-btn { background: #ff3b30; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 250px; }
     </style>
 </head>
@@ -121,39 +77,25 @@
 <div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
-        <input type="text" id="username" placeholder="Nom d'utilisateur" spellcheck="false">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off">
         <input type="password" id="password" placeholder="Mot de passe">
         <button class="login-btn" onclick="handleLogin()">Se connecter</button>
-        <p id="error-msg" style="color:#ff3b30; display:none; margin-top:15px; font-size: 14px;">Identifiants incorrects</p>
+        <p id="error-msg" style="color:#ff3b30; display:none; margin-top:15px;">Identifiants incorrects</p>
     </div>
 
-    <div id="loading-screen" style="display:none;">
-        <div class="spinner"></div>
-    </div>
+    <div id="loading-screen" style="display:none;"><div class="spinner"></div></div>
 
     <div id="main-app">
         <header id="top-header">Meta Service</header>
-        
         <div class="content-area" id="main-scroll-area">
-            
-            <div id="feed-section" class="section active">
-                <div id="photo-list"></div>
-            </div>
-
-            <div id="videos-section" class="section">
-                <div id="video-list"></div>
-            </div>
-
+            <div id="feed-section" class="section active"><div id="photo-list"></div></div>
+            <div id="videos-section" class="section"><div id="video-list"></div></div>
             <div id="profile-section" class="section" style="padding: 40px 20px; text-align: center;">
-                <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-user fa-3x" style="color: #ccc;"></i>
-                </div>
-                <h2 id="display-user" style="margin-bottom: 10px;">User</h2>
+                <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user fa-3x" style="color:#ccc"></i></div>
+                <h2 id="display-user">User</h2>
                 <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
             </div>
-
         </div>
-
         <nav>
             <i class="fas fa-home active" id="nav-feed" onclick="switchTab('feed')"></i>
             <i class="fas fa-play" id="nav-videos" onclick="switchTab('videos')"></i>
@@ -163,23 +105,16 @@
 </div>
 
 <script>
-    // --- TES DONNÉES ---
     const LISTE_PHOTOS = [
-        { url: "https://via.placeholder.com/800x1000", auteur: "walid_hchm", bio: "Photo plein écran" },
-        { url: "https://via.placeholder.com/800x800", auteur: "mazine2.0", bio: "Meta Service est en ligne !" }
+        { url: "https://via.placeholder.com/800x1000", auteur: "mazine2.0", bio: "Bienvenue sur Meta Service !" }
     ];
 
     const LISTE_VIDEOS = [
-        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Format TikTok Full" },
-        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Incroyable !" }
+        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Vidéo 1 #Meta" },
+        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo 2 #Cool" }
     ];
 
-    const USERS = { 
-        "walid_hchm": "Walid.123", 
-        "user": "12345",
-        "mazine2.0": "Mazine.123",
-        "amineg": "Amine.123"
-    };
+    const USERS = { "walid_hchm": "Walid.123", "mazine2.0": "Mazine.123", "amineg": "Amine.123", "user": "12345" };
 
     function genererContenu() {
         const photoDiv = document.getElementById('photo-list');
@@ -187,27 +122,40 @@
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
 
         LISTE_PHOTOS.forEach(photo => {
-            photoDiv.innerHTML += `
-                <div class="post">
-                    <div class="post-header"><div class="user-avatar"></div>${photo.auteur}</div>
-                    <div class="post-img-container"><img src="${photo.url}"></div>
-                    <div class="post-actions"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
-                    <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
-                </div>`;
+            photoDiv.innerHTML += `<div class="post">
+                <div class="post-header"><div class="user-avatar"></div>${photo.auteur}</div>
+                <div class="post-img-container"><img src="${photo.url}"></div>
+                <div class="post-actions"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
+                <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
+            </div>`;
         });
 
         LISTE_VIDEOS.forEach(vid => {
-            videoDiv.innerHTML += `
-                <div class="video-card">
-                    <video loop playsinline onclick="this.paused ? this.play() : this.pause()">
-                        <source src="${vid.url}" type="video/mp4">
-                    </video>
-                    <div class="video-info">
-                        <h3>@${vid.auteur}</h3>
-                        <p>${vid.legende}</p>
-                    </div>
-                </div>`;
+            videoDiv.innerHTML += `<div class="video-card">
+                <video loop playsinline muted><source src="${vid.url}" type="video/mp4"></video>
+                <div class="video-info"><h3>@${vid.auteur}</h3><p>${vid.legende}</p></div>
+            </div>`;
         });
+
+        initVideoObserver();
+    }
+
+    // --- LE CŒUR DU SYSTÈME TIKTOK (Stop & Go) ---
+    function initVideoObserver() {
+        const options = { threshold: 0.6 }; // Se lance quand 60% de la vidéo est visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    video.play().catch(() => {}); // Play si visible
+                } else {
+                    video.pause(); // Stop si on scroll ailleurs
+                    video.currentTime = 0; // Reset au début
+                }
+            });
+        }, options);
+
+        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
     }
 
     function handleLogin() {
@@ -219,7 +167,7 @@
             setTimeout(() => {
                 localStorage.setItem("metaUser", u);
                 startApp(u);
-            }, 1100);
+            }, 1000);
         } else {
             document.getElementById("error-msg").style.display = "block";
         }
@@ -239,12 +187,12 @@
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
         document.getElementById('nav-' + tab).classList.add('active');
 
-        const header = document.getElementById('top-header');
-        if(tab === 'videos') {
-            header.style.display = "none"; // Optionnel: Cacher le header en mode vidéo pour plus d'espace
+        // Stop toutes les vidéos si on quitte l'onglet Vidéo
+        if(tab !== 'videos') {
+            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
+            document.getElementById('top-header').style.display = "flex";
         } else {
-            header.style.display = "flex";
-            header.innerText = tab === 'feed' ? "Meta Service" : "Profil";
+            document.getElementById('top-header').style.display = "none";
         }
     }
 
@@ -259,6 +207,5 @@
         document.addEventListener('contextmenu', e => e.preventDefault());
     });
 </script>
-
 </body>
 </html>
