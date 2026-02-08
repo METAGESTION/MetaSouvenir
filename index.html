@@ -32,11 +32,20 @@
 
         .content-area { flex: 1; position: relative; overflow: hidden; }
         
+        /* --- FEED CORRIGÉ POUR PC --- */
         #feed-section { height: 100%; overflow-y: auto; background: var(--bg-color); }
-        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); margin-left: auto; margin-right: auto; max-width: 600px; }
+        .post-img-container { background: #eee; display: flex; justify-content: center; }
+        .post-img-container img { 
+            width: 100%; 
+            max-height: 70vh; /* Empêche l'image d'être trop géante sur PC */
+            display: block; 
+            object-fit: contain; /* Garde l'image entière sans la déformer */
+            background: #000; /* Fond noir si l'image ne remplit pas tout le cadre */
+        }
         .post-caption { padding: 12px; font-size: 0.95rem; }
 
+        /* --- VIDEOS (TIKTOK STYLE) --- */
         #videos-section { 
             height: 100%; 
             width: 100%;
@@ -63,21 +72,21 @@
         
         .video-info { 
             position: absolute; 
-            bottom: calc(40px + env(safe-area-inset-bottom)); /* Remonté pour iOS 26 */
+            bottom: calc(40px + env(safe-area-inset-bottom)); 
             left: 15px; color: white; 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.8); 
         }
 
-        /* --- NAV CORRIGÉE POUR iOS 26 --- */
+        /* --- NAV iOS 26 SAFE --- */
         nav { 
-            height: calc(85px + env(safe-area-inset-bottom)); /* Hauteur augmentée */
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); /* Marge de clic augmentée */
+            height: calc(85px + env(safe-area-inset-bottom)); 
+            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
             border-top: 1px solid var(--border); 
             display: flex; justify-content: space-around; 
             align-items: center; background: var(--white); 
             z-index: 100;
         }
-        nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; padding: 10px; } /* Zone de touche agrandie */
+        nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; padding: 10px; }
         nav i.active { color: var(--text-main); }
     </style>
 </head>
@@ -119,8 +128,8 @@
 
 <script>
     const LISTE_PHOTOS = [
-        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Interface corrigée pour iOS 26." },
-        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Navigation fluide." }
+        { url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", bio: "Taille d'image optimisée pour PC et Mobile." },
+        { url: "https://picsum.photos/800/800?random=2", auteur: "amineg", bio: "On voit enfin la bio sans trop scroller !" }
     ];
 
     const LISTE_VIDEOS = [
@@ -182,11 +191,9 @@
     function switchTab(tab) {
         document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
-        
         const target = document.getElementById(tab + '-section');
         target.style.display = 'block';
         document.getElementById('nav-' + tab).classList.add('active');
-
         if(tab === 'videos') {
             document.getElementById('top-header').style.display = "none";
         } else {
