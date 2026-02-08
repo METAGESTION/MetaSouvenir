@@ -37,20 +37,35 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+        
+        /* AJUSTEMENT DYNAMIC ISLAND */
+        header { 
+            /* On ajoute 20px de marge supplémentaire pour la Dynamic Island */
+            height: calc(80px + env(safe-area-inset-top)); 
+            padding-top: calc(20px + env(safe-area-inset-top)); 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-left: 20px; 
+            padding-right: 20px; 
+            background: var(--white); 
+            z-index: 100; 
+            flex-shrink: 0; 
+        }
+
         #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
         .logo { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         input { width: 100%; max-width: 320px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 15px; background: var(--white); color: var(--text-main); outline: none; }
         .login-btn { width: 100%; max-width: 320px; background: var(--blue); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-        header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-left: 20px; padding-right: 20px; background: var(--white); z-index: 100; flex-shrink: 0; }
         header span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
 
         .content-area { flex: 1; position: relative; overflow: hidden; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
         .section.active { display: block; }
         
-        /* POST STYLE */
         .post { background: var(--white); margin: 0 auto 10px auto; max-width: 500px; box-shadow: var(--card-shadow); border-radius: 0 0 15px 15px; }
         .post-user { padding: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
         .post-user i { color: var(--text-sec); font-size: 1.2rem; }
@@ -59,44 +74,27 @@
         .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .post-actions i.fas { color: #f9d71c; }
 
-        /* --- CORRECTION SCROLL TIKTOK --- */
-        #videos-section { 
-            background: #000; 
-            overflow-y: scroll; 
-            scroll-snap-type: y mandatory; 
-            height: 100%; /* Important */
-            scrollbar-width: none; /* Cache la barre sur Firefox */
-        }
-        #videos-section::-webkit-scrollbar { display: none; } /* Cache sur Chrome/Safari */
+        /* SCROLL TIKTOK */
+        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; scrollbar-width: none; }
+        #videos-section::-webkit-scrollbar { display: none; } 
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
+        .video-card iframe { width: 100%; height: 100%; border: none; }
+        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; z-index: 10; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none; }
 
-        .video-card { 
-            height: 100%; /* Chaque carte prend toute la place de la section */
-            width: 100%; 
-            scroll-snap-align: start; 
-            scroll-snap-stop: always; 
-            position: relative; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-card iframe { 
+        .overlay-page { 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
             width: 100%; 
             height: 100%; 
-            border: none; 
-            object-fit: cover; 
+            background: var(--bg-color); 
+            z-index: 600; 
+            overflow-y: auto; 
+            animation: slideUp 0.3s ease-out; 
+            /* Marge de sécurité aussi pour les overlays */
+            padding-top: calc(20px + env(safe-area-inset-top));
         }
-        .video-info { 
-            position: absolute; 
-            bottom: 30px; 
-            left: 15px; 
-            color: white; 
-            z-index: 10; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
-            pointer-events: none;
-        }
-        /* ------------------------------- */
-
-        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         nav { height: calc(65px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); position: relative; z-index: 100; }
@@ -144,11 +142,9 @@
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
             <div id="own-profile-section" class="section">
-                <div style="padding: 40px 20px 20px; text-align: center; background: var(--white);">
-                    <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h2 id="my-name-display" style="font-weight: 700; margin-bottom: 5px;"></h2>
+                <div style="padding: 20px 20px; text-align: center; background: var(--white);">
+                    <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;"><i class="fas fa-user"></i></div>
+                    <h2 id="my-name-display" style="font-weight: 700;"></h2>
                     <p style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 20px;">@compte_officiel</p>
                     <button onclick="handleLogout()" class="btn-press" style="color:var(--text-main); border:1px solid var(--border); padding:8px 24px; border-radius:20px; background:var(--white); font-size: 0.85rem; font-weight: 600;">Déconnexion</button>
                 </div>
@@ -165,7 +161,10 @@
                     <i class="fas fa-arrow-left btn-press" onclick="closeExternalProfile()" style="padding: 10px;"></i>
                     <span id="ext-user-title" style="margin-left: 10px; font-weight: 700;"></span>
                 </div>
-                <div id="ext-content"></div>
+                <div id="ext-header" style="padding: 20px; text-align: center; background: var(--white);">
+                    <div style="width: 70px; height: 70px; background: var(--blue); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;"><i class="fas fa-user"></i></div>
+                    <h3 id="ext-display-name"></h3>
+                </div>
                 <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
                 <div id="ext-posts-grid" class="content-grid"></div>
             </div>
@@ -198,9 +197,10 @@
 </div>
 
 <script>
+    // FORMATAGE DES LIENS DRIVE VERS /PREVIEW
     const LISTE_VIDEOS = [
-        { id: "v1", auteur: "walid_hchm", drive_url: "https://drive.google.com/file/d/12Y7EfMNDXaegCNoVBIYrAdtSTuHdGHYs/view?usp=sharing", legende: "Baston Abdelkabir vs El Gazzer", date: 700 },
-        { id: "v2", auteur: "mazine2.0", drive_url: "Lien_Google_Drive_Ici", legende: "New vibes only", date: 650 }
+        { id: "v1", auteur: "walid_hchm", drive_url: "https://drive.google.com/file/d/ID_VIDEO_1/preview", legende: "Morning routine ☕️", date: 700 },
+        { id: "v2", auteur: "mazine2.0", drive_url: "https://drive.google.com/file/d/ID_VIDEO_2/preview", legende: "New vibes only", date: 650 }
     ];
     const LISTE_PHOTOS = [
         { id: "p1", url: "https://picsum.photos/800/1000?random=11", auteur: "mazine2.0", date: 550 },
@@ -237,12 +237,9 @@
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
         document.querySelectorAll('nav i').forEach((icon, idx) => icon.classList.toggle('active', idx === i));
-        
-        // Cache le header uniquement pour les vidéos pour laisser toute la place au scroll TikTok
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
-        if(t === 'videos') document.getElementById('videos-section').scrollTop = 0;
     }
 
     function moveIndicator(i) {
@@ -255,6 +252,7 @@
         if(username === loggedUser) { switchTab('own-profile', 3); return; }
         const overlay = document.getElementById('external-profile-overlay');
         document.getElementById('ext-user-title').innerText = username;
+        document.getElementById('ext-display-name').innerText = username;
         const grid = document.getElementById('ext-posts-grid');
         grid.innerHTML = "";
         const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
@@ -289,7 +287,7 @@
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.drive_url}"></iframe><div class="video-info"><h3 onclick="openExternalProfile('${v.auteur}')">@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
+            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.drive_url}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
         });
     }
 
@@ -334,4 +332,3 @@
 </script>
 </body>
 </html>
-
