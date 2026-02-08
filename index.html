@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Meta Service | UI Refresh</title>
+    <title>Meta Service | TikTok Scroll</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://player.vimeo.com/api/player.js"></script>
     <style>
         :root { 
             --bg-color: #f8f9fa; 
@@ -72,25 +73,45 @@
         .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .post-actions i.fas { color: #f9d71c; }
 
-        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; scrollbar-width: none; }
+        /* --- STYLE TIKTOK (SCROLL SNAP) --- */
+        #videos-section { 
+            background: #000; 
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory; 
+            height: 100%; 
+            scrollbar-width: none; 
+        }
         #videos-section::-webkit-scrollbar { display: none; } 
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
-        .video-card iframe { width: 100%; height: 100%; border: none; }
-        .video-info { position: absolute; bottom: 30px; left: 15px; color: white; z-index: 10; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none; }
-
-        .overlay-page { 
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
+        
+        .video-card { 
+            height: 100%; 
+            width: 100%; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #000;
+        }
+        .video-card iframe { 
             width: 100%; 
             height: 100%; 
-            background: var(--bg-color); 
-            z-index: 600; 
-            overflow-y: auto; 
-            animation: slideUp 0.3s ease-out; 
-            padding-top: calc(35px + env(safe-area-inset-top));
+            border: none; 
+            pointer-events: auto;
         }
+        .video-info { 
+            position: absolute; 
+            bottom: 80px; 
+            left: 15px; 
+            color: white; 
+            z-index: 10; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+            pointer-events: none; 
+            width: 80%;
+        }
+
+        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.3s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         nav { height: calc(65px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); position: relative; z-index: 100; }
@@ -135,7 +156,10 @@
                 </div>
                 <div id="search-results"></div>
             </div>
-            <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
+            
+            <div id="videos-section" class="section">
+                <div id="video-list" style="height: 100%;"></div>
+            </div>
             
             <div id="own-profile-section" class="section">
                 <div style="padding: 20px 20px; text-align: center; background: var(--white);">
@@ -193,15 +217,20 @@
 </div>
 
 <script>
-    // LISTE DES VIDÉOS AVEC TES LIENS VIMEO
     const LISTE_VIDEOS = [
         { 
             id: "v1", 
             auteur: "mazine2.0", 
-            vimeo_url: "https://player.vimeo.com/video/1163079929?badge=0&autopause=0&player_id=0&app_id=58479", 
-            legende: "WhatsApp Video 2026-02-08", 
+            vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", 
+            legende: "WhatsApp Video 2026-02-08 🔥", 
             date: 700
-    
+        },
+        { 
+            id: "v2", 
+            auteur: "meta_service", 
+            vimeo_url: "https://player.vimeo.com/video/76979871?title=0&byline=0&portrait=0", 
+            legende: "Test du scroll", 
+            date: 600
         }
     ];
 
@@ -286,12 +315,57 @@
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
+        
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
-        [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.vimeo_url}" allow="autoplay; fullscreen; picture-in-picture"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
+
+        // Génération des vidéos
+        LISTE_VIDEOS.forEach(v => {
+            videoDiv.innerHTML += `
+                <div class="video-card">
+                    <iframe src="${v.vimeo_url}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture;" title="${v.legende}"></iframe>
+                    <div class="video-info">
+                        <h3>@${v.auteur}</h3>
+                        <p>${v.legende}</p>
+                    </div>
+                </div>`;
         });
+
+        // APPEL DE LA FONCTION MAGIQUE DE SCROLL
+        setTimeout(observeVideos, 500);
+    }
+
+    // --- FONCTION INTELLIGENTE DE GESTION DU SCROLL ---
+    function observeVideos() {
+        const cards = document.querySelectorAll('.video-card');
+        
+        // Configuration du détecteur
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const iframe = entry.target.querySelector('iframe');
+                if (!iframe) return;
+
+                // On utilise l'API Vimeo chargée en haut du fichier
+                const player = new Vimeo.Player(iframe);
+
+                if (entry.isIntersecting) {
+                    // La vidéo est visible : on peut essayer de la lancer
+                    // Note: Les navigateurs bloquent souvent le son auto, donc ça lancera peut-être sans son ou demandera un clic.
+                    // player.play().catch(e => console.log('Autoplay bloqué par le navigateur', e));
+                    console.log("Vidéo visible");
+                } else {
+                    // La vidéo n'est PLUS visible : ON PAUSE OBLIGATOIREMENT
+                    player.pause().then(() => {
+                        console.log("Vidéo mise en pause car scrollée");
+                    });
+                }
+            });
+        }, {
+            threshold: 0.5 // Se déclenche quand 50% de la vidéo est visible/invisible
+        });
+
+        cards.forEach(card => observer.observe(card));
     }
 
     function openMediaView(id, type) {
@@ -328,7 +402,6 @@
 
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
-    // COUPE LES VIDÉOS QUAND ON QUITTE L'ONGLET
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             document.querySelectorAll('iframe').forEach(iframe => {
