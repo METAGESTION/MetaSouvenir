@@ -38,11 +38,10 @@
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
         
-        /* AJUSTEMENT DYNAMIC ISLAND */
+        /* AJUSTEMENT DYNAMIC ISLAND POUR DESCENDRE LE SITE */
         header { 
-            /* On ajoute 20px de marge supplémentaire pour la Dynamic Island */
-            height: calc(80px + env(safe-area-inset-top)); 
-            padding-top: calc(20px + env(safe-area-inset-top)); 
+            height: calc(90px + env(safe-area-inset-top)); 
+            padding-top: calc(35px + env(safe-area-inset-top)); 
             border-bottom: 1px solid var(--border); 
             display: flex; 
             justify-content: space-between; 
@@ -92,8 +91,7 @@
             z-index: 600; 
             overflow-y: auto; 
             animation: slideUp 0.3s ease-out; 
-            /* Marge de sécurité aussi pour les overlays */
-            padding-top: calc(20px + env(safe-area-inset-top));
+            padding-top: calc(35px + env(safe-area-inset-top));
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
@@ -197,9 +195,8 @@
 </div>
 
 <script>
-    // FORMATAGE DES LIENS DRIVE VERS /PREVIEW
     const LISTE_VIDEOS = [
-        { id: "v1", auteur: "walid_hchm", drive_url: "https://drive.google.com/file/d/ID_VIDEO_1/preview", legende: "Morning routine ☕️", date: 700 },
+        { id: "v1", auteur: "walid_hchm", drive_url: "https://drive.google.com/file/d/12Y7EfMNDXaegCNoVBIYrAdtSTuHdGHYs/preview", legende: "Morning routine ☕️", date: 700 },
         { id: "v2", auteur: "mazine2.0", drive_url: "https://drive.google.com/file/d/12Y7EfMNDXaegCNoVBIYrAdtSTuHdGHYs/preview", legende: "Baston Abdelkabir vs El Gazzer", date: 650 }
     ];
     const LISTE_PHOTOS = [
