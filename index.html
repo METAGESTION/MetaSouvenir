@@ -2,49 +2,118 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Meta Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg-color: #fafafa; --white: #ffffff; --border: #dbdbdb; --text-main: #262626; --text-secondary: #8e8e8e; --blue: #0095f6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; justify-content: center; overflow: hidden; }
+        :root { 
+            --bg-color: #fafafa; 
+            --white: #ffffff; 
+            --border: #dbdbdb; 
+            --text-main: #262626; 
+            --blue: #0095f6; 
+        }
 
-        #app-container { width: 100%; max-width: 450px; background: var(--white); height: 100%; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--white); /* Plus de fond noir derrière l'app */
+            color: var(--text-main); 
+            height: 100vh; 
+            width: 100vw;
+            display: flex; 
+            justify-content: center; 
+            overflow: hidden; 
+        }
 
-        /* Login & Loading */
-        #login-screen, #loading-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        .logo { font-size: 2.5rem; font-weight: bold; margin-bottom: 30px; letter-spacing: -1px; }
-        input { width: 100%; padding: 12px; background: #fafafa; border: 1px solid var(--border); border-radius: 5px; margin-bottom: 10px; }
-        .login-btn { width: 100%; background: var(--blue); color: white; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        /* Container Principal : Occupe désormais TOUT l'écran sans exception */
+        #app-container { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: none; /* Suppression de l'ombre */
+        }
+
+        /* --- ÉCRANS DE CONNEXION --- */
+        #login-screen, #loading-screen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--white); z-index: 1000; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; 
+        }
+        .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 30px; letter-spacing: -1.5px; }
+        input { width: 100%; max-width: 350px; padding: 14px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; font-size: 16px; }
+        .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Main App */
-        #main-app { display: none; flex-direction: column; height: 100%; }
-        header { height: 50px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; background: var(--white); }
+        /* --- STRUCTURE APP --- */
+        #main-app { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--white); }
         
-        .content-area { flex: 1; overflow-y: auto; background: var(--bg-color); scroll-behavior: smooth; }
-        
-        /* Posts Style */
-        .post { background: var(--white); margin-bottom: 10px; border-bottom: 1px solid var(--border); }
-        .post-header { padding: 10px; display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; }
-        .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: #eee; margin-right: 10px; }
-        .post-img-container { width: 100%; background: #efefef; min-height: 250px; }
-        .post-img-container img { width: 100%; display: block; object-fit: cover; }
-        .post-actions { padding: 10px; font-size: 1.4rem; display: flex; gap: 15px; }
-        .post-caption { padding: 0 10px 15px 10px; font-size: 0.9rem; line-height: 1.4; }
+        header { 
+            height: 60px; border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: center; align-items: center; 
+            font-weight: bold; font-size: 1.2rem; background: var(--white); flex-shrink: 0; z-index: 10;
+        }
 
-        /* Video Style */
-        .video-container { width: 100%; background: #000; margin-bottom: 5px; position: relative; }
-        .video-container video { width: 100%; display: block; max-height: 80vh; }
+        .content-area { 
+            flex: 1; overflow-y: auto; background: var(--bg-color); 
+            scrollbar-width: none;
+        }
+        .content-area::-webkit-scrollbar { display: none; }
 
-        /* Nav */
-        nav { height: 50px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); flex-shrink: 0; }
-        nav i { font-size: 1.4rem; cursor: pointer; color: #555; }
-        .section { display: none; }
+        /* --- SECTION ACCUEIL --- */
+        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); width: 100%; }
+        .post-header { padding: 12px; display: flex; align-items: center; font-size: 0.95rem; font-weight: 600; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); margin-right: 12px; }
+        .post-img-container img { width: 100%; display: block; max-height: 85vh; object-fit: cover; }
+        .post-actions { padding: 12px; font-size: 1.5rem; display: flex; gap: 18px; }
+        .post-caption { padding: 0 12px 18px 12px; font-size: 0.95rem; line-height: 1.4; }
+
+        /* --- SECTION VIDEOS (PLEIN ÉCRAN TOTAL) --- */
+        #videos-section { 
+            height: 100%; 
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory;
+            background: #000;
+        }
+        .video-card { 
+            height: calc(100vh - 125px); /* Ajusté pour Header + Nav */
+            width: 100vw;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-card video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Remplit tout l'écran comme TikTok */
+        }
+        .video-info {
+            position: absolute; bottom: 20px; left: 15px; color: white;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8); z-index: 5;
+        }
+
+        /* --- BARRE DE NAVIGATION --- */
+        nav { 
+            height: 65px; border-top: 1px solid var(--border); 
+            display: flex; justify-content: space-around; align-items: center; 
+            background: var(--white); flex-shrink: 0; 
+        }
+        nav i { font-size: 1.6rem; cursor: pointer; color: #8e8e8e; }
+        nav i.active { color: var(--text-main); }
+
+        .section { display: none; height: 100%; }
         .section.active { display: block; }
-        .logout-btn { color: #ed4956; border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 10px; background: none; font-weight: bold; }
+
+        /* --- PROFIL --- */
+        .logout-btn { background: #ff3b30; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; width: 250px; }
     </style>
 </head>
 <body>
@@ -52,10 +121,10 @@
 <div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
-        <input type="text" id="username" placeholder="Nom d'utilisateur">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" spellcheck="false">
         <input type="password" id="password" placeholder="Mot de passe">
         <button class="login-btn" onclick="handleLogin()">Se connecter</button>
-        <p id="error-msg" style="color:red; display:none; margin-top:10px;">Identifiants incorrects</p>
+        <p id="error-msg" style="color:#ff3b30; display:none; margin-top:15px; font-size: 14px;">Identifiants incorrects</p>
     </div>
 
     <div id="loading-screen" style="display:none;">
@@ -64,6 +133,7 @@
 
     <div id="main-app">
         <header id="top-header">Meta Service</header>
+        
         <div class="content-area" id="main-scroll-area">
             
             <div id="feed-section" class="section active">
@@ -74,34 +144,36 @@
                 <div id="video-list"></div>
             </div>
 
-            <div id="profile-section" class="section" style="padding: 20px; text-align: center;">
-                <div id="profile-pic-circle" style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px;"></div>
-                <h2 id="display-user">User</h2>
-                <button class="logout-btn" onclick="handleLogout()">Se déconnecter</button>
+            <div id="profile-section" class="section" style="padding: 40px 20px; text-align: center;">
+                <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user fa-3x" style="color: #ccc;"></i>
+                </div>
+                <h2 id="display-user" style="margin-bottom: 10px;">User</h2>
+                <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
             </div>
 
         </div>
+
         <nav>
-            <i class="fas fa-home" onclick="switchTab('feed')"></i>
-            <i class="fas fa-play-circle" onclick="switchTab('videos')"></i>
-            <i class="fas fa-user" onclick="switchTab('profile')"></i>
+            <i class="fas fa-home active" id="nav-feed" onclick="switchTab('feed')"></i>
+            <i class="fas fa-play" id="nav-videos" onclick="switchTab('videos')"></i>
+            <i class="fas fa-user" id="nav-profile" onclick="switchTab('profile')"></i>
         </nav>
     </div>
 </div>
 
 <script>
-    // --- CONFIGURATION CONTENUS ---
+    // --- TES DONNÉES ---
     const LISTE_PHOTOS = [
-        { url: "https://via.placeholder.com/600x600", auteur: "walid_hchm", bio: "Exemple de photo 1" },
-        { url: "https://via.placeholder.com/600x800", auteur: "mazine2.0", bio: "C'est Mazine sur la photo !" }
+        { url: "https://via.placeholder.com/800x1000", auteur: "walid_hchm", bio: "Photo plein écran" },
+        { url: "https://via.placeholder.com/800x800", auteur: "mazine2.0", bio: "Meta Service est en ligne !" }
     ];
 
     const LISTE_VIDEOS = [
-        { url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+        { url: "https://www.w3schools.com/html/mov_bbb.mp4", auteur: "mazine2.0", legende: "Format TikTok Full" },
+        { url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Incroyable !" }
     ];
 
-    // --- BASE DE DONNÉES UTILISATEURS ---
-    // Note: On stocke les clés en minuscules pour faciliter la comparaison
     const USERS = { 
         "walid_hchm": "Walid.123", 
         "user": "12345",
@@ -126,25 +198,28 @@
 
         LISTE_VIDEOS.forEach(vid => {
             videoDiv.innerHTML += `
-                <div class="video-container">
-                    <video controls loop><source src="${vid.url}" type="video/mp4"></video>
+                <div class="video-card">
+                    <video loop playsinline onclick="this.paused ? this.play() : this.pause()">
+                        <source src="${vid.url}" type="video/mp4">
+                    </video>
+                    <div class="video-info">
+                        <h3>@${vid.auteur}</h3>
+                        <p>${vid.legende}</p>
+                    </div>
                 </div>`;
         });
     }
 
     function handleLogin() {
-        // .trim() enlève les espaces / .toLowerCase() transforme en minuscules
-        const uRaw = document.getElementById("username").value;
-        const u = uRaw.trim().toLowerCase();
-        const p = document.getElementById("password").value; // Le mot de passe reste sensible à la casse (sécurité)
-
+        const u = document.getElementById("username").value.trim().toLowerCase();
+        const p = document.getElementById("password").value;
         if (USERS[u] && USERS[u] === p) {
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("loading-screen").style.display = "flex";
             setTimeout(() => {
                 localStorage.setItem("metaUser", u);
                 startApp(u);
-            }, 1200);
+            }, 1100);
         } else {
             document.getElementById("error-msg").style.display = "block";
         }
@@ -152,9 +227,25 @@
 
     function startApp(user) {
         document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("login-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
         document.getElementById("display-user").innerText = user;
         genererContenu();
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tab + '-section').classList.add('active');
+        document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
+        document.getElementById('nav-' + tab).classList.add('active');
+
+        const header = document.getElementById('top-header');
+        if(tab === 'videos') {
+            header.style.display = "none"; // Optionnel: Cacher le header en mode vidéo pour plus d'espace
+        } else {
+            header.style.display = "flex";
+            header.innerText = tab === 'feed' ? "Meta Service" : "Profil";
+        }
     }
 
     function handleLogout() {
@@ -162,20 +253,10 @@
         location.reload();
     }
 
-    function switchTab(tab) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(tab + '-section').classList.add('active');
-        document.getElementById('main-scroll-area').scrollTop = 0;
-        document.getElementById('top-header').innerText = tab === 'feed' ? 'Meta Service' : (tab === 'videos' ? 'Vidéos' : 'Profil');
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
         const saved = localStorage.getItem("metaUser");
         if(saved) startApp(saved);
-        
-        // Sécurité blocage inspecteur
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = e => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false; }
     });
 </script>
 
