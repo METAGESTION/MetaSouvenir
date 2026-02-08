@@ -3,57 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Meta Service</title>
+    <title>Meta Service | UI Refresh</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg-color: #fafafa; --white: #ffffff; --border: #dbdbdb; --text-main: #262626; --blue: #0095f6; --nav-bg: rgba(255, 255, 255, 0.9); }
-        body.dark-mode { --bg-color: #121212; --white: #1e1e1e; --border: #333333; --text-main: #f5f5f5; --nav-bg: rgba(30, 30, 30, 0.9); }
+        :root { 
+            --bg-color: #f8f9fa; 
+            --white: #ffffff; 
+            --border: #eeeeee; 
+            --text-main: #1a1a1a; 
+            --text-sec: #737373;
+            --blue: #0095f6; 
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        body.dark-mode { 
+            --bg-color: #000000; 
+            --white: #121212; 
+            --border: #262626; 
+            --text-main: #f5f5f5; 
+            --text-sec: #a8a8a8;
+            --nav-bg: rgba(18, 18, 18, 0.85);
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--white); height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); transition: all 0.3s ease; }
         
+        .btn-press:active { transform: scale(0.92); transition: 0.1s; }
+        .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
-        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f0f4f8, #d9e2ec); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
-        .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue); }
-        input { width: 100%; max-width: 350px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 16px; background: var(--white); color: var(--text-main); }
-        .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        .logo { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input { width: 100%; max-width: 320px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 15px; background: var(--white); color: var(--text-main); outline: none; }
+        .login-btn { width: 100%; max-width: 320px; background: var(--blue); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-        header { height: calc(85px + env(safe-area-inset-top)); padding-top: calc(30px + env(safe-area-inset-top)); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-left: 20px; padding-right: 20px; font-weight: bold; background: var(--white); z-index: 10; flex-shrink: 0; }
-        
+        header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding-left: 20px; padding-right: 20px; background: var(--white); z-index: 100; flex-shrink: 0; }
+        header span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+
         .content-area { flex: 1; position: relative; overflow: hidden; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
         .section.active { display: block; }
         
-        .post { background: var(--white); border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
-        .post-user { padding:12px; font-weight:bold; cursor: pointer; color: var(--blue); }
-        .post-img-container img { width: 100%; max-height: 75vh; display: block; object-fit: cover; }
-        .post-actions { padding: 15px; display: flex; justify-content: flex-end; }
-        .post-actions i { font-size: 2.5rem; cursor: pointer; }
+        /* POST STYLE */
+        .post { background: var(--white); margin: 0 auto 10px auto; max-width: 500px; box-shadow: var(--card-shadow); border-radius: 0 0 15px 15px; }
+        .post-user { padding: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .post-user i { color: var(--text-sec); font-size: 1.2rem; }
+        .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        .post-actions { padding: 12px 16px; display: flex; justify-content: flex-end; }
+        .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .post-actions i.fas { color: #f9d71c; }
 
-        /* VIDEOS STYLE TIKTOK */
-        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; }
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
-        .video-card iframe { width: 100%; height: 100%; border: none; }
-        .video-info { position: absolute; bottom: 40px; left: 15px; color: white; z-index: 10; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
+        /* --- CORRECTION SCROLL TIKTOK --- */
+        #videos-section { 
+            background: #000; 
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory; 
+            height: 100%; /* Important */
+            scrollbar-width: none; /* Cache la barre sur Firefox */
+        }
+        #videos-section::-webkit-scrollbar { display: none; } /* Cache sur Chrome/Safari */
 
-        /* OVERLAYS FULLSCREEN */
-        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; }
+        .video-card { 
+            height: 100%; /* Chaque carte prend toute la place de la section */
+            width: 100%; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            position: relative; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-card iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            object-fit: cover; 
+        }
+        .video-info { 
+            position: absolute; 
+            bottom: 30px; 
+            left: 15px; 
+            color: white; 
+            z-index: 10; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+            pointer-events: none;
+        }
+        /* ------------------------------- */
 
-        nav { height: calc(85px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); backdrop-filter: blur(20px); position: relative; }
-        .nav-indicator { position: absolute; bottom: calc(25px + env(safe-area-inset-bottom)); left: 0; width: 50px; height: 45px; background: rgba(0, 149, 246, 0.12); border-radius: 18px; z-index: 0; transition: all 0.3s; }
-        nav i { font-size: 1.4rem; color: #b0b0b0; cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-        nav i.active { color: var(--blue); }
+        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .profile-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--white); }
-        .p-tab { flex: 1; padding: 15px; text-align: center; color: #8e8e8e; cursor: pointer; font-weight: bold; }
+        nav { height: calc(65px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); position: relative; z-index: 100; }
+        .nav-indicator { position: absolute; top: 12px; width: 45px; height: 40px; background: rgba(0, 149, 246, 0.1); border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        nav i { font-size: 1.3rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        nav i.active { color: var(--blue); transform: translateY(-2px); }
+
+        .profile-tabs { display: flex; background: var(--white); margin-top: 10px; }
+        .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
         .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item { aspect-ratio: 1/1; background: #eee; position: relative; overflow: hidden; cursor: pointer; }
+        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
@@ -64,89 +119,93 @@
 <div id="app-container">
     <div id="login-screen">
         <div class="logo">Meta Service</div>
-        <input type="text" id="username" placeholder="Utilisateur">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off">
         <input type="password" id="password" placeholder="Mot de passe">
-        <button class="login-btn" onclick="handleLogin()">Connexion</button>
+        <button class="login-btn btn-press" onclick="handleLogin()">Se connecter</button>
     </div>
 
     <div id="main-app">
-        <header id="top-header">
-            <div style="width: 80px;"></div>
+        <header class="glass" id="main-header">
+            <div style="width: 40px;"></div>
             <span>Meta Service</span>
-            <div style="width: 80px; text-align: right;"><i class="fas fa-cog" id="global-cog" style="display:none; cursor:pointer;" onclick="toggleSettings(true)"></i></div>
+            <div style="width: 40px; text-align: right;">
+                <i class="fas fa-cog btn-press" id="global-cog" style="display:none; font-size: 1.2rem;" onclick="toggleSettings(true)"></i>
+            </div>
         </header>
 
         <div class="content-area">
             <div id="feed-section" class="section active"><div id="photo-list"></div></div>
             <div id="search-section" class="section">
-                <div style="padding:15px;"><input type="text" id="search-input" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border);" placeholder="Chercher un profil..." oninput="filtrerRecherche()"></div>
+                <div style="padding:15px; background:var(--white); position:sticky; top:0; z-index:10;">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:var(--bg-color); border:none;" placeholder="Rechercher un profil..." oninput="filtrerRecherche()">
+                </div>
                 <div id="search-results"></div>
             </div>
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
             <div id="own-profile-section" class="section">
-                <div style="padding: 30px 20px; text-align: center;">
-                    <h2 id="my-name-display"></h2>
-                    <p style="font-size: 0.8rem; color: #8e8e8e; margin-bottom: 10px;">Votre compte</p>
-                    <button onclick="handleLogout()" style="color:#ed4956; border:1px solid var(--border); padding:8px 20px; border-radius:8px; background:none; margin: 0 auto;">Déconnexion</button>
+                <div style="padding: 40px 20px 20px; text-align: center; background: var(--white);">
+                    <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 id="my-name-display" style="font-weight: 700; margin-bottom: 5px;"></h2>
+                    <p style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 20px;">@compte_officiel</p>
+                    <button onclick="handleLogout()" class="btn-press" style="color:var(--text-main); border:1px solid var(--border); padding:8px 24px; border-radius:20px; background:var(--white); font-size: 0.85rem; font-weight: 600;">Déconnexion</button>
                 </div>
-                <div class="profile-tabs">
-                    <div id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">PUBLIÉ</div>
-                    <div id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">ENREGISTRÉ</div>
+                <div class="profile-tabs glass">
+                    <div id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">POSTS</div>
+                    <div id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">ENREGISTRÉS</div>
                 </div>
                 <div id="my-posts-grid" class="content-grid"></div>
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
             <div id="external-profile-overlay" class="overlay-page">
-                <div style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <i class="fas fa-arrow-left" onclick="closeExternalProfile()" style="cursor:pointer;"></i>
-                    <span id="ext-user-title" style="margin-left: 20px; font-weight: bold;"></span>
+                <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <i class="fas fa-arrow-left btn-press" onclick="closeExternalProfile()" style="padding: 10px;"></i>
+                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 700;"></span>
                 </div>
-                <div style="padding: 30px 20px; text-align: center;">
-                    <h2 id="ext-display-name"></h2>
-                    <p style="font-size: 0.8rem; color: #8e8e8e;">Profil Public</p>
-                </div>
+                <div id="ext-content"></div>
                 <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
                 <div id="ext-posts-grid" class="content-grid"></div>
             </div>
 
             <div id="media-view-overlay" class="overlay-page">
-                <div style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <i class="fas fa-arrow-left" onclick="closeMediaView()" style="cursor:pointer;"></i>
-                    <span style="margin-left: 20px; font-weight: bold;">Publication</span>
+                <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <i class="fas fa-arrow-left btn-press" onclick="closeMediaView()" style="padding: 10px;"></i>
+                    <span style="margin-left: 10px; font-weight: 700;">Détails</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
 
             <div id="settings-overlay" class="overlay-page">
-                <div style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);"><i class="fas fa-arrow-left" onclick="toggleSettings(false)" style="cursor:pointer;"></i><h2 style="margin-left: 20px;">Paramètres</h2></div>
-                <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background: var(--white); border-bottom: 1px solid var(--border);">
-                    <span>Mode Sombre</span>
-                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);"><i class="fas fa-arrow-left btn-press" onclick="toggleSettings(false)" style="padding:10px;"></i><h2 style="margin-left: 10px; font-size: 1.1rem;">Réglages</h2></div>
+                <div style="padding:25px; display:flex; justify-content:space-between; align-items:center; background: var(--white);">
+                    <span style="font-weight: 500;">Apparence Sombre</span>
+                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 40px; margin-bottom:0;">
                 </div>
             </div>
         </div>
 
-        <nav id="navbar">
+        <nav class="glass">
             <div class="nav-indicator" id="nav-indicator"></div>
-            <i class="fas fa-home active" onclick="switchTab('feed', 0)"></i>
-            <i class="fas fa-search" onclick="switchTab('search', 1)"></i>
-            <i class="fas fa-play" onclick="switchTab('videos', 2)"></i>
-            <i class="fas fa-user" onclick="switchTab('own-profile', 3)"></i>
+            <i class="fas fa-house btn-press active" onclick="switchTab('feed', 0)"></i>
+            <i class="fas fa-magnifying-glass btn-press" onclick="switchTab('search', 1)"></i>
+            <i class="fas fa-clapperboard btn-press" onclick="switchTab('videos', 2)"></i>
+            <i class="fas fa-circle-user btn-press" onclick="switchTab('own-profile', 3)"></i>
         </nav>
     </div>
 </div>
 
 <script>
     const LISTE_VIDEOS = [
-        { id: "v1", auteur: "walid_hchm", drive_url: "", legende: "Vidéo 1", date: 700 },
-        { id: "v2", auteur: "user", drive_url: "", legende: "Vidéo 2", date: 650 }
+        { id: "v1", auteur: "walid_hchm", drive_url: "https://drive.google.com/file/d/12Y7EfMNDXaegCNoVBIYrAdtSTuHdGHYs/view?usp=sharing", legende: "Baston Abdelkabir vs El Gazzer", date: 700 },
+        { id: "v2", auteur: "mazine2.0", drive_url: "Lien_Google_Drive_Ici", legende: "New vibes only", date: 650 }
     ];
     const LISTE_PHOTOS = [
-        { id: "p1", url: "https://picsum.photos/800/1200?random=1", auteur: "mazine2.0", date: 550 },
-        { id: "p2", url: "https://picsum.photos/800/800?random=2", auteur: "walid_hchm", date: 350 },
-        { id: "p3", url: "https://picsum.photos/800/800?random=3", auteur: "user", date: 150 }
+        { id: "p1", url: "https://picsum.photos/800/1000?random=11", auteur: "mazine2.0", date: 550 },
+        { id: "p2", url: "https://picsum.photos/800/1000?random=22", auteur: "walid_hchm", date: 350 },
+        { id: "p3", url: "https://picsum.photos/800/1000?random=33", auteur: "user", date: 150 }
     ];
 
     const USERS_DB = ["user", "walid_hchm", "mazine2.0", "metaservice", "meta actu"];
@@ -167,7 +226,6 @@
         switchTab('feed', 0);
     }
 
-    // --- FERMETURE AUTOMATIQUE DES BUG ---
     function closeAllOverlays() {
         document.getElementById('settings-overlay').style.display = 'none';
         document.getElementById('external-profile-overlay').style.display = 'none';
@@ -175,32 +233,28 @@
     }
 
     function switchTab(t, i) {
-        // 1. Fermer tous les menus ouverts avant de changer
         closeAllOverlays();
-        
-        // 2. Changer de section
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
-        
-        // 3. Update UI
         document.querySelectorAll('nav i').forEach((icon, idx) => icon.classList.toggle('active', idx === i));
-        document.getElementById('top-header').style.display = (t === 'videos') ? "none" : "flex";
+        
+        // Cache le header uniquement pour les vidéos pour laisser toute la place au scroll TikTok
+        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
+        if(t === 'videos') document.getElementById('videos-section').scrollTop = 0;
     }
 
     function moveIndicator(i) {
         const icons = document.querySelectorAll('nav i');
         const indicator = document.getElementById('nav-indicator');
-        if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 25) + 'px';
+        if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 22.5) + 'px';
     }
 
-    // --- PROFIL EXTERNE ---
     function openExternalProfile(username) {
         if(username === loggedUser) { switchTab('own-profile', 3); return; }
         const overlay = document.getElementById('external-profile-overlay');
         document.getElementById('ext-user-title').innerText = username;
-        document.getElementById('ext-display-name').innerText = username;
         const grid = document.getElementById('ext-posts-grid');
         grid.innerHTML = "";
         const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
@@ -212,7 +266,6 @@
 
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; }
 
-    // --- MON PROFIL ---
     function renderMyProfile() {
         const gridPosts = document.getElementById('my-posts-grid');
         const gridSaved = document.getElementById('my-saved-grid');
@@ -228,13 +281,12 @@
         document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none';
     }
 
-    // --- CONTENU ---
     function genererContenu() {
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
-            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')">@${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
+            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
             videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.drive_url}"></iframe><div class="video-info"><h3 onclick="openExternalProfile('${v.auteur}')">@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
@@ -245,19 +297,18 @@
         const overlay = document.getElementById('media-view-overlay');
         const content = document.getElementById('media-view-content');
         let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        content.innerHTML = `<div class="post"><div class="post-user">@${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.drive_url}" style="width:100%;height:400px;"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+        content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.drive_url}" style="width:100%;height:450px;"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
         overlay.style.display = 'block';
     }
 
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
     function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
-    
     function filtrerRecherche() {
         const q = document.getElementById('search-input').value.toLowerCase();
         const res = document.getElementById('search-results');
         res.innerHTML = "";
         if(q.length < 1) return;
-        USERS_DB.forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:15px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border);" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle"></i> ${u}</div>`; });
+        USERS_DB.forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle" style="font-size:1.5rem; color:var(--text-sec);"></i> <b>${u}</b></div>`; });
     }
 
     function toggleSave(id, btn) {
@@ -277,9 +328,10 @@
 
     window.addEventListener('load', () => {
         if (localStorage.getItem('metaTheme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-toggle').checked = true; }
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
         if(loggedUser) startApp();
     });
 </script>
 </body>
 </html>
+
