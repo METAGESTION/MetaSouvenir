@@ -13,66 +13,48 @@
 
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* --- LOGIN DESIGN - CORRIGÉ POUR DYNAMIC ISLAND --- */
+        /* --- LOGIN DESIGN --- */
         #login-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: linear-gradient(135deg, #f0f4f8, #d9e2ec); 
-            z-index: 1000; 
-            display: flex; flex-direction: column; 
-            justify-content: center; /* Centrage vertical parfait */
-            align-items: center; 
-            /* Ajout de padding safe area pour repousser le contenu des bords haut/bas */
+            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; 
             padding: env(safe-area-inset-top) 40px env(safe-area-inset-bottom) 40px; 
         }
-        .logo { 
-            font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue);
-            animation: float 3s ease-in-out infinite; 
-            text-shadow: 0 2px 10px rgba(0,149,246,0.2);
-        }
+        .logo { font-size: 2.8rem; font-weight: bold; margin-bottom: 40px; color: var(--blue); animation: float 3s ease-in-out infinite; text-shadow: 0 2px 10px rgba(0,149,246,0.2); }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-        input { 
-            width: 100%; max-width: 350px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 16px; 
-            background: var(--white); box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: 0.3s;
-        }
-        input:focus { border-color: var(--blue); box-shadow: 0 4px 15px rgba(0,149,246,0.15); }
-        
-        .login-btn { 
-            width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 15px; border: none; border-radius: 12px; 
-            font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,149,246,0.3);
-        }
+        input { width: 100%; max-width: 350px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; font-size: 16px; background: var(--white); transition: 0.3s; }
+        .login-btn { width: 100%; max-width: 350px; background: var(--blue); color: white; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
         #login-error { color: var(--error); font-size: 14px; margin-top: 15px; font-weight: 500; display: none; animation: shake 0.4s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
         /* --- APP STRUCTURE --- */
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-        header { 
-            height: calc(60px + env(safe-area-inset-top)); 
-            padding-top: env(safe-area-inset-top);
-            border-bottom: 1px solid var(--border); 
-            display: flex; justify-content: center; align-items: center; 
-            font-weight: bold; flex-shrink: 0; background: var(--white); z-index: 10; 
-        }
+        header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; background: var(--white); z-index: 10; }
 
         .content-area { flex: 1; position: relative; overflow: hidden; height: 100%; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
         .section.active { display: block; }
 
         /* --- FEED (PHOTOS) --- */
-        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); margin-left: auto; margin-right: auto; max-width: 600px; position: relative; }
+        .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); margin: 0 auto 15px auto; max-width: 600px; }
         .post-img-container img { width: 100%; max-height: 70vh; display: block; object-fit: cover; }
-        .post-actions { padding: 12px; display: flex; justify-content: flex-end; align-items: center; font-size: 1.5rem; }
-        .save-btn { cursor: pointer; transition: 0.2s; color: var(--text-main); }
+        .post-actions { padding: 12px; display: flex; justify-content: flex-end; font-size: 1.5rem; }
+        .save-btn { cursor: pointer; color: var(--text-main); }
 
-        /* --- VIDEOS (TIKTOK STYLE) --- */
-        #videos-section { 
-            background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-        }
+        /* --- VIDEOS (IFRAME TIKTOK STYLE) --- */
+        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; }
-        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; }
-        .video-card video { width: 100%; height: 100%; object-fit: contain; }
-        .video-info { position: absolute; bottom: calc(40px + env(safe-area-inset-bottom)); left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); pointer-events: none; }
+        .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; overflow: hidden; }
+        
+        /* Conteneur pour l'iframe Google/YouTube */
+        .iframe-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        .iframe-container iframe { width: 100%; height: 100%; border: none; }
+        
+        /* Couche invisible pour permettre le scroll par-dessus l'iframe */
+        .video-overlay { position: absolute; top: 0; left: 0; width: 80%; height: 100%; z-index: 5; }
+
+        .video-info { position: absolute; bottom: calc(60px + env(safe-area-inset-bottom)); left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); pointer-events: none; z-index: 10; }
 
         /* --- PROFILE --- */
         .profile-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--white); }
@@ -83,13 +65,8 @@
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- NAV --- */
-        nav { 
-            height: calc(85px + env(safe-area-inset-bottom)); 
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-            border-top: 1px solid var(--border); display: flex; justify-content: space-around; 
-            align-items: center; background: var(--white); z-index: 100;
-        }
-        nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; padding: 10px; transition: 0.2s; }
+        nav { height: calc(85px + env(safe-area-inset-bottom)); padding-bottom: calc(20px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); z-index: 100; }
+        nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; padding: 10px; }
         nav i.active { color: var(--text-main); transform: scale(1.1); }
     </style>
 </head>
@@ -131,42 +108,42 @@
 </div>
 
 <script>
-    // Sécurité clavier
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123) return false;
-        if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
-        if (e.ctrlKey && e.keyCode == 85) return false;
-    });
-
-    const LISTE_PHOTOS = [
-        { id: "p1", url: "https://fv5-7.files.fm/thumb_show.php?i=7mms6r8jpb&view&v=1&PHPSESSID=428f9ce09a7c49ba1348b14b417c8e31059fa7b9", auteur: "Abdelkabir", bio: "Clean & Simple." },
-        { id: "p2", url: "https://fv5-6.files.fm/thumb_show.php?i=7fx37kezgk&view&v=1&PHPSESSID=428f9ce09a7c49ba1348b14b417c8e31059fa7b9", auteur: "walid_hchm", bio: "Enregistrement photo actif." },
-        { id: "p3", url: "https://fv5-6.files.fm/thumb_show.php?i=fj2st92wgf&view&v=1&PHPSESSID=428f9ce09a7c49ba1348b14b417c8e31059fa7b9", auteur: "Mazine2.0", bio: "Péricles" }
+    /* --- INSTRUCTIONS : COLLE TES CODES GOOGLE DOCS ICI --- */
+    const LISTE_VIDEOS = [
+        { 
+            id: "v1", 
+            auteur: "Auteur 1", 
+            legende: "Ma première vidéo",
+            // COLLE LE CODE IFRAME CI-DESSOUS ENTRE LES QUOTES
+            embedCode: ` ` 
+        },
+        { 
+            id: "v2", 
+            auteur: "Auteur 2", 
+            legende: "Ma deuxième vidéo",
+            // COLLE LE CODE IFRAME CI-DESSOUS ENTRE LES QUOTES
+            embedCode: ` ` 
+        }
     ];
 
-    const LISTE_VIDEOS = [
-        { id: "v1", url: "https://drive.google.com/file/d/12Y7EfMNDXaegCNoVBIYrAdtSTuHdGHYs/view?usp=sharing", auteur: "mazine2.0", legende: "Baston improvisé" },
-        { id: "v2", url: "https://www.w3schools.com/html/movie.mp4", auteur: "amineg", legende: "Vidéo TikTok 2" }
+    const LISTE_PHOTOS = [
+        { id: "p1", url: "https://picsum.photos/800/1200?random=11", auteur: "mazine2.0", bio: "Clean & Simple." },
+        { id: "p2", url: "https://picsum.photos/800/800?random=12", auteur: "walid_hchm", bio: "Enregistrement photo actif." }
     ];
 
     const USERS = { "walid_hchm": "Walid.123", "mazine2.0": "Mazine.123", "amineg": "Amine.123", "user": "12345" };
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
 
-    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+    // Sécurité inspection
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) return false;
+    });
 
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
-        const errorMsg = document.getElementById("login-error");
-        if (USERS[u] && USERS[u] === p) {
-            localStorage.setItem("metaUser", u);
-            startApp(u);
-        } else {
-            errorMsg.style.display = "block";
-            errorMsg.style.animation = 'none';
-            errorMsg.offsetHeight; 
-            errorMsg.style.animation = null;
-        }
+        if (USERS[u] && USERS[u] === p) { localStorage.setItem("metaUser", u); startApp(u); }
+        else { const e = document.getElementById("login-error"); e.style.display = "block"; e.style.animation = 'none'; e.offsetHeight; e.style.animation = null; }
     }
 
     function hideError() { document.getElementById("login-error").style.display = "none"; }
@@ -183,36 +160,32 @@
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-        shuffle([...LISTE_PHOTOS]).forEach(photo => {
+
+        LISTE_PHOTOS.forEach(photo => {
             const isSaved = savedItems.includes(photo.id);
-            photoDiv.innerHTML += `
-                <div class="post">
-                    <div class="post-header" style="padding:10px; font-weight:bold;">${photo.auteur}</div>
-                    <div class="post-img-container"><img src="${photo.url}"></div>
-                    <div class="post-actions">
-                        <i class="${isSaved ? 'fas' : 'far'} fa-bookmark save-btn" onclick="toggleSave('${photo.id}', this)"></i>
-                    </div>
-                    <div class="post-caption"><b>${photo.auteur}</b> ${photo.bio}</div>
-                </div>`;
+            photoDiv.innerHTML += `<div class="post">
+                <div style="padding:10px; font-weight:bold;">${photo.auteur}</div>
+                <div class="post-img-container"><img src="${photo.url}"></div>
+                <div class="post-actions"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark save-btn" onclick="toggleSave('${photo.id}', this)"></i></div>
+                <div style="padding:0 12px 12px 12px;"><b>${photo.auteur}</b> ${photo.bio}</div>
+            </div>`;
         });
-        shuffle([...LISTE_VIDEOS]).forEach(vid => {
+
+        LISTE_VIDEOS.forEach(vid => {
             videoDiv.innerHTML += `
                 <div class="video-card">
-                    <video loop playsinline muted onclick="this.paused ? this.play() : this.pause()"><source src="${vid.url}" type="video/mp4"></video>
+                    <div class="video-overlay"></div>
+                    <div class="iframe-container">
+                        ${vid.embedCode || '<p style="color:white;">Colle le code HTML ici</p>'}
+                    </div>
                     <div class="video-info"><h3>@${vid.auteur}</h3><p>${vid.legende}</p></div>
                 </div>`;
         });
-        initVideoObserver();
     }
 
     function toggleSave(id, btn) {
-        if (savedItems.includes(id)) {
-            savedItems = savedItems.filter(item => item !== id);
-            btn.classList.replace('fas', 'far');
-        } else {
-            savedItems.push(id);
-            btn.classList.replace('far', 'fas');
-        }
+        if (savedItems.includes(id)) { savedItems = savedItems.filter(item => item !== id); btn.classList.replace('fas', 'far'); }
+        else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
         renderSavedGrid();
     }
@@ -220,14 +193,9 @@
     function renderSavedGrid() {
         const grid = document.getElementById('saved-grid');
         grid.innerHTML = "";
-        let hasSaved = false;
         LISTE_PHOTOS.forEach(item => {
-            if (savedItems.includes(item.id)) {
-                hasSaved = true;
-                grid.innerHTML += `<div class="grid-item"><img src="${item.url}"></div>`;
-            }
+            if (savedItems.includes(item.id)) grid.innerHTML += `<div class="grid-item"><img src="${item.url}"></div>`;
         });
-        if(!hasSaved) grid.innerHTML = "<p style='padding:20px; color:#8e8e8e; text-align:center; width:100%; grid-column: 1/4;'>Aucune photo enregistrée.</p>";
     }
 
     function switchProfileTab(type) {
@@ -237,31 +205,12 @@
         document.getElementById('saved-grid').style.display = type === 'saved' ? 'grid' : 'none';
     }
 
-    function initVideoObserver() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (video) {
-                    if (entry.isIntersecting) video.play().catch(() => {});
-                    else { video.pause(); video.currentTime = 0; }
-                }
-            });
-        }, { threshold: 0.8 });
-        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
-    }
-
     function switchTab(tab) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(tab + '-section').classList.add('active');
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
         document.getElementById('nav-' + tab).classList.add('active');
-        if(tab === 'videos') {
-            document.getElementById('top-header').style.display = "none";
-            document.getElementById('videos-section').scrollTop = 0;
-        } else {
-            document.getElementById('top-header').style.display = "flex";
-            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
-        }
+        document.getElementById('top-header').style.display = tab === 'videos' ? "none" : "flex";
     }
 
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
