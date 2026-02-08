@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Meta Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,29 +21,37 @@
 
         /* --- APP STRUCTURE --- */
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-        header { height: 60px; border-bottom: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-weight: bold; flex-shrink: 0; background: var(--white); z-index: 10; }
+        
+        /* Correction Dynamic Island : Padding top sécurisé */
+        header { 
+            height: calc(60px + env(safe-area-inset-top)); 
+            padding-top: env(safe-area-inset-top);
+            border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: center; align-items: center; 
+            font-weight: bold; flex-shrink: 0; background: var(--white); z-index: 10; 
+        }
 
         .content-area { flex: 1; position: relative; overflow: hidden; }
         
-        /* SECTION ACCUEIL (Scroll classique) */
         #feed-section { height: 100%; overflow-y: auto; background: var(--bg-color); }
         .post { background: var(--white); margin-bottom: 15px; border-bottom: 1px solid var(--border); }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
         .post-caption { padding: 12px; font-size: 0.95rem; }
 
-        /* SECTION VIDEOS (TikTok Style - FULL SCREEN) */
         #videos-section { 
             height: 100%; 
             width: 100%;
             overflow-y: scroll; 
             scroll-snap-type: y mandatory; 
             background: #000; 
-            display: none; /* Masqué par défaut */
+            display: none;
+            scrollbar-width: none;
         }
+        #videos-section::-webkit-scrollbar { display: none; }
         #videos-section.active { display: block; }
         
         .video-card { 
-            height: 100%; /* Prend toute la hauteur disponible de content-area */
+            height: 100%; 
             width: 100%;
             scroll-snap-align: start;
             scroll-snap-stop: always;
@@ -53,10 +61,24 @@
             justify-content: center;
         }
         .video-card video { width: 100%; height: 100%; object-fit: contain; }
-        .video-info { position: absolute; bottom: 20px; left: 15px; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
+        
+        /* Correction barre du bas : Padding bottom sécurisé pour les infos vidéos */
+        .video-info { 
+            position: absolute; 
+            bottom: calc(20px + env(safe-area-inset-bottom)); 
+            left: 15px; color: white; 
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8); 
+            padding-bottom: 10px;
+        }
 
         /* --- NAV --- */
-        nav { height: 65px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--white); }
+        nav { 
+            height: calc(65px + env(safe-area-inset-bottom)); 
+            padding-bottom: env(safe-area-inset-bottom);
+            border-top: 1px solid var(--border); 
+            display: flex; justify-content: space-around; 
+            align-items: center; background: var(--white); 
+        }
         nav i { font-size: 1.6rem; color: #8e8e8e; cursor: pointer; }
         nav i.active { color: var(--text-main); }
     </style>
@@ -99,8 +121,8 @@
 
 <script>
     const LISTE_PHOTOS = [
-        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Les photos fonctionnent !" },
-        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Le scroll est fluide ici." }
+        { url: "https://picsum.photos/800/1000?random=1", auteur: "mazine2.0", bio: "Photos avec zone sécurisée." },
+        { url: "https://picsum.photos/800/1000?random=2", auteur: "amineg", bio: "Plus rien n'est caché." }
     ];
 
     const LISTE_VIDEOS = [
@@ -160,19 +182,13 @@
     }
 
     function switchTab(tab) {
-        // Cacher toutes les sections
         document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
         document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
         
-        // Afficher la bonne
         const target = document.getElementById(tab + '-section');
-        target.style.display = (tab === 'videos') ? 'block' : 'block';
-        if(tab === 'feed') target.style.display = 'block';
-        if(tab === 'profile') target.style.display = 'block';
-
+        target.style.display = 'block';
         document.getElementById('nav-' + tab).classList.add('active');
 
-        // Spécifique Vidéo
         if(tab === 'videos') {
             document.getElementById('top-header').style.display = "none";
         } else {
