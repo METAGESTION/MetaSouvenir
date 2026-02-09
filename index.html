@@ -67,7 +67,7 @@
         .section.active { display: block; }
         
         .post { background: var(--white); margin: 0 auto 10px auto; max-width: 500px; box-shadow: var(--card-shadow); border-radius: 0 0 15px 15px; }
-        .post-user { padding: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .post-user { padding: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; cursor: pointer; }
         .post-user i { color: var(--text-sec); font-size: 1.2rem; }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
         .post-actions { padding: 12px 16px; display: flex; justify-content: flex-end; }
@@ -123,7 +123,7 @@
         .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
         .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; }
+        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; cursor: pointer; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
@@ -228,7 +228,14 @@
         { id: "v2", auteur: "meta_service", vimeo_url: "https://player.vimeo.com/video/76979871?title=0&byline=0&portrait=0", legende: "Test du scroll", date: 600 }
     ];
 
+    // --- CORRECTION : LE POST "META ACTU" EST MAINTENANT DANS LA LISTE PRINCIPALE ---
     const LISTE_PHOTOS = [
+        { 
+            id: "meta_actu_fixe", 
+            url: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=1000&auto=format&fit=crop", 
+            auteur: "meta actu", 
+            date: 9999999 // Date très élevée pour le tri éventuel
+        },
         { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 550 },
         { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 350 },
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "user", date: 150 }
@@ -298,10 +305,17 @@
         document.getElementById('ext-display-name').innerText = username;
         const grid = document.getElementById('ext-posts-grid');
         grid.innerHTML = "";
+        
+        // CORRECTION: Filtrage standard, car 'meta actu' est maintenant dans LISTE_PHOTOS
         const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
-        allMedia.forEach(m => {
-            grid.innerHTML += `<div class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</div>`;
-        });
+        
+        if (allMedia.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-sec);">Aucune publication</div>`;
+        } else {
+            allMedia.forEach(m => {
+                grid.innerHTML += `<div class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</div>`;
+            });
+        }
         overlay.style.display = 'block';
     }
 
@@ -312,7 +326,13 @@
         const gridSaved = document.getElementById('my-saved-grid');
         gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
-        LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
+        
+        // CORRECTION: Le "meta_actu_fixe" sera trouvé ici car il est dans LISTE_PHOTOS
+        LISTE_PHOTOS.forEach(p => { 
+            if(savedItems.includes(p.id)) {
+                gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; 
+            }
+        });
     }
 
     function switchMyTab(t) {
@@ -327,8 +347,29 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
-        [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
-            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
+        // --- LOGIQUE DE TRI CORRIGÉE ---
+        // 1. Extraire le post Meta Actu
+        const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
+        // 2. Extraire les autres et mélanger
+        const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort(() => Math.random() - 0.5);
+        
+        // 3. Reconstituer le flux : Meta Actu en premier (s'il existe), suivi des autres
+        const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
+
+        fluxFinal.forEach(p => {
+            const isSaved = savedItems.includes(p.id);
+            photoDiv.innerHTML += `
+            <div class="post">
+                <div class="post-user" onclick="openExternalProfile('${p.auteur}')">
+                    <i class="fas fa-circle-user"></i> ${p.auteur}
+                </div>
+                <div class="post-img-container">
+                    <img src="${p.url}">
+                </div>
+                <div class="post-actions">
+                    <i class="${isSaved ? 'fas' : 'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i>
+                </div>
+            </div>`;
         });
 
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
@@ -369,8 +410,11 @@
         const overlay = document.getElementById('media-view-overlay');
         const content = document.getElementById('media-view-content');
         let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
-        overlay.style.display = 'block';
+        
+        if(item) {
+             content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+             overlay.style.display = 'block';
+        }
     }
 
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
@@ -385,10 +429,19 @@
     }
 
     function toggleSave(id, btn) {
-        if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); }
-        else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
+        if (savedItems.includes(id)) { 
+            savedItems = savedItems.filter(i => i !== id); 
+            btn.classList.replace('fas', 'far'); 
+        } else { 
+            savedItems.push(id); 
+            btn.classList.replace('far', 'fas'); 
+        }
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
-        renderMyProfile();
+        
+        // Mise à jour immédiate si on est sur la page profil
+        if(document.getElementById('own-profile-section').classList.contains('active')) {
+            renderMyProfile();
+        }
     }
 
     function toggleTheme() {
@@ -400,7 +453,6 @@
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
-        // Si aucune préférence n'est stockée, on met 'dark' par défaut
         if (!localStorage.getItem('metaTheme')) {
             localStorage.setItem('metaTheme', 'dark');
         }
