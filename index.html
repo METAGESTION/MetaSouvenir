@@ -57,6 +57,7 @@
         .logo { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         input { width: 100%; max-width: 320px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 15px; background: var(--white); color: var(--text-main); outline: none; }
         .login-btn { width: 100%; max-width: 320px; background: var(--blue); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        #login-error { color: #ed4956; font-size: 0.85rem; margin-top: 15px; display: none; font-weight: 500; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         header span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
@@ -73,7 +74,6 @@
         .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .post-actions i.fas { color: #f9d71c; }
 
-        /* --- STYLE TIKTOK (SCROLL SNAP) --- */
         #videos-section { 
             background: #000; 
             overflow-y: scroll; 
@@ -137,6 +137,7 @@
         <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off">
         <input type="password" id="password" placeholder="Mot de passe">
         <button class="login-btn btn-press" onclick="handleLogin()">Se connecter</button>
+        <div id="login-error">Identifiants incorrects</div>
     </div>
 
     <div id="main-app">
@@ -218,27 +219,9 @@
 
 <script>
     const LISTE_VIDEOS = [
-        { 
-            id: "v0", 
-            auteur: "di3uavh7l", 
-            vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", 
-            legende: "Nouveau contenu Cloudinary", 
-            date: 800
-        },
-        { 
-            id: "v1", 
-            auteur: "mazine2.0", 
-            vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", 
-            legende: "WhatsApp Video 2026-02-08 🔥", 
-            date: 700
-        },
-        { 
-            id: "v2", 
-            auteur: "meta_service", 
-            vimeo_url: "https://player.vimeo.com/video/76979871?title=0&byline=0&portrait=0", 
-            legende: "Test du scroll", 
-            date: 600
-        }
+        { id: "v0", auteur: "di3uavh7l", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Nouveau contenu Cloudinary", date: 800 },
+        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", legende: "WhatsApp Video 2026-02-08 🔥", date: 700 },
+        { id: "v2", auteur: "meta_service", vimeo_url: "https://player.vimeo.com/video/76979871?title=0&byline=0&portrait=0", legende: "Test du scroll", date: 600 }
     ];
 
     const LISTE_PHOTOS = [
@@ -247,13 +230,31 @@
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "user", date: 150 }
     ];
 
-    const USERS_DB = ["user", "walid_hchm", "mazine2.0", "metaservice", "meta actu"];
+    // Base de données : "utilisateur": "motdepasse"
+    const USERS_DB = {
+        "user": "1234",
+        "walid_hchm": "walid2026",
+        "mazine2.0": "mazine",
+        "metaservice": "admin",
+        "meta actu": "actu"
+    };
+
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let loggedUser = localStorage.getItem("metaUser") || "";
 
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
-        if (USERS_DB.includes(u)) { localStorage.setItem("metaUser", u); loggedUser = u; startApp(); }
+        const p = document.getElementById("password").value;
+        const errorMsg = document.getElementById("login-error");
+
+        if (USERS_DB[u] && USERS_DB[u] === p) {
+            errorMsg.style.display = "none";
+            localStorage.setItem("metaUser", u);
+            loggedUser = u;
+            startApp();
+        } else {
+            errorMsg.style.display = "block";
+        }
     }
 
     function startApp() {
@@ -347,24 +348,17 @@
             entries.forEach(entry => {
                 const iframe = entry.target.querySelector('iframe');
                 if (!iframe) return;
-
-                // Support Vimeo API si c'est une vidéo Vimeo
                 if (iframe.src.includes('vimeo')) {
                     const player = new Vimeo.Player(iframe);
-                    if (!entry.isIntersecting) {
-                        player.pause().catch(() => {});
-                    }
+                    if (!entry.isIntersecting) { player.pause().catch(() => {}); }
                 } else {
-                    // Pour les autres sources (Cloudinary), on réinitialise le src pour stopper le son si hors vue
                     if (!entry.isIntersecting) {
                         const currentSrc = iframe.src;
-                        iframe.src = "";
-                        iframe.src = currentSrc;
+                        iframe.src = ""; iframe.src = currentSrc;
                     }
                 }
             });
         }, { threshold: 0.5 });
-
         cards.forEach(card => observer.observe(card));
     }
 
@@ -384,7 +378,7 @@
         const res = document.getElementById('search-results');
         res.innerHTML = "";
         if(q.length < 1) return;
-        USERS_DB.forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle" style="font-size:1.5rem; color:var(--text-sec);"></i> <b>${u}</b></div>`; });
+        Object.keys(USERS_DB).forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle" style="font-size:1.5rem; color:var(--text-sec);"></i> <b>${u}</b></div>`; });
     }
 
     function toggleSave(id, btn) {
