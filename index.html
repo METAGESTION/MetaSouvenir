@@ -277,11 +277,10 @@
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
         
-        // Arrêter les vidéos si on quitte l'onglet vidéo
         if (t !== 'videos') {
             stopAllVideos();
         } else {
-            // Relancer l'observation si on revient sur vidéo
+            // Relancer l'observation quand on revient sur l'onglet vidéo
             setTimeout(observeVideos, 100);
         }
     }
@@ -294,10 +293,7 @@
 
     function stopAllVideos() {
         document.querySelectorAll('.video-card iframe').forEach(iframe => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); // Youtube
-            iframe.contentWindow.postMessage('{"method":"pause"}', '*'); // Vimeo
-            // Cloudinary trick (re-src pour couper le flux)
-            const s = iframe.src; iframe.src = ""; iframe.src = s;
+            iframe.src = ""; // Force l'arrêt total
         });
     }
 
@@ -309,19 +305,21 @@
                 const iframe = entry.target.querySelector('iframe');
                 if (!iframe) return;
                 
+                const targetSrc = iframe.getAttribute('data-src');
+
                 if (entry.isIntersecting) {
-                    // Play
-                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                    iframe.contentWindow.postMessage('{"method":"play"}', '*');
-                    // Cloudinary autoplay est souvent géré par l'URL, mais on s'assure que le src est là
-                    if(iframe.src === "") iframe.src = iframe.getAttribute('data-src');
+                    // Charger le src s'il est vide, puis forcer la lecture
+                    if(iframe.src === "" || iframe.src !== targetSrc) {
+                        iframe.src = targetSrc;
+                    }
+                    // Attendre un court instant que l'iframe charge pour envoyer le play
+                    setTimeout(() => {
+                        iframe.contentWindow.postMessage('{"method":"play"}', '*');
+                    }, 200);
                 } else {
-                    // Pause
-                    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    // Mettre en pause et vider le src pour libérer la mémoire et le son
                     iframe.contentWindow.postMessage('{"method":"pause"}', '*');
-                    // Pour Cloudinary, on reset le src pour stopper net le son
-                    const currentSrc = iframe.src;
-                    iframe.src = ""; iframe.src = currentSrc;
+                    iframe.src = ""; 
                 }
             });
         }, { threshold: 0.6 });
@@ -377,7 +375,8 @@
         });
 
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.vimeo_url}&autoplay=1&muted=1" frameborder="0" allow="autoplay; fullscreen" title="${v.legende}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
+            // Stockage de l'URL dans data-src pour la relance automatique
+            videoDiv.innerHTML += `<div class="video-card"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen" title="${v.legende}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
         });
         setTimeout(observeVideos, 500);
     }
@@ -394,7 +393,6 @@
 
     function closeMediaView() { 
         document.getElementById('media-view-overlay').style.display = 'none'; 
-        // Stopper les vidéos dans la vue détail
         document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = "");
     }
     
