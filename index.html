@@ -127,9 +127,7 @@
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
-<body>
-
-<div id="loader"><div class="spinner"></div></div>
+<body oncontextmenu="return false;"> <div id="loader"><div class="spinner"></div></div>
 
 <div id="app-container">
     <div id="login-screen">
@@ -218,6 +216,14 @@
 </div>
 
 <script>
+    // --- PROTECTION ANTI-INSPECTION ---
+    document.onkeydown = function(e) {
+        // Bloquer F12
+        if(e.keyCode == 123) return false;
+        // Bloquer Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+Maj+C, Ctrl+U
+        if(e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67) || e.keyCode == 85)) return false;
+    };
+
     const LISTE_VIDEOS = [
         { id: "v0", auteur: "di3uavh7l", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Nouveau contenu Cloudinary", date: 800 },
         { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", legende: "WhatsApp Video 2026-02-08 🔥", date: 700 },
@@ -230,7 +236,6 @@
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "user", date: 150 }
     ];
 
-    // Base de données : "utilisateur": "motdepasse"
     const USERS_DB = {
         "user": "1234",
         "walid_hchm": "walid2026",
