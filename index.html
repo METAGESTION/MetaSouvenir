@@ -219,6 +219,13 @@
 <script>
     const LISTE_VIDEOS = [
         { 
+            id: "v0", 
+            auteur: "di3uavh7l", 
+            vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", 
+            legende: "Nouveau contenu Cloudinary", 
+            date: 800
+        },
+        { 
             id: "v1", 
             auteur: "mazine2.0", 
             vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", 
@@ -316,12 +323,10 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
-        // Randomisation des photos
         [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
             photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
 
-        // --- MODIFICATION ICI : Randomisation des vidéos ---
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
             videoDiv.innerHTML += `
                 <div class="video-card">
@@ -333,37 +338,32 @@
                 </div>`;
         });
 
-        // APPEL DE LA FONCTION MAGIQUE DE SCROLL (toujours à la fin)
         setTimeout(observeVideos, 500);
     }
 
-    // --- FONCTION INTELLIGENTE DE GESTION DU SCROLL ---
     function observeVideos() {
         const cards = document.querySelectorAll('.video-card');
-        
-        // Configuration du détecteur
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const iframe = entry.target.querySelector('iframe');
                 if (!iframe) return;
 
-                // On utilise l'API Vimeo chargée en haut du fichier
-                const player = new Vimeo.Player(iframe);
-
-                if (entry.isIntersecting) {
-                    // console.log("Vidéo visible");
-                    // Tu peux décommenter ci-dessous si tu veux tenter l'autoplay (bloqué parfois par Chrome)
-                    // player.play().catch(e => console.log('Autoplay bloqué', e));
+                // Support Vimeo API si c'est une vidéo Vimeo
+                if (iframe.src.includes('vimeo')) {
+                    const player = new Vimeo.Player(iframe);
+                    if (!entry.isIntersecting) {
+                        player.pause().catch(() => {});
+                    }
                 } else {
-                    // La vidéo n'est PLUS visible : ON PAUSE OBLIGATOIREMENT
-                    player.pause().then(() => {
-                        console.log("Vidéo mise en pause car scrollée");
-                    });
+                    // Pour les autres sources (Cloudinary), on réinitialise le src pour stopper le son si hors vue
+                    if (!entry.isIntersecting) {
+                        const currentSrc = iframe.src;
+                        iframe.src = "";
+                        iframe.src = currentSrc;
+                    }
                 }
             });
-        }, {
-            threshold: 0.5 // Se déclenche quand 50% de la vidéo est visible/invisible
-        });
+        }, { threshold: 0.5 });
 
         cards.forEach(card => observer.observe(card));
     }
@@ -401,14 +401,6 @@
     }
 
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
-
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-            document.querySelectorAll('iframe').forEach(iframe => {
-                const s = iframe.src; iframe.src = ""; iframe.src = s;
-            });
-        }
-    });
 
     window.addEventListener('load', () => {
         if (localStorage.getItem('metaTheme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-toggle').checked = true; }
