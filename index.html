@@ -127,7 +127,8 @@
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
-<body oncontextmenu="return false;" class="dark-mode"> <div id="loader"><div class="spinner"></div></div>
+<body oncontextmenu="return false;" class="dark-mode"> 
+<div id="loader"><div class="spinner"></div></div>
 
 <div id="app-container">
     <div id="login-screen">
@@ -216,7 +217,6 @@
 </div>
 
 <script>
-    // --- PROTECTION ANTI-INSPECTION ---
     document.onkeydown = function(e) {
         if(e.keyCode == 123) return false;
         if(e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67) || e.keyCode == 85)) return false;
@@ -229,43 +229,28 @@
        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 600 }
     ];
 
-    // --- CORRECTION : LE POST "META ACTU" EST MAINTENANT DANS LA LISTE PRINCIPALE ---
     const LISTE_PHOTOS = [
-        { 
-            id: "meta_actu_fixe", 
-            url: "https://media.culturepsg.com/image/news/resume_psg_om_l1_08022026.jpg", 
-            auteur: "Meta actu", 
-            date: 9999999 // Date très élevée pour le tri éventuel
-        },
+        { id: "meta_actu_fixe", url: "https://media.culturepsg.com/image/news/resume_psg_om_l1_08022026.jpg", auteur: "Meta actu", date: 9999999 },
         { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 550 },
         { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 350 },
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "user", date: 150 }
     ];
 
-    const USERS_DB = {
-        "user": "12345",
-        "walid_hchm": "Pass.123",
-        "mazine2.0": "mazine.123",
-        "metaservice": "Pass.123",
-        "meta actu": "Pass.123"
-    };
-
+    const USERS_DB = { "user": "12345", "walid_hchm": "Pass.123", "mazine2.0": "mazine.123", "metaservice": "Pass.123", "meta actu": "Pass.123" };
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let loggedUser = localStorage.getItem("metaUser") || "";
+    let videoObserver = null;
 
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
         const errorMsg = document.getElementById("login-error");
-
         if (USERS_DB[u] && USERS_DB[u] === p) {
             errorMsg.style.display = "none";
             localStorage.setItem("metaUser", u);
             loggedUser = u;
             startApp();
-        } else {
-            errorMsg.style.display = "block";
-        }
+        } else { errorMsg.style.display = "block"; }
     }
 
     function startApp() {
@@ -291,12 +276,56 @@
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
+        
+        // Arrêter les vidéos si on quitte l'onglet vidéo
+        if (t !== 'videos') {
+            stopAllVideos();
+        } else {
+            // Relancer l'observation si on revient sur vidéo
+            setTimeout(observeVideos, 100);
+        }
     }
 
     function moveIndicator(i) {
         const icons = document.querySelectorAll('nav i');
         const indicator = document.getElementById('nav-indicator');
         if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 22.5) + 'px';
+    }
+
+    function stopAllVideos() {
+        document.querySelectorAll('.video-card iframe').forEach(iframe => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); // Youtube
+            iframe.contentWindow.postMessage('{"method":"pause"}', '*'); // Vimeo
+            // Cloudinary trick (re-src pour couper le flux)
+            const s = iframe.src; iframe.src = ""; iframe.src = s;
+        });
+    }
+
+    function observeVideos() {
+        if (videoObserver) videoObserver.disconnect();
+        const cards = document.querySelectorAll('.video-card');
+        videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const iframe = entry.target.querySelector('iframe');
+                if (!iframe) return;
+                
+                if (entry.isIntersecting) {
+                    // Play
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    iframe.contentWindow.postMessage('{"method":"play"}', '*');
+                    // Cloudinary autoplay est souvent géré par l'URL, mais on s'assure que le src est là
+                    if(iframe.src === "") iframe.src = iframe.getAttribute('data-src');
+                } else {
+                    // Pause
+                    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    iframe.contentWindow.postMessage('{"method":"pause"}', '*');
+                    // Pour Cloudinary, on reset le src pour stopper net le son
+                    const currentSrc = iframe.src;
+                    iframe.src = ""; iframe.src = currentSrc;
+                }
+            });
+        }, { threshold: 0.6 });
+        cards.forEach(card => videoObserver.observe(card));
     }
 
     function openExternalProfile(username) {
@@ -306,10 +335,7 @@
         document.getElementById('ext-display-name').innerText = username;
         const grid = document.getElementById('ext-posts-grid');
         grid.innerHTML = "";
-        
-        // CORRECTION: Filtrage standard, car 'meta actu' est maintenant dans LISTE_PHOTOS
         const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
-        
         if (allMedia.length === 0) {
             grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-sec);">Aucune publication</div>`;
         } else {
@@ -327,13 +353,7 @@
         const gridSaved = document.getElementById('my-saved-grid');
         gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
-        
-        // CORRECTION: Le "meta_actu_fixe" sera trouvé ici car il est dans LISTE_PHOTOS
-        LISTE_PHOTOS.forEach(p => { 
-            if(savedItems.includes(p.id)) {
-                gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; 
-            }
-        });
+        LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; } });
     }
 
     function switchMyTab(t) {
@@ -347,78 +367,37 @@
         const photoDiv = document.getElementById('photo-list');
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-        
-        // --- LOGIQUE DE TRI CORRIGÉE ---
-        // 1. Extraire le post Meta Actu
         const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
-        // 2. Extraire les autres et mélanger
         const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort(() => Math.random() - 0.5);
-        
-        // 3. Reconstituer le flux : Meta Actu en premier (s'il existe), suivi des autres
         const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
 
         fluxFinal.forEach(p => {
             const isSaved = savedItems.includes(p.id);
-            photoDiv.innerHTML += `
-            <div class="post">
-                <div class="post-user" onclick="openExternalProfile('${p.auteur}')">
-                    <i class="fas fa-circle-user"></i> ${p.auteur}
-                </div>
-                <div class="post-img-container">
-                    <img src="${p.url}">
-                </div>
-                <div class="post-actions">
-                    <i class="${isSaved ? 'fas' : 'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i>
-                </div>
-            </div>`;
+            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
         });
 
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `
-                <div class="video-card">
-                    <iframe src="${v.vimeo_url}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture;" title="${v.legende}"></iframe>
-                    <div class="video-info">
-                        <h3>@${v.auteur}</h3>
-                        <p>${v.legende}</p>
-                    </div>
-                </div>`;
+            videoDiv.innerHTML += `<div class="video-card"><iframe src="${v.vimeo_url}&autoplay=1&muted=1" frameborder="0" allow="autoplay; fullscreen" title="${v.legende}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
         });
-
         setTimeout(observeVideos, 500);
-    }
-
-    function observeVideos() {
-        const cards = document.querySelectorAll('.video-card');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const iframe = entry.target.querySelector('iframe');
-                if (!iframe) return;
-                if (iframe.src.includes('vimeo')) {
-                    const player = new Vimeo.Player(iframe);
-                    if (!entry.isIntersecting) { player.pause().catch(() => {}); }
-                } else {
-                    if (!entry.isIntersecting) {
-                        const currentSrc = iframe.src;
-                        iframe.src = ""; iframe.src = currentSrc;
-                    }
-                }
-            });
-        }, { threshold: 0.5 });
-        cards.forEach(card => observer.observe(card));
     }
 
     function openMediaView(id, type) {
         const overlay = document.getElementById('media-view-overlay');
         const content = document.getElementById('media-view-content');
         let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        
         if(item) {
-             content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+             content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
              overlay.style.display = 'block';
         }
     }
 
-    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
+    function closeMediaView() { 
+        document.getElementById('media-view-overlay').style.display = 'none'; 
+        // Stopper les vidéos dans la vue détail
+        document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = "");
+    }
+    
     function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
     
     function filtrerRecherche() {
@@ -430,19 +409,10 @@
     }
 
     function toggleSave(id, btn) {
-        if (savedItems.includes(id)) { 
-            savedItems = savedItems.filter(i => i !== id); 
-            btn.classList.replace('fas', 'far'); 
-        } else { 
-            savedItems.push(id); 
-            btn.classList.replace('far', 'fas'); 
-        }
+        if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); } 
+        else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
-        
-        // Mise à jour immédiate si on est sur la page profil
-        if(document.getElementById('own-profile-section').classList.contains('active')) {
-            renderMyProfile();
-        }
+        if(document.getElementById('own-profile-section').classList.contains('active')) renderMyProfile();
     }
 
     function toggleTheme() {
@@ -454,18 +424,9 @@
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
-        if (!localStorage.getItem('metaTheme')) {
-            localStorage.setItem('metaTheme', 'dark');
-        }
-        
-        if (localStorage.getItem('metaTheme') === 'dark') { 
-            document.body.classList.add('dark-mode'); 
-            document.getElementById('theme-toggle').checked = true; 
-        } else {
-            document.body.classList.remove('dark-mode');
-            document.getElementById('theme-toggle').checked = false;
-        }
-        
+        if (!localStorage.getItem('metaTheme')) localStorage.setItem('metaTheme', 'dark');
+        if (localStorage.getItem('metaTheme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-toggle').checked = true; } 
+        else { document.body.classList.remove('dark-mode'); document.getElementById('theme-toggle').checked = false; }
         setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
         if(loggedUser) startApp();
     });
