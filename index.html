@@ -3,302 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Orion Services | High-End Security</title>
+    <title>Meta Service | TikTok Random</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <style>
         :root { 
-            --bg-black: #050505; 
-            --card-gray: #121212; 
-            --border: #222222; 
+            --bg-color: #f8f9fa; 
+            --white: #ffffff; 
+            --border: #eeeeee; 
+            --text-main: #1a1a1a; 
+            --text-sec: #737373;
+            --blue: #0095f6; 
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        body.dark-mode { 
+            --bg-color: #000000; 
+            --white: #121212; 
+            --border: #262626; 
             --text-main: #f5f5f5; 
-            --text-sec: #888888;
-            --orion-gold: linear-gradient(135deg, #a67c00 0%, #bf9b30 45%, #ffdc73 70%, #bf9b30 85%, #a67c00 100%);
-            --gold-solid: #bf9b30;
-            --safe-blur: rgba(5, 5, 5, 0.9);
+            --text-sec: #a8a8a8;
+            --nav-bg: rgba(18, 18, 18, 0.85);
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, system-ui, sans-serif; }
-        body { background-color: var(--bg-black); height: 100vh; overflow: hidden; color: var(--text-main); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); transition: all 0.3s ease; }
         
-        #security-lock { display: none; position: fixed; inset: 0; background: #000; z-index: 10000; flex-direction: column; justify-content: center; align-items: center; }
+        .btn-press:active { transform: scale(0.92); transition: 0.1s; }
+        .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
 
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .logo-orion { font-size: 2rem; font-weight: 800; background: var(--orion-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; letter-spacing: -1px; }
-        .login-input { width: 300px; padding: 15px; background: #111; border: 1px solid #333; border-radius: 12px; color: #fff; margin-bottom: 12px; font-size: 14px; text-align: center; }
-        .login-input:focus { border-color: var(--gold-solid); outline: none; }
-        .login-btn { width: 300px; padding: 15px; background: var(--orion-gold); border: none; border-radius: 12px; color: #000; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 13px; }
-        .login-err { color: #ff3b30; font-size: 12px; margin-top: 15px; font-weight: 600; display: none; }
-
-        #main-app { display: none; height: 100%; flex-direction: column; opacity: 0; transition: opacity 0.5s ease; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .spinner { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--border); background: var(--safe-blur); backdrop-filter: blur(20px); z-index: 1000; }
-        header .title { font-weight: 800; background: var(--orion-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.1rem; }
+        #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+        
+        header { 
+            height: calc(90px + env(safe-area-inset-top)); 
+            padding-top: calc(35px + env(safe-area-inset-top)); 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-left: 20px; 
+            padding-right: 20px; 
+            background: var(--white); 
+            z-index: 100; 
+            flex-shrink: 0; 
+        }
 
-        .viewport { flex: 1; overflow-y: auto; scrollbar-width: none; }
-        .viewport::-webkit-scrollbar { display: none; }
-        .section { display: none; padding-bottom: 100px; }
-        .section.active { display: block; animation: sectionFade 0.3s ease; }
-        @keyframes sectionFade { from { opacity: 0; } to { opacity: 1; } }
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        .logo { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; letter-spacing: -1px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input { width: 100%; max-width: 320px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 15px; background: var(--white); color: var(--text-main); outline: none; }
+        .login-btn { width: 100%; max-width: 320px; background: var(--blue); color: white; padding: 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
-        .post { background: var(--bg-black); border-bottom: 1px solid var(--border); }
-        .post-header { padding: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .post-header i { color: var(--gold-solid); }
-        .post-media { width: 100%; aspect-ratio: 1/1; background: #000; }
-        .post-media img { width: 100%; height: 100%; object-fit: cover; }
-        .post-actions { padding: 15px; display: flex; justify-content: space-between; }
-        .post-actions i { font-size: 1.3rem; cursor: pointer; color: var(--text-main); }
-        .fa-bookmark.active { color: var(--gold-solid); }
+        #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
+        header span { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
 
-        /* Profile Layout */
-        .profile-head { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
-        .avatar-frame { width: 90px; height: 90px; border-radius: 50%; padding: 3px; background: var(--orion-gold); margin-bottom: 15px; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--gold-solid); }
-        .profile-stats { display: flex; width: 100%; justify-content: space-around; max-width: 400px; margin: 20px 0; }
-        .stat-box { text-align: center; }
-        .stat-box span { display: block; font-weight: 800; font-size: 1.1rem; }
-        .stat-box label { font-size: 11px; color: var(--text-sec); text-transform: uppercase; }
+        .content-area { flex: 1; position: relative; overflow: hidden; }
+        .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: var(--bg-color); }
+        .section.active { display: block; }
+        
+        .post { background: var(--white); margin: 0 auto 10px auto; max-width: 500px; box-shadow: var(--card-shadow); border-radius: 0 0 15px 15px; }
+        .post-user { padding: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .post-user i { color: var(--text-sec); font-size: 1.2rem; }
+        .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        .post-actions { padding: 12px 16px; display: flex; justify-content: flex-end; }
+        .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .post-actions i.fas { color: #f9d71c; }
 
-        .profile-tabs { display: flex; border-top: 1px solid var(--border); }
-        .tab-icon { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; }
-        .tab-icon.active { color: var(--gold-solid); border-top: 2px solid var(--gold-solid); }
+        /* --- STYLE TIKTOK (SCROLL SNAP) --- */
+        #videos-section { 
+            background: #000; 
+            overflow-y: scroll; 
+            scroll-snap-type: y mandatory; 
+            height: 100%; 
+            scrollbar-width: none; 
+        }
+        #videos-section::-webkit-scrollbar { display: none; } 
+        
+        .video-card { 
+            height: 100%; 
+            width: 100%; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #000;
+        }
+        .video-card iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            pointer-events: auto;
+        }
+        .video-info { 
+            position: absolute; 
+            bottom: 80px; 
+            left: 15px; 
+            color: white; 
+            z-index: 10; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+            pointer-events: none; 
+            width: 80%;
+        }
 
-        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-        .grid-post { aspect-ratio: 1/1; background: #111; overflow: hidden; }
-        .grid-post img { width: 100%; height: 100%; object-fit: cover; }
+        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.3s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Search List */
-        .search-result-item { padding: 15px; background: #111; border-radius: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
-        .search-result-item:active { background: #1a1a1a; border-color: var(--gold-solid); }
+        nav { height: calc(65px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); position: relative; z-index: 100; }
+        .nav-indicator { position: absolute; top: 12px; width: 45px; height: 40px; background: rgba(0, 149, 246, 0.1); border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        nav i { font-size: 1.3rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        nav i.active { color: var(--blue); transform: translateY(-2px); }
 
-        nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--safe-blur); backdrop-filter: blur(25px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        nav i { font-size: 1.3rem; color: var(--text-sec); cursor: pointer; transition: 0.2s; }
-        nav i.active { color: var(--gold-solid); }
-
-        .orion-overlay { display: none; position: fixed; inset: 0; background: var(--bg-black); z-index: 2000; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .overlay-header { position: sticky; top: 0; height: 70px; display: flex; align-items: center; padding: 0 20px; background: var(--safe-blur); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); z-index: 10; }
+        .profile-tabs { display: flex; background: var(--white); margin-top: 10px; }
+        .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+        .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
+        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-<div id="security-lock">
-    <div class="logo-orion" style="font-size: 1.2rem;">ORION_ENCRYPTION_ACTIVE</div>
-</div>
+<div id="loader"><div class="spinner"></div></div>
 
-<div id="login-screen">
-    <div class="logo-orion">Orion Services</div>
-    <div id="login-err-msg" class="login-err">CLÉ D'ACCÈS INCORRECTE</div>
-    <input type="text" id="user-id" class="login-input" placeholder="UTILISATEUR" autocomplete="off">
-    <input type="password" id="pass-key" class="login-input" placeholder="CLÉ PRIVÉE">
-    <button class="login-btn" onclick="validateOrionAccess()">Décrypter l'accès</button>
-</div>
+<div id="app-container">
+    <div id="login-screen">
+        <div class="logo">Meta Service</div>
+        <input type="text" id="username" placeholder="Nom d'utilisateur" autocomplete="off">
+        <input type="password" id="password" placeholder="Mot de passe">
+        <button class="login-btn btn-press" onclick="handleLogin()">Se connecter</button>
+    </div>
 
-<div id="main-app">
-    <header>
-        <div style="width: 24px;"><i class="fas fa-fingerprint" style="color:var(--gold-solid)"></i></div>
-        <div class="title">ORION SERVICES</div>
-        <div style="width: 24px; text-align: right;"><i class="fas fa-sliders-h" onclick="openOverlay('settings-overlay')"></i></div>
-    </header>
-
-    <div class="viewport">
-        <div id="feed-sec" class="section active"></div>
-        <div id="search-sec" class="section">
-            <div style="padding: 15px;">
-                <input type="text" id="orion-search" class="login-input" style="width:100%; text-align:left; border:none;" placeholder="Chercher dans le réseau..." oninput="handleOrionSearch()">
-                <div id="search-results-box" style="padding-top:15px;"></div>
+    <div id="main-app">
+        <header class="glass" id="main-header">
+            <div style="width: 40px;"></div>
+            <span>Meta Service</span>
+            <div style="width: 40px; text-align: right;">
+                <i class="fas fa-cog btn-press" id="global-cog" style="display:none; font-size: 1.2rem;" onclick="toggleSettings(true)"></i>
             </div>
-        </div>
-        <div id="reels-sec" class="section" style="padding:0; height:100%;">
-            <div id="reels-container" style="height:100%; overflow-y: scroll; scroll-snap-type: y mandatory;"></div>
-        </div>
-        <div id="profile-sec" class="section">
-            <div class="profile-head">
-                <div class="avatar-frame"><div class="avatar-img" id="user-initial">O</div></div>
-                <h3 id="display-username" style="font-weight: 800;"></h3>
-                <p style="color: var(--gold-solid); font-size: 11px; margin-top: 5px; font-weight: 700;">MEMBRE PREMIUM ORION</p>
-                <div class="profile-stats">
-                    <div class="stat-box"><span>12</span><label>Posts</label></div>
-                    <div class="stat-box"><span>14.2k</span><label>Abonnés</label></div>
-                    <div class="stat-box"><span>203</span><label>Suivis</label></div>
+        </header>
+
+        <div class="content-area">
+            <div id="feed-section" class="section active"><div id="photo-list"></div></div>
+            <div id="search-section" class="section">
+                <div style="padding:15px; background:var(--white); position:sticky; top:0; z-index:10;">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:var(--bg-color); border:none;" placeholder="Rechercher un profil..." oninput="filtrerRecherche()">
+                </div>
+                <div id="search-results"></div>
+            </div>
+            
+            <div id="videos-section" class="section">
+                <div id="video-list" style="height: 100%;"></div>
+            </div>
+            
+            <div id="own-profile-section" class="section">
+                <div style="padding: 20px 20px; text-align: center; background: var(--white);">
+                    <div style="width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;"><i class="fas fa-user"></i></div>
+                    <h2 id="my-name-display" style="font-weight: 700;"></h2>
+                    <p style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 20px;">@compte_officiel</p>
+                    <button onclick="handleLogout()" class="btn-press" style="color:var(--text-main); border:1px solid var(--border); padding:8px 24px; border-radius:20px; background:var(--white); font-size: 0.85rem; font-weight: 600;">Déconnexion</button>
+                </div>
+                <div class="profile-tabs glass">
+                    <div id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">POSTS</div>
+                    <div id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">ENREGISTRÉS</div>
+                </div>
+                <div id="my-posts-grid" class="content-grid"></div>
+                <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
+            </div>
+
+            <div id="external-profile-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <i class="fas fa-arrow-left btn-press" onclick="closeExternalProfile()" style="padding: 10px;"></i>
+                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 700;"></span>
+                </div>
+                <div id="ext-header" style="padding: 20px; text-align: center; background: var(--white);">
+                    <div style="width: 70px; height: 70px; background: var(--blue); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;"><i class="fas fa-user"></i></div>
+                    <h3 id="ext-display-name"></h3>
+                </div>
+                <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
+                <div id="ext-posts-grid" class="content-grid"></div>
+            </div>
+
+            <div id="media-view-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <i class="fas fa-arrow-left btn-press" onclick="closeMediaView()" style="padding: 10px;"></i>
+                    <span style="margin-left: 10px; font-weight: 700;">Détails</span>
+                </div>
+                <div id="media-view-content"></div>
+            </div>
+
+            <div id="settings-overlay" class="overlay-page">
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);"><i class="fas fa-arrow-left btn-press" onclick="toggleSettings(false)" style="padding:10px;"></i><h2 style="margin-left: 10px; font-size: 1.1rem;">Réglages</h2></div>
+                <div style="padding:25px; display:flex; justify-content:space-between; align-items:center; background: var(--white);">
+                    <span style="font-weight: 500;">Apparence Sombre</span>
+                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 40px; margin-bottom:0;">
                 </div>
             </div>
-            <div class="profile-tabs">
-                <div class="tab-icon active" id="btn-grid-posts" onclick="switchProfileGrid('posts')"><i class="fas fa-th"></i></div>
-                <div class="tab-icon" id="btn-grid-saved" onclick="switchProfileGrid('saved')"><i class="fas fa-bookmark"></i></div>
-            </div>
-            <div id="grid-posts-view" class="grid-container"></div>
-            <div id="grid-saved-view" class="grid-container" style="display:none;"></div>
         </div>
-    </div>
 
-    <nav>
-        <i class="fas fa-home active" onclick="navigateOrion('feed-sec', this)"></i>
-        <i class="fas fa-compass" onclick="navigateOrion('search-sec', this)"></i>
-        <i class="fas fa-play" onclick="navigateOrion('reels-sec', this)"></i>
-        <i class="fas fa-user" onclick="navigateOrion('profile-sec', this)"></i>
-    </nav>
-</div>
-
-<div id="external-profile-overlay" class="orion-overlay">
-    <div class="overlay-header">
-        <i class="fas fa-chevron-left" onclick="closeOverlay('external-profile-overlay')" style="font-size: 1.2rem; padding-right: 20px;"></i>
-        <span id="ext-username-title" style="font-weight: 800; background: var(--orion-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></span>
-    </div>
-    <div id="ext-profile-content"></div>
-</div>
-
-<div id="settings-overlay" class="orion-overlay">
-    <div class="overlay-header">
-        <i class="fas fa-chevron-left" onclick="closeOverlay('settings-overlay')" style="font-size: 1.2rem; padding-right: 20px;"></i>
-        <span style="font-weight: 800;">PARAMÈTRES</span>
-    </div>
-    <div style="padding:30px;">
-        <button onclick="terminateOrionSession()" style="color:#ff3b30; background:none; border:none; font-weight:800; letter-spacing: 1px;">DÉCONNEXION DE LA SESSION</button>
+        <nav class="glass">
+            <div class="nav-indicator" id="nav-indicator"></div>
+            <i class="fas fa-house btn-press active" onclick="switchTab('feed', 0)"></i>
+            <i class="fas fa-magnifying-glass btn-press" onclick="switchTab('search', 1)"></i>
+            <i class="fas fa-clapperboard btn-press" onclick="switchTab('videos', 2)"></i>
+            <i class="fas fa-circle-user btn-press" onclick="switchTab('own-profile', 3)"></i>
+        </nav>
     </div>
 </div>
 
 <script>
-    const ORION_USERS = ["mazine2.0", "admin", "vip_access", "walid_h", "clara_lux"];
-    const ORION_POSTS = [
-        { id: "p1", user: "mazine2.0", img: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view" },
-        { id: "p2", user: "mazine2.0", img: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view" },
-        { id: "p3", user: "vip_access", img: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view" },
-        { id: "p4", user: "clara_lux", img: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view" }
-    ];
-    const ORION_REELS = [
-        { id: "v1", user: "mazine2.0", url: "https://player.vimeo.com/video/1163085534" },
-        { id: "v2", user: "vip_access", url: "https://player.vimeo.com/video/76979871" }
-    ];
-
-    let currentSession = localStorage.getItem("orion_current_user") || null;
-    let bookmarks = JSON.parse(localStorage.getItem("orion_bookmarks")) || [];
-
-    function validateOrionAccess() {
-        const u = document.getElementById('user-id').value.trim().toLowerCase();
-        const k = document.getElementById('pass-key').value;
-        if (ORION_USERS.includes(u) && k !== "") {
-            localStorage.setItem("orion_current_user", u);
-            currentSession = u;
-            launchOrion();
-        } else {
-            document.getElementById('login-err-msg').style.display = "block";
+    const LISTE_VIDEOS = [
+        { 
+            id: "v1", 
+            auteur: "mazine2.0", 
+            vimeo_url: "https://player.vimeo.com/video/1163085534?badge=0&autopause=0&player_id=0&app_id=58479", 
+            legende: "WhatsApp Video 2026-02-08 🔥", 
+            date: 700
+        },
+        { 
+            id: "v2", 
+            auteur: "meta_service", 
+            vimeo_url: "https://player.vimeo.com/video/76979871?title=0&byline=0&portrait=0", 
+            legende: "Test du scroll", 
+            date: 600
         }
+    ];
+
+    const LISTE_PHOTOS = [
+        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 550 },
+        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "mazine2.0", date: 350 },
+        { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1&PHPSESSID=d86cdd4796d304e40f6147e9e71d2b23dc11bc19", auteur: "user", date: 150 }
+    ];
+
+    const USERS_DB = ["user", "walid_hchm", "mazine2.0", "metaservice", "meta actu"];
+    let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
+    let loggedUser = localStorage.getItem("metaUser") || "";
+
+    function handleLogin() {
+        const u = document.getElementById("username").value.trim().toLowerCase();
+        if (USERS_DB.includes(u)) { localStorage.setItem("metaUser", u); loggedUser = u; startApp(); }
     }
 
-    function launchOrion() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'flex';
-        setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
-        document.getElementById('display-username').innerText = currentSession;
-        document.getElementById('user-initial').innerText = currentSession.charAt(0).toUpperCase();
-        renderOrionFeed();
-        renderOrionReels();
-        renderOrionProfile();
+    function startApp() {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("main-app").style.display = "flex";
+        document.getElementById("my-name-display").innerText = loggedUser;
+        genererContenu();
+        renderMyProfile();
+        switchTab('feed', 0);
     }
 
-    function navigateOrion(target, el) {
-        document.querySelectorAll('.orion-overlay').forEach(o => o.style.display = 'none');
+    function closeAllOverlays() {
+        document.getElementById('settings-overlay').style.display = 'none';
+        document.getElementById('external-profile-overlay').style.display = 'none';
+        document.getElementById('media-view-overlay').style.display = 'none';
+    }
+
+    function switchTab(t, i) {
+        closeAllOverlays();
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('nav i').forEach(i => i.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
-        el.classList.add('active');
+        document.getElementById(t + '-section').classList.add('active');
+        document.querySelectorAll('nav i').forEach((icon, idx) => icon.classList.toggle('active', idx === i));
+        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
+        document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
+        moveIndicator(i);
     }
 
-    function openOverlay(id) { document.getElementById(id).style.display = 'block'; }
-    function closeOverlay(id) { document.getElementById(id).style.display = 'none'; }
-
-    function renderOrionFeed() {
-        const feed = document.getElementById('feed-sec');
-        feed.innerHTML = "";
-        [...ORION_POSTS].sort(() => Math.random() - 0.5).forEach(p => {
-            const isBookmarked = bookmarks.includes(p.id);
-            feed.innerHTML += `
-                <div class="post">
-                    <div class="post-header" onclick="openExternalProfile('${p.user}')"><i class="fas fa-check-circle"></i> ${p.user}</div>
-                    <div class="post-media"><img src="${p.img}" loading="lazy"></div>
-                    <div class="post-actions">
-                        <i class="fas fa-heart"></i>
-                        <i class="fa-bookmark ${isBookmarked ? 'fas active' : 'far'}" onclick="toggleBookmark('${p.id}', this)"></i>
-                    </div>
-                </div>`;
-        });
+    function moveIndicator(i) {
+        const icons = document.querySelectorAll('nav i');
+        const indicator = document.getElementById('nav-indicator');
+        if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 22.5) + 'px';
     }
 
-    function renderOrionReels() {
-        const container = document.getElementById('reels-container');
-        container.innerHTML = "";
-        ORION_REELS.forEach(v => {
-            container.innerHTML += `<div style="height:100%;width:100%;scroll-snap-align:start;"><iframe src="${v.url}" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe></div>`;
-        });
-    }
-
-    /* NAVIGATION VERS PROFILS EXTERNES */
     function openExternalProfile(username) {
-        if(username === currentSession) return navigateOrion('profile-sec', document.querySelector('.fa-user'));
-        
+        if(username === loggedUser) { switchTab('own-profile', 3); return; }
         const overlay = document.getElementById('external-profile-overlay');
-        const content = document.getElementById('ext-profile-content');
-        document.getElementById('ext-username-title').innerText = `@${username.toUpperCase()}`;
-        
-        content.innerHTML = `
-            <div class="profile-head">
-                <div class="avatar-frame"><div class="avatar-img">${username.charAt(0).toUpperCase()}</div></div>
-                <h3 style="font-weight: 800;">${username}</h3>
-                <div class="profile-stats">
-                    <div class="stat-box"><span>${ORION_POSTS.filter(p => p.user === username).length}</span><label>Posts</label></div>
-                    <div class="stat-box"><span>1.5k</span><label>Abonnés</label></div>
-                </div>
-            </div>
-            <div class="grid-container" id="ext-grid-view"></div>`;
-        
-        const grid = document.getElementById('ext-grid-view');
-        ORION_POSTS.filter(p => p.user === username).forEach(p => {
-            grid.innerHTML += `<div class="grid-post"><img src="${p.img}"></div>`;
+        document.getElementById('ext-user-title').innerText = username;
+        document.getElementById('ext-display-name').innerText = username;
+        const grid = document.getElementById('ext-posts-grid');
+        grid.innerHTML = "";
+        const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
+        allMedia.forEach(m => {
+            grid.innerHTML += `<div class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</div>`;
         });
-        
         overlay.style.display = 'block';
     }
 
-    function handleOrionSearch() {
-        const q = document.getElementById('orion-search').value.toLowerCase();
-        const results = document.getElementById('search-results-box');
-        results.innerHTML = "";
-        if(!q) return;
+    function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; }
 
-        ORION_USERS.filter(u => u.includes(q)).forEach(u => {
-            results.innerHTML += `
-                <div class="search-result-item" onclick="openExternalProfile('${u}')">
-                    <div style="width:35px;height:35px;border-radius:50%;background:var(--orion-gold);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#000;">${u.charAt(0).toUpperCase()}</div>
-                    <span>${u}</span>
+    function renderMyProfile() {
+        const gridPosts = document.getElementById('my-posts-grid');
+        const gridSaved = document.getElementById('my-saved-grid');
+        gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
+        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
+        LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
+    }
+
+    function switchMyTab(t) {
+        document.getElementById('my-tab-pub').classList.toggle('active', t === 'info');
+        document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved');
+        document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none';
+        document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none';
+    }
+
+    function genererContenu() {
+        const photoDiv = document.getElementById('photo-list');
+        const videoDiv = document.getElementById('video-list');
+        photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
+        
+        // Randomisation des photos
+        [...LISTE_PHOTOS].sort(() => Math.random() - 0.5).forEach(p => {
+            photoDiv.innerHTML += `<div class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><i class="fas fa-circle-user"></i> ${p.auteur}</div><div class="post-img-container"><img src="${p.url}"></div><div class="post-actions"><i class="${savedItems.includes(p.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i></div></div>`;
+        });
+
+        // --- MODIFICATION ICI : Randomisation des vidéos ---
+        [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
+            videoDiv.innerHTML += `
+                <div class="video-card">
+                    <iframe src="${v.vimeo_url}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture;" title="${v.legende}"></iframe>
+                    <div class="video-info">
+                        <h3>@${v.auteur}</h3>
+                        <p>${v.legende}</p>
+                    </div>
                 </div>`;
         });
+
+        // APPEL DE LA FONCTION MAGIQUE DE SCROLL (toujours à la fin)
+        setTimeout(observeVideos, 500);
     }
 
-    function toggleBookmark(id, el) {
-        if (bookmarks.includes(id)) { bookmarks = bookmarks.filter(b => b !== id); el.classList.replace('fas', 'far'); el.classList.remove('active'); }
-        else { bookmarks.push(id); el.classList.replace('far', 'fas'); el.classList.add('active'); }
-        localStorage.setItem("orion_bookmarks", JSON.stringify(bookmarks));
-        renderOrionProfile();
+    // --- FONCTION INTELLIGENTE DE GESTION DU SCROLL ---
+    function observeVideos() {
+        const cards = document.querySelectorAll('.video-card');
+        
+        // Configuration du détecteur
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const iframe = entry.target.querySelector('iframe');
+                if (!iframe) return;
+
+                // On utilise l'API Vimeo chargée en haut du fichier
+                const player = new Vimeo.Player(iframe);
+
+                if (entry.isIntersecting) {
+                    // console.log("Vidéo visible");
+                    // Tu peux décommenter ci-dessous si tu veux tenter l'autoplay (bloqué parfois par Chrome)
+                    // player.play().catch(e => console.log('Autoplay bloqué', e));
+                } else {
+                    // La vidéo n'est PLUS visible : ON PAUSE OBLIGATOIREMENT
+                    player.pause().then(() => {
+                        console.log("Vidéo mise en pause car scrollée");
+                    });
+                }
+            });
+        }, {
+            threshold: 0.5 // Se déclenche quand 50% de la vidéo est visible/invisible
+        });
+
+        cards.forEach(card => observer.observe(card));
     }
 
-    function renderOrionProfile() {
-        const gridPosts = document.getElementById('grid-posts-view');
-        const gridSaved = document.getElementById('grid-saved-view');
-        gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
-        ORION_POSTS.filter(p => p.user === currentSession).forEach(p => gridPosts.innerHTML += `<div class="grid-post"><img src="${p.img}"></div>`);
-        ORION_POSTS.filter(p => bookmarks.includes(p.id)).forEach(p => gridSaved.innerHTML += `<div class="grid-post"><img src="${p.img}"></div>`);
+    function openMediaView(id, type) {
+        const overlay = document.getElementById('media-view-overlay');
+        const content = document.getElementById('media-view-content');
+        let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
+        content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><i class="fas fa-circle-user"></i> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+        overlay.style.display = 'block';
     }
 
-    function switchProfileGrid(type) {
-        document.getElementById('btn-grid-posts').classList.toggle('active', type === 'posts');
-        document.getElementById('btn-grid-saved').classList.toggle('active', type === 'saved');
-        document.getElementById('grid-posts-view').style.display = type === 'posts' ? 'grid' : 'none';
-        document.getElementById('grid-saved-view').style.display = type === 'saved' ? 'grid' : 'none';
+    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; }
+    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
+    
+    function filtrerRecherche() {
+        const q = document.getElementById('search-input').value.toLowerCase();
+        const res = document.getElementById('search-results');
+        res.innerHTML = "";
+        if(q.length < 1) return;
+        USERS_DB.forEach(u => { if(u.includes(q)) res.innerHTML += `<div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')"><i class="fas fa-user-circle" style="font-size:1.5rem; color:var(--text-sec);"></i> <b>${u}</b></div>`; });
     }
 
-    function terminateOrionSession() { localStorage.removeItem("orion_current_user"); location.reload(); }
-    window.onload = () => { if (currentSession) launchOrion(); };
+    function toggleSave(id, btn) {
+        if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); }
+        else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
+        localStorage.setItem('metaSaved', JSON.stringify(savedItems));
+        renderMyProfile();
+    }
+
+    function toggleTheme() {
+        const isDark = document.getElementById('theme-toggle').checked;
+        document.body.classList.toggle('dark-mode', isDark);
+        localStorage.setItem('metaTheme', isDark ? 'dark' : 'light');
+    }
+
+    function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            document.querySelectorAll('iframe').forEach(iframe => {
+                const s = iframe.src; iframe.src = ""; iframe.src = s;
+            });
+        }
+    });
+
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('metaTheme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-toggle').checked = true; }
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
+        if(loggedUser) startApp();
+    });
 </script>
 </body>
 </html>
