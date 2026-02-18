@@ -15,12 +15,32 @@
             --border: #222222; 
             --text-main: #ffffff; 
             --text-sec: #888888;
-            --gold: #D4AF37; /* Or Luxe */
-            --gold-light: #F3E5AB;
+            --accent: #D4AF37; /* Or par défaut */
+            --accent-text: #000000;
             --nav-bg: rgba(5, 5, 5, 0.85);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+
+        /* Définition des palettes de couleurs (Accents) */
+        body[data-accent="gold"] { --accent: #D4AF37; --accent-text: #000000; }
+        body[data-accent="blue"] { --accent: #007AFF; --accent-text: #ffffff; }
+        body[data-accent="white"] { --accent: #FFFFFF; --accent-text: #000000; }
         
+        /* Mode Clair */
+        body.light-mode { 
+            --bg-color: #F5F5F7; 
+            --white: #FFFFFF; 
+            --surface: #FFFFFF;
+            --border: #E0E0E0; 
+            --text-main: #1D1D1F; 
+            --text-sec: #86868B;
+            --nav-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        body.light-mode[data-accent="black"] { --accent: #1D1D1F; --accent-text: #FFFFFF; }
+        body.light-mode[data-accent="blue"] { --accent: #007AFF; --accent-text: #FFFFFF; }
+        body.light-mode[data-accent="grey"] { --accent: #555555; --accent-text: #FFFFFF; }
+
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             font-family: 'Montserrat', sans-serif;
@@ -30,202 +50,194 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        :focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
-        
+        :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
-        /* LOADER ELEGANT */
+        /* LOADER */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .spinner { width: 40px; height: 40px; border: 1px solid var(--border); border-top: 1px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
-        .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--gold); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; }
+        .spinner { width: 40px; height: 40px; border: 1px solid #333; border-top: 1px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+        /* --- ONBOARDING SCREEN (CHOIX THEME) --- */
+        #onboarding-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; }
+        .ob-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
+        .ob-subtitle { font-size: 0.8rem; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 50px; }
         
+        .ob-step { display: none; width: 100%; max-width: 350px; animation: fadeIn 0.5s ease; }
+        .ob-step.active { display: block; }
+        
+        .ob-options { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .ob-btn { 
+            padding: 20px; 
+            border: 1px solid #333; 
+            background: transparent; 
+            color: #fff; 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+        .ob-btn:hover { border-color: #fff; }
+        .ob-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.05); color: var(--accent); }
+
+        .color-options { display: flex; justify-content: center; gap: 25px; margin-top: 10px; }
+        .color-circle {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; color: #fff; font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .color-circle:active { transform: scale(0.9); }
+        .color-circle.active { border-color: #fff; transform: scale(1.1); }
+        
+        /* Styles pour les cercles de couleur */
+        .cc-gold { background: #D4AF37; color: #000; }
+        .cc-blue { background: #007AFF; }
+        .cc-white { background: #FFF; color: #000; }
+        .cc-black { background: #1D1D1F; }
+        .cc-grey { background: #555; }
+
+        .ob-validate-btn { margin-top: 40px; padding: 15px 40px; background: #fff; color: #000; border: none; font-weight: 600; letter-spacing: 1px; cursor: pointer; transition: opacity 0.2s; }
+        .ob-validate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* --- LOGIN --- */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; }
+        input { width: 100%; max-width: 300px; padding: 18px; background: transparent; border: 1px solid var(--border); border-radius: 0; margin-bottom: 20px; font-size: 13px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
+        input:focus { border-color: var(--accent); }
+        input::placeholder { color: var(--text-sec); }
+        .login-btn { width: 100%; max-width: 300px; background: transparent; color: var(--accent); padding: 18px; border: 1px solid var(--accent); border-radius: 0; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; transition: 0.3s; }
+        .login-btn:active { background: var(--accent); color: var(--accent-text); }
+        #login-error { color: #ff4d4d; font-size: 0.7rem; margin-top: 15px; display: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* --- MAIN APP --- */
         header { 
             height: calc(70px + env(safe-area-inset-top)); 
             padding-top: env(safe-area-inset-top); 
             border-bottom: 1px solid var(--border); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-left: 25px; 
-            padding-right: 25px; 
-            background: transparent; 
-            z-index: 100; 
-            flex-shrink: 0;
+            display: none; justify-content: space-between; align-items: center; 
+            padding-left: 25px; padding-right: 25px; 
+            background: transparent; z-index: 100; flex-shrink: 0;
         }
-        header span { 
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem; 
-            font-weight: 600; 
-            letter-spacing: 1px; 
-            color: var(--text-main);
-            text-transform: uppercase;
-        }
+        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
-        /* STORIES ELEGANT */
-        .stories-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 25px 20px;
-            gap: 25px;
-            background: transparent;
-            border-bottom: 1px solid var(--border);
-            scrollbar-width: none;
-        }
+        .stories-container { display: flex; overflow-x: auto; padding: 25px 20px; gap: 25px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
-        .story-bubble {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 75px;
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-        .story-img-wrapper {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            background: var(--bg-color);
-            border: 1px solid var(--gold); /* Cercle Or fin */
-            transition: 0.3s;
-            overflow: hidden;
-        }
-        .story-bubble:active .story-img-wrapper { transform: scale(0.95); border-color: var(--gold-light); }
+        .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 75px; cursor: pointer; border: none; background: none; }
+        .story-img-wrapper { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-color); border: 1px solid var(--accent); transition: 0.3s; overflow: hidden; }
+        .story-bubble:active .story-img-wrapper { transform: scale(0.95); border-color: var(--text-main); }
         .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: none; filter: grayscale(30%) contrast(105%); opacity: 0.9; }
         .story-img-wrapper i { font-size: 1.5rem; color: var(--text-sec); }
-        .story-name { font-size: 0.65rem; color: var(--text-sec); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-
-        /* LOGIN PREMIUM */
-        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
-        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: #fff; text-transform: uppercase; }
-        input { width: 100%; max-width: 300px; padding: 18px; background: transparent; border: 1px solid var(--border); border-radius: 0; margin-bottom: 20px; font-size: 13px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
-        input:focus { border-color: var(--gold); }
-        input::placeholder { color: var(--text-sec); }
-        .login-btn { width: 100%; max-width: 300px; background: transparent; color: var(--gold); padding: 18px; border: 1px solid var(--gold); border-radius: 0; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; transition: 0.3s; }
-        .login-btn:active { background: var(--gold); color: #000; }
-        #login-error { color: #ff4d4d; font-size: 0.7rem; margin-top: 15px; display: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+        .story-name { font-size: 0.65rem; color: var(--text-sec); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 10px; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
-
         .content-area { flex: 1; position: relative; overflow: hidden; }
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: transparent; }
         .section.active { display: block; }
         
-        /* POST STYLE MINIMALISTE */
-        .post { 
-            background: var(--surface); 
-            margin: 25px auto; 
-            max-width: 500px; 
-            border-radius: 2px; /* Coins presque vifs */
-            overflow: hidden;
-            border: none;
-            box-shadow: var(--card-shadow);
-        }
-        
+        .post { background: var(--surface); margin: 25px auto; max-width: 500px; border-radius: 2px; overflow: hidden; border: none; box-shadow: var(--card-shadow); }
         .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.75rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
         .post-user .mini-avatar { width: 28px; height: 28px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
         .post-actions { padding: 18px 20px; display: flex; justify-content: flex-end; border-top: 1px solid var(--border); }
         
-        .action-btn {
-            background: transparent;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-            color: var(--text-sec);
-            font-size: 1.2rem; /* Icônes plus fines/petites */
-            transition: color 0.3s;
-        }
+        .action-btn { background: transparent; border: none; padding: 5px; cursor: pointer; color: var(--text-sec); font-size: 1.2rem; transition: color 0.3s; }
         .action-btn:active { color: var(--text-main); }
         .action-btn i { pointer-events: none; }
-        .action-btn.saved { color: var(--gold); }
+        .action-btn.saved { color: var(--accent); }
 
-        /* VIDEO SECTION */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; } 
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
         .video-info { position: absolute; bottom: 80px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
-        .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--gold-light); font-size: 1.4rem; }
+        .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
 
-        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 600; overflow-y: auto; animation: fadeIn 0.4s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
+        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: fadeIn 0.4s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* NAVIGATION FLOTTANTE PREMIUM */
-        nav { 
-            height: auto; 
-            width: calc(100% - 40px);
-            margin: 0 auto 20px auto; 
-            padding-top: 15px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-            border-radius: 30px; /* Forme pilule */
-            border: 1px solid rgba(255,255,255,0.05);
-            background: rgba(20, 20, 20, 0.8); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative; 
-            z-index: 100;
-            display: flex;
-            justify-content: space-around; 
-            align-items: center; 
-        }
-        .nav-indicator { position: absolute; top: 5px; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--gold); }
-        
-        nav button.nav-item {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-sec);
-            cursor: pointer;
-            z-index: 2;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        nav button.nav-item.active { color: var(--gold); }
+        /* NAVIGATION */
+        nav { height: auto; width: calc(100% - 40px); margin: 0 auto 20px auto; padding-top: 15px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); border-radius: 30px; border: 1px solid var(--border); background: var(--nav-bg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; z-index: 100; display: flex; justify-content: space-around; align-items: center; }
+        .nav-indicator { position: absolute; top: 5px; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--accent); }
+        nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        nav button.nav-item.active { color: var(--accent); }
 
-        /* PROFILES */
+        /* PROFILE & SETTINGS */
         .profile-tabs { display: flex; background: transparent; margin-top: 30px; border-bottom: 1px solid var(--border); }
-        .p-tab { flex: 1; padding: 18px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; text-transform: uppercase; }
-        .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--gold); }
-        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--bg-color); }
+        .p-tab { flex: 1; padding: 18px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
+        .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
+        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); }
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; transition: opacity 0.3s; }
         .grid-item:active { opacity: 0.7; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
         
-        .header-btn {
-            background: none;
-            border: none;
-            color: var(--text-sec);
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 8px;
-        }
+        .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.1rem; cursor: pointer; padding: 8px; }
+
+        /* Settings specific */
+        .settings-group { padding: 25px; border-bottom: 1px solid var(--border); }
+        .settings-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; margin-bottom: 20px; color: var(--text-main); }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .settings-label { font-size: 0.8rem; letter-spacing: 1px; color: var(--text-sec); text-transform: uppercase; }
+        
+        /* Color Picker in Settings */
+        .picker-colors { display: flex; gap: 15px; }
+        .picker-circle { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+        .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
     </style>
 </head>
-<body oncontextmenu="return false;" class="dark-mode"> 
+<body oncontextmenu="return false;" data-accent="gold">
 <div id="loader"><div class="spinner"></div><div class="loader-text">Loading</div></div>
 
-<div id="app-container">
-    <div id="login-screen">
-        <div class="logo">Meta Service</div>
-        <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
-        <input type="password" id="password" placeholder="PASSWORD">
-        <button class="login-btn btn-press" onclick="handleLogin()">Enter</button>
-        <div id="login-error">Access Denied</div>
+<!-- 1. ECRAN D'ONBOARDING (CHOIX THEME) -->
+<div id="onboarding-screen">
+    <div class="ob-title">Meta Service</div>
+    <div class="ob-subtitle">Personnalisation</div>
+
+    <!-- Etape 1: Mode -->
+    <div id="ob-step-1" class="ob-step active">
+        <div class="ob-subtitle" style="margin-bottom: 30px; font-size: 0.7rem;">Choisissez votre ambiance</div>
+        <div class="ob-options">
+            <button class="ob-btn" onclick="setObMode('dark')">
+                <i class="fas fa-moon" style="margin-right: 10px;"></i> Mode Sombre
+            </button>
+            <button class="ob-btn" onclick="setObMode('light')">
+                <i class="fas fa-sun" style="margin-right: 10px;"></i> Mode Clair
+            </button>
+        </div>
     </div>
 
+    <!-- Etape 2: Couleur -->
+    <div id="ob-step-2" class="ob-step">
+        <div class="ob-subtitle" style="margin-bottom: 30px; font-size: 0.7rem;">Sélectionnez l'accent</div>
+        <div id="ob-color-container" class="color-options">
+            <!-- Rempli dynamiquement par JS -->
+        </div>
+        <button id="ob-validate-btn" class="ob-validate-btn" onclick="validateOnboarding()" disabled>Appliquer</button>
+    </div>
+</div>
+
+<!-- 2. ECRAN DE CONNEXION -->
+<div id="login-screen">
+    <div class="logo">Meta Service</div>
+    <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
+    <input type="password" id="password" placeholder="PASSWORD">
+    <button class="login-btn btn-press" onclick="handleLogin()">Enter</button>
+    <div id="login-error">Access Denied</div>
+</div>
+
+<!-- 3. APPLICATION PRINCIPALE -->
+<div id="app-container">
     <div id="main-app">
         <header class="glass" id="main-header">
             <div style="width: 40px;"></div>
@@ -245,7 +257,7 @@
             
             <div id="search-section" class="section">
                 <div style="padding:20px; background:transparent; position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher un profil">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher">
                 </div>
                 <div id="search-results"></div>
             </div>
@@ -256,7 +268,7 @@
             
             <div id="own-profile-section" class="section">
                 <div style="padding: 50px 20px; text-align: center; background: transparent;">
-                    <div id="my-profile-pic-container" style="width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--gold); overflow: hidden; border: 1px solid var(--gold);">
+                    <div id="my-profile-pic-container" style="width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent);">
                         <i class="fas fa-user"></i>
                     </div>
                     <h2 id="my-name-display" style="font-weight: 300; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;"></h2>
@@ -272,12 +284,12 @@
             </div>
 
             <div id="external-profile-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; background: rgba(0,0,0,0.9); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond'; letter-spacing: 1px;"></span>
                 </div>
                 <div id="ext-header" style="padding: 40px; text-align: center; background: transparent;">
-                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--gold);">
+                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);">
                         <i class="fas fa-user"></i>
                     </div>
                     <h3 id="ext-display-name" style="font-size: 1.5rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
@@ -287,21 +299,37 @@
             </div>
 
             <div id="media-view-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; background: rgba(0,0,0,0.9); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeMediaView()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;">Details</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
 
+            <!-- SETTINGS OVERLAY MIS A JOUR -->
             <div id="settings-overlay" class="overlay-page">
-                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.9);">
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav-bg);">
                     <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <h2 style="margin-left: 10px; font-size: 1rem; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Settings</h2>
                 </div>
-                <div style="padding:30px; display:flex; justify-content:space-between; align-items:center; background: transparent;">
-                    <span style="font-weight: 400; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;">Dark Mode</span>
-                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 40px; margin-bottom:0;" checked aria-label="Activer le mode sombre">
+                
+                <div class="settings-group">
+                    <div class="settings-title">Apparence</div>
+                    
+                    <div class="settings-row">
+                        <span class="settings-label">Mode</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.6rem;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.6rem;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-row">
+                        <span class="settings-label">Couleur Accent</span>
+                        <div id="settings-color-picker" class="picker-colors">
+                            <!-- Rempli dynamiquement -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -318,7 +346,7 @@
 
 <script>
     /* ==========================================
-       CONFIGURATION CENTRALE DES MEMBRES
+       CONFIGURATION
        ========================================== */
     const CONFIG_USERS = {
         "metaservice": { pass: "Pass.123", avatar: "" },
@@ -345,12 +373,73 @@
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
+    let currentObMode = 'dark'; // Temp var for onboarding
+
+    // --- LOGIQUE THEME & ONBOARDING ---
+
+    function applyTheme(mode, accent) {
+        if (mode === 'light') {
+            document.body.classList.add('light-mode');
+        } else {
+            document.body.classList.remove('light-mode');
+        }
+        document.body.setAttribute('data-accent', accent);
+        
+        // Sauvegarde
+        localStorage.setItem('metaThemeMode', mode);
+        localStorage.setItem('metaThemeAccent', accent);
+    }
+
+    function setObMode(mode) {
+        currentObMode = mode;
+        document.getElementById('ob-step-1').classList.remove('active');
+        document.getElementById('ob-step-2').classList.add('active');
+        
+        const container = document.getElementById('ob-color-container');
+        container.innerHTML = '';
+        
+        // Définir les options de couleur selon le mode
+        let colors = [];
+        if (mode === 'dark') {
+            colors = [
+                { id: 'gold', name: 'Or', class: 'cc-gold' },
+                { id: 'blue', name: 'Bleu', class: 'cc-blue' },
+                { id: 'white', name: 'Blanc', class: 'cc-white' }
+            ];
+        } else {
+            colors = [
+                { id: 'black', name: 'Noir', class: 'cc-black' },
+                { id: 'blue', name: 'Bleu', class: 'cc-blue' },
+                { id: 'grey', name: 'Gris', class: 'cc-grey' }
+            ];
+        }
+
+        colors.forEach(c => {
+            container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`;
+        });
+    }
+
+    let selectedObColor = null;
+
+    function selectObColor(color, elem) {
+        document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active'));
+        elem.classList.add('active');
+        selectedObColor = color;
+        document.getElementById('ob-validate-btn').disabled = false;
+    }
+
+    function validateOnboarding() {
+        if (!selectedObColor) return;
+        applyTheme(currentObMode, selectedObColor);
+        document.getElementById('onboarding-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    // --- LOGIQUE APPLICATION ---
 
     function getAvatar(username) {
         const user = CONFIG_USERS[username];
-        if (user && user.avatar) {
-            return `<img src="${user.avatar}" alt="Avatar de ${username}">`;
-        }
+        if (user && user.avatar) return `<img src="${user.avatar}" alt="${username}">`;
         return `<i class="fas fa-user" aria-hidden="true"></i>`;
     }
 
@@ -370,6 +459,8 @@
     function startApp() {
         document.getElementById("login-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
+        document.querySelector("header").style.display = "flex";
+        
         document.getElementById("my-name-display").innerText = loggedUser;
         document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_');
         document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
@@ -378,6 +469,7 @@
         genererContenu();
         renderMyProfile();
         switchTab('feed', 0);
+        updateSettingsUI();
     }
 
     function renderStories() {
@@ -386,23 +478,18 @@
         Object.keys(CONFIG_USERS).forEach(username => {
             storiesList.insertAdjacentHTML('beforeend', `
                 <button class="story-bubble btn-press" onclick="openExternalProfile('${username}')" aria-label="Voir le profil de ${username}">
-                    <div class="story-img-wrapper">
-                        ${getAvatar(username)}
-                    </div>
+                    <div class="story-img-wrapper">${getAvatar(username)}</div>
                     <div class="story-name">${username}</div>
                 </button>
             `);
         });
     }
 
-    function closeAllOverlays() {
+    function switchTab(t, i) {
         document.getElementById('settings-overlay').style.display = 'none';
         document.getElementById('external-profile-overlay').style.display = 'none';
         document.getElementById('media-view-overlay').style.display = 'none';
-    }
-
-    function switchTab(t, i) {
-        closeAllOverlays();
+        
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
         document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
@@ -424,9 +511,7 @@
         }
     }
 
-    function stopAllVideos() {
-        document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; });
-    }
+    function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; }); }
 
     function observeVideos() {
         if (videoObserver) videoObserver.disconnect();
@@ -516,7 +601,7 @@
                     </div>
                     <div class="post-img-container"><img src="${p.url}" alt="Publication de ${p.auteur}"></div>
                     <div class="post-actions">
-                        <button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)" aria-label="${isSaved ? 'Retirer des enregistrés' : 'Enregistrer'}">
+                        <button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)" aria-label="${isSaved ? 'Retirer' : 'Enregistrer'}">
                             <i class="${isSaved ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -544,7 +629,10 @@
         document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = "");
     }
     
-    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; }
+    function toggleSettings(s) { 
+        document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; 
+        updateSettingsUI();
+    }
     
     function filtrerRecherche() {
         const q = document.getElementById('search-input').value.toLowerCase();
@@ -564,39 +652,87 @@
 
     function toggleSave(id, btn) {
         const icon = btn.querySelector('i');
-        
         if (savedItems.includes(id)) { 
             savedItems = savedItems.filter(i => i !== id); 
             icon.classList.replace('fas', 'far');
             btn.classList.remove('saved');
-            btn.setAttribute('aria-label', 'Enregistrer');
         } else { 
             savedItems.push(id); 
             icon.classList.replace('far', 'fas');
             btn.classList.add('saved');
-            btn.setAttribute('aria-label', 'Retirer des enregistrés');
         }
-        
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
         if(document.getElementById('own-profile-section').classList.contains('active')) renderMyProfile();
     }
 
-    function toggleTheme() {
-        const isDark = document.getElementById('theme-toggle').checked;
-        document.body.classList.toggle('dark-mode', isDark);
-        localStorage.setItem('metaTheme', isDark ? 'dark' : 'light');
+    // --- SETTINGS CONTROLS ---
+    
+    function setThemeMode(mode) {
+        // On applique le mode, et on garde l'accent actuel ou on réinitialise si incompatibilité
+        let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold';
+        
+        // Si on passe en mode clair et qu'on a un accent "White" ou "Gold" (qui peuvent poser problème), on reset
+        if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) {
+            currentAccent = 'black'; // Défaut mode clair
+        }
+        // Si on passe en mode sombre et qu'on a "black"
+        if(mode === 'dark' && currentAccent === 'black') {
+            currentAccent = 'gold'; // Défaut mode sombre
+        }
+        
+        applyTheme(mode, currentAccent);
+        updateSettingsUI();
+    }
+
+    function setThemeAccent(accent) {
+        const mode = localStorage.getItem('metaThemeMode') || 'dark';
+        applyTheme(mode, accent);
+        updateSettingsUI();
+    }
+
+    function updateSettingsUI() {
+        const mode = localStorage.getItem('metaThemeMode') || 'dark';
+        const accent = localStorage.getItem('metaThemeAccent') || 'gold';
+
+        // Boutons Mode
+        document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark');
+        document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light');
+
+        // Picker Couleur
+        const picker = document.getElementById('settings-color-picker');
+        picker.innerHTML = '';
+        
+        let colors = (mode === 'dark') 
+            ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}]
+            : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}];
+
+        colors.forEach(c => {
+            const isActive = (c.id === accent);
+            picker.innerHTML += `<div class="picker-circle ${c.class} ${isActive ? 'active' : ''}" onclick="setThemeAccent('${c.id}')"></div>`;
+        });
     }
 
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
-        if (!localStorage.getItem('metaTheme')) localStorage.setItem('metaTheme', 'dark');
-        if (localStorage.getItem('metaTheme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-toggle').checked = true; } 
-        else { document.body.classList.remove('dark-mode'); document.getElementById('theme-toggle').checked = false; }
-        
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 1200);
-        
-        if(loggedUser) startApp();
+        // Vérifier si c'est la première visite
+        const hasPrefs = localStorage.getItem('metaThemeMode');
+
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            
+            if (!hasPrefs) {
+                // Pas de préférences : Onboarding
+                document.getElementById('onboarding-screen').style.display = 'flex';
+            } else {
+                // Préférences existantes : Apply and Login
+                applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
+                document.getElementById('onboarding-screen').style.display = 'none';
+                
+                if(loggedUser) startApp();
+                else document.getElementById('login-screen').style.display = 'flex';
+            }
+        }, 1200);
     });
 </script>
 </body>
