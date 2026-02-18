@@ -30,6 +30,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); transition: all 0.3s ease; }
         
+        /* Accessibilité : Focus visible pour la navigation clavier */
+        :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+        
         .btn-press:active { transform: scale(0.92); transition: 0.1s; }
         .glass { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
 
@@ -53,7 +56,6 @@
             flex-shrink: 0; 
         }
 
-        /* --- NOUVEAU : STYLE DES BULLES (STORIES) --- */
         .stories-container {
             display: flex;
             overflow-x: auto;
@@ -70,6 +72,8 @@
             align-items: center;
             min-width: 70px;
             cursor: pointer;
+            border: none;
+            background: none;
         }
         .story-img-wrapper {
             width: 60px;
@@ -82,8 +86,9 @@
             justify-content: center;
             margin-bottom: 5px;
             background: var(--white);
+            overflow: hidden;
         }
-        .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: none; }
         .story-img-wrapper i { font-size: 1.8rem; color: var(--text-sec); }
         .story-name { font-size: 0.7rem; color: var(--text-main); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -105,8 +110,22 @@
         .post-user .mini-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; background: #ddd; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
         .post-actions { padding: 12px 16px; display: flex; justify-content: flex-end; }
-        .post-actions i { font-size: 1.6rem; cursor: pointer; transition: transform 0.2s; }
-        .post-actions i.fas { color: #f9d71c; }
+        
+        /* Style pour les boutons d'action (Accessibilité) */
+        .action-btn {
+            background: transparent;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            color: var(--text-main); /* Hérite la couleur par défaut */
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn i { pointer-events: none; transition: transform 0.2s; }
+        .action-btn:active i { transform: scale(0.9); }
+        .action-btn.saved i { color: #f9d71c; } /* Couleur dorée si enregistré */
 
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; height: 100%; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; } 
@@ -120,15 +139,40 @@
 
         nav { height: calc(65px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: var(--nav-bg); position: relative; z-index: 100; }
         .nav-indicator { position: absolute; top: 12px; width: 45px; height: 40px; background: rgba(0, 149, 246, 0.1); border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        nav i { font-size: 1.3rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        nav i.active { color: var(--blue); transform: translateY(-2px); }
+        
+        /* Boutons de navigation (Accessibilité) */
+        nav button.nav-item {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-sec);
+            cursor: pointer;
+            z-index: 2;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        nav button.nav-item.active { color: var(--blue); transform: translateY(-2px); }
 
         .profile-tabs { display: flex; background: var(--white); margin-top: 10px; }
-        .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+        .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: none; border-left: none; border-right: none; border-top: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 2px solid var(--text-main); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
-        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; cursor: pointer; }
+        .grid-item { aspect-ratio: 1/1; background: var(--border); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Boutons header */
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" class="dark-mode"> 
@@ -148,19 +192,21 @@
             <div style="width: 40px;"></div>
             <span>Meta Service</span>
             <div style="width: 40px; text-align: right;">
-                <i class="fas fa-cog btn-press" id="global-cog" style="display:none; font-size: 1.2rem;" onclick="toggleSettings(true)"></i>
+                <button class="header-btn btn-press" id="global-cog" style="display:none;" onclick="toggleSettings(true)" aria-label="Réglages">
+                    <i class="fas fa-cog"></i>
+                </button>
             </div>
         </header>
 
         <div class="content-area">
             <div id="feed-section" class="section active">
-                <div id="stories-list" class="stories-container"></div>
+                <div id="stories-list" class="stories-container" role="list" aria-label="Stories"></div>
                 <div id="photo-list"></div>
             </div>
             
             <div id="search-section" class="section">
                 <div style="padding:15px; background:var(--white); position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:var(--bg-color); border:none;" placeholder="Rechercher un profil..." oninput="filtrerRecherche()">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:var(--bg-color); border:none;" placeholder="Rechercher un profil..." oninput="filtrerRecherche()" aria-label="Rechercher un profil">
                 </div>
                 <div id="search-results"></div>
             </div>
@@ -179,8 +225,8 @@
                     <button onclick="handleLogout()" class="btn-press" style="color:var(--text-main); border:1px solid var(--border); padding:8px 24px; border-radius:20px; background:var(--white); font-size: 0.85rem; font-weight: 600;">Déconnexion</button>
                 </div>
                 <div class="profile-tabs glass">
-                    <div id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">POSTS</div>
-                    <div id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">ENREGISTRÉS</div>
+                    <button id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">POSTS</button>
+                    <button id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">ENREGISTRÉS</button>
                 </div>
                 <div id="my-posts-grid" class="content-grid"></div>
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
@@ -188,7 +234,7 @@
 
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
-                    <i class="fas fa-arrow-left btn-press" onclick="closeExternalProfile()" style="padding: 10px;"></i>
+                    <button class="header-btn btn-press" onclick="closeExternalProfile()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <span id="ext-user-title" style="margin-left: 10px; font-weight: 700;"></span>
                 </div>
                 <div id="ext-header" style="padding: 20px; text-align: center; background: var(--white);">
@@ -203,27 +249,30 @@
 
             <div id="media-view-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; background: var(--white); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
-                    <i class="fas fa-arrow-left btn-press" onclick="closeMediaView()" style="padding: 10px;"></i>
+                    <button class="header-btn btn-press" onclick="closeMediaView()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <span style="margin-left: 10px; font-weight: 700;">Détails</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
 
             <div id="settings-overlay" class="overlay-page">
-                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);"><i class="fas fa-arrow-left btn-press" onclick="toggleSettings(false)" style="padding:10px;"></i><h2 style="margin-left: 10px; font-size: 1.1rem;">Réglages</h2></div>
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--white);">
+                    <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem;">Réglages</h2>
+                </div>
                 <div style="padding:25px; display:flex; justify-content:space-between; align-items:center; background: var(--white);">
                     <span style="font-weight: 500;">Apparence Sombre</span>
-                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 40px; margin-bottom:0;" checked>
+                    <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 40px; margin-bottom:0;" checked aria-label="Activer le mode sombre">
                 </div>
             </div>
         </div>
 
         <nav class="glass">
             <div class="nav-indicator" id="nav-indicator"></div>
-            <i class="fas fa-house btn-press active" onclick="switchTab('feed', 0)"></i>
-            <i class="fas fa-magnifying-glass btn-press" onclick="switchTab('search', 1)"></i>
-            <i class="fas fa-clapperboard btn-press" onclick="switchTab('videos', 2)"></i>
-            <i class="fas fa-circle-user btn-press" onclick="switchTab('own-profile', 3)"></i>
+            <button class="nav-item btn-press active" onclick="switchTab('feed', 0)" aria-label="Accueil"><i class="fas fa-house"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('search', 1)" aria-label="Rechercher"><i class="fas fa-magnifying-glass"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('videos', 2)" aria-label="Vidéos"><i class="fas fa-clapperboard"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('own-profile', 3)" aria-label="Mon profil"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
 </div>
@@ -262,9 +311,10 @@
     function getAvatar(username) {
         const user = CONFIG_USERS[username];
         if (user && user.avatar) {
-            return `<img src="${user.avatar}" alt="${username}">`;
+            // Ajout de alt pour l'accessibilité
+            return `<img src="${user.avatar}" alt="Avatar de ${username}">`;
         }
-        return `<i class="fas fa-user"></i>`;
+        return `<i class="fas fa-user" aria-hidden="true"></i>`;
     }
 
     function handleLogin() {
@@ -300,14 +350,15 @@
         const storiesList = document.getElementById('stories-list');
         storiesList.innerHTML = "";
         Object.keys(CONFIG_USERS).forEach(username => {
-            storiesList.innerHTML += `
-                <div class="story-bubble btn-press" onclick="openExternalProfile('${username}')">
+            // Utilisation de button pour l'accessibilité
+            storiesList.insertAdjacentHTML('beforeend', `
+                <button class="story-bubble btn-press" onclick="openExternalProfile('${username}')" aria-label="Voir le profil de ${username}">
                     <div class="story-img-wrapper">
                         ${getAvatar(username)}
                     </div>
                     <div class="story-name">${username}</div>
-                </div>
-            `;
+                </button>
+            `);
         });
     }
 
@@ -321,7 +372,10 @@
         closeAllOverlays();
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
-        document.querySelectorAll('nav i').forEach((icon, idx) => icon.classList.toggle('active', idx === i));
+        
+        // Gestion de la navigation active
+        document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
+        
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
@@ -331,9 +385,9 @@
     }
 
     function moveIndicator(i) {
-        const icons = document.querySelectorAll('nav i');
+        const buttons = document.querySelectorAll('nav button.nav-item');
         const indicator = document.getElementById('nav-indicator');
-        if(icons[i]) indicator.style.left = (icons[i].offsetLeft + icons[i].offsetWidth/2 - 22.5) + 'px';
+        if(buttons[i]) indicator.style.left = (buttons[i].offsetLeft + buttons[i].offsetWidth/2 - 22.5) + 'px';
     }
 
     function stopAllVideos() {
@@ -378,7 +432,7 @@
             grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-sec);">Aucune publication</div>`;
         } else {
             allMedia.forEach(m => {
-                grid.innerHTML += `<div class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</div>`;
+                grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')" aria-label="Voir la publication">${m.type==='photo'?`<img src="${m.url}" alt="Publication">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#333;color:white;"><i class="fas fa-play"></i></div>`}</button>`);
             });
         }
         overlay.style.display = 'block';
@@ -390,8 +444,16 @@
         const gridPosts = document.getElementById('my-posts-grid');
         const gridSaved = document.getElementById('my-saved-grid');
         gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
-        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { gridPosts.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; });
-        LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.innerHTML += `<div class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></div>`; } });
+        
+        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { 
+            gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); 
+        });
+        
+        LISTE_PHOTOS.forEach(p => { 
+            if(savedItems.includes(p.id)) { 
+                gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); 
+            } 
+        });
     }
 
     function switchMyTab(t) {
@@ -412,21 +474,24 @@
 
         fluxFinal.forEach(p => {
             const isSaved = savedItems.includes(p.id);
-            photoDiv.innerHTML += `
-                <div class="post">
+            // Utilisation de insertAdjacentHTML et button pour action
+            photoDiv.insertAdjacentHTML('beforeend', `
+                <article class="post">
                     <div class="post-user" onclick="openExternalProfile('${p.auteur}')">
                         <div class="mini-avatar">${getAvatar(p.auteur)}</div> 
                         ${p.auteur}
                     </div>
-                    <div class="post-img-container"><img src="${p.url}"></div>
+                    <div class="post-img-container"><img src="${p.url}" alt="Publication de ${p.auteur}"></div>
                     <div class="post-actions">
-                        <i class="${isSaved ? 'fas' : 'far'} fa-bookmark btn-press" onclick="toggleSave('${p.id}', this)"></i>
+                        <button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)" aria-label="${isSaved ? 'Retirer des enregistrés' : 'Enregistrer'}">
+                            <i class="${isSaved ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
+                        </button>
                     </div>
-                </div>`;
+                </article>`);
         });
 
         [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.innerHTML += `<div class="video-card"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`;
+            videoDiv.insertAdjacentHTML('beforeend', `<div class="video-card"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen" title="Vidéo de ${v.auteur}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`);
         });
         setTimeout(observeVideos, 500);
     }
@@ -436,7 +501,7 @@
         const content = document.getElementById('media-view-content');
         let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
         if(item) {
-             content.innerHTML = `<div class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark btn-press" onclick="toggleSave('${item.id}', this)"></i></div></div>`;
+             content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%" alt="Vue détaillée">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen" title="Lecteur vidéo"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)" aria-label="Enregistrer"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark" aria-hidden="true"></i></button></div></article>`;
              overlay.style.display = 'block';
         }
     }
@@ -455,18 +520,31 @@
         if(q.length < 1) return;
         Object.keys(CONFIG_USERS).forEach(u => { 
             if(u.includes(q)) {
-                res.innerHTML += `
-                    <div style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px;" onclick="openExternalProfile('${u}')">
+                res.insertAdjacentHTML('beforeend', `
+                    <button style="padding:16px; cursor:pointer; background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; width:100%; text-align:left; border-left:none; border-right:none; border-top:none;" onclick="openExternalProfile('${u}')">
                         <div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> 
-                        <b>${u}</b>
-                    </div>`; 
+                        <b style="color: var(--text-main);">${u}</b>
+                    </button>`); 
             }
         });
     }
 
+    // Mise à jour pour gérer le bouton
     function toggleSave(id, btn) {
-        if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); btn.classList.replace('fas', 'far'); } 
-        else { savedItems.push(id); btn.classList.replace('far', 'fas'); }
+        const icon = btn.querySelector('i'); // On cible l'icône à l'intérieur du bouton
+        
+        if (savedItems.includes(id)) { 
+            savedItems = savedItems.filter(i => i !== id); 
+            icon.classList.replace('fas', 'far');
+            btn.classList.remove('saved');
+            btn.setAttribute('aria-label', 'Enregistrer');
+        } else { 
+            savedItems.push(id); 
+            icon.classList.replace('far', 'fas');
+            btn.classList.add('saved');
+            btn.setAttribute('aria-label', 'Retirer des enregistrés');
+        }
+        
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
         if(document.getElementById('own-profile-section').classList.contains('active')) renderMyProfile();
     }
