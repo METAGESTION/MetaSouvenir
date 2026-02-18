@@ -19,6 +19,7 @@
             --accent-text: #000000;
             --nav-bg: rgba(5, 5, 5, 0.85);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --vh: 1vh; /* Variable pour la correction mobile */
         }
 
         /* Définition des palettes de couleurs (Accents) */
@@ -42,12 +43,23 @@
         body.light-mode[data-accent="grey"] { --accent: #555555; --accent-text: #FFFFFF; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* CORRECTION HEIGHT MOBILE */
+        html, body { 
+            height: 100%; 
+            width: 100%; 
+            overflow: hidden; 
+            background-color: var(--bg-color);
+        }
         body { 
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-color); 
-            height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); 
+            /* Utilisation de la variable JS pour la hauteur */
+            height: calc(var(--vh, 1vh) * 100);
+            color: var(--text-main); 
             transition: all 0.4s ease; 
             -webkit-font-smoothing: antialiased;
+            position: fixed; /* Fixe le corps pour éviter le scroll indésirable */
+            top: 0; left: 0;
         }
         
         :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
@@ -62,8 +74,8 @@
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* --- ONBOARDING SCREEN (CHOIX THEME) --- */
-        #onboarding-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; }
+        /* --- ONBOARDING SCREEN --- */
+        #onboarding-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; overflow-y: auto; }
         .ob-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
         .ob-subtitle { font-size: 0.8rem; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 50px; }
         
@@ -101,7 +113,6 @@
         .color-circle:active { transform: scale(0.9); }
         .color-circle.active { border-color: #fff; transform: scale(1.1); }
         
-        /* Styles pour les cercles de couleur */
         .cc-gold { background: #D4AF37; color: #000; }
         .cc-blue { background: #007AFF; }
         .cc-white { background: #FFF; color: #000; }
@@ -112,7 +123,7 @@
         .ob-validate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         /* --- LOGIN --- */
-        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
         .logo { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; }
         input { width: 100%; max-width: 300px; padding: 18px; background: transparent; border: 1px solid var(--border); border-radius: 0; margin-bottom: 20px; font-size: 13px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
         input:focus { border-color: var(--accent); }
@@ -190,7 +201,6 @@
         .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .settings-label { font-size: 0.8rem; letter-spacing: 1px; color: var(--text-sec); text-transform: uppercase; }
         
-        /* Color Picker in Settings */
         .picker-colors { display: flex; gap: 15px; }
         .picker-circle { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
@@ -199,12 +209,10 @@
 <body oncontextmenu="return false;" data-accent="gold">
 <div id="loader"><div class="spinner"></div><div class="loader-text">Loading</div></div>
 
-<!-- 1. ECRAN D'ONBOARDING (CHOIX THEME) -->
+<!-- 1. ECRAN D'ONBOARDING -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Service</div>
     <div class="ob-subtitle">Personnalisation</div>
-
-    <!-- Etape 1: Mode -->
     <div id="ob-step-1" class="ob-step active">
         <div class="ob-subtitle" style="margin-bottom: 30px; font-size: 0.7rem;">Choisissez votre ambiance</div>
         <div class="ob-options">
@@ -216,13 +224,9 @@
             </button>
         </div>
     </div>
-
-    <!-- Etape 2: Couleur -->
     <div id="ob-step-2" class="ob-step">
         <div class="ob-subtitle" style="margin-bottom: 30px; font-size: 0.7rem;">Sélectionnez l'accent</div>
-        <div id="ob-color-container" class="color-options">
-            <!-- Rempli dynamiquement par JS -->
-        </div>
+        <div id="ob-color-container" class="color-options"></div>
         <button id="ob-validate-btn" class="ob-validate-btn" onclick="validateOnboarding()" disabled>Appliquer</button>
     </div>
 </div>
@@ -306,7 +310,6 @@
                 <div id="media-view-content"></div>
             </div>
 
-            <!-- SETTINGS OVERLAY MIS A JOUR -->
             <div id="settings-overlay" class="overlay-page">
                 <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav-bg);">
                     <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
@@ -315,7 +318,6 @@
                 
                 <div class="settings-group">
                     <div class="settings-title">Apparence</div>
-                    
                     <div class="settings-row">
                         <span class="settings-label">Mode</span>
                         <div style="display:flex; gap:10px;">
@@ -323,12 +325,9 @@
                             <button class="ob-btn" style="padding:8px 15px; font-size:0.6rem;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
                         </div>
                     </div>
-
                     <div class="settings-row">
                         <span class="settings-label">Couleur Accent</span>
-                        <div id="settings-color-picker" class="picker-colors">
-                            <!-- Rempli dynamiquement -->
-                        </div>
+                        <div id="settings-color-picker" class="picker-colors"></div>
                     </div>
                 </div>
             </div>
@@ -373,19 +372,23 @@
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
-    let currentObMode = 'dark'; // Temp var for onboarding
+    let currentObMode = 'dark';
+
+    // --- CORRECTION HEIGHT MOBILE ---
+    function setViewportHeight() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('load', setViewportHeight);
 
     // --- LOGIQUE THEME & ONBOARDING ---
 
     function applyTheme(mode, accent) {
-        if (mode === 'light') {
-            document.body.classList.add('light-mode');
-        } else {
-            document.body.classList.remove('light-mode');
-        }
-        document.body.setAttribute('data-accent', accent);
+        if (mode === 'light') document.body.classList.add('light-mode');
+        else document.body.classList.remove('light-mode');
         
-        // Sauvegarde
+        document.body.setAttribute('data-accent', accent);
         localStorage.setItem('metaThemeMode', mode);
         localStorage.setItem('metaThemeAccent', accent);
     }
@@ -398,21 +401,9 @@
         const container = document.getElementById('ob-color-container');
         container.innerHTML = '';
         
-        // Définir les options de couleur selon le mode
         let colors = [];
-        if (mode === 'dark') {
-            colors = [
-                { id: 'gold', name: 'Or', class: 'cc-gold' },
-                { id: 'blue', name: 'Bleu', class: 'cc-blue' },
-                { id: 'white', name: 'Blanc', class: 'cc-white' }
-            ];
-        } else {
-            colors = [
-                { id: 'black', name: 'Noir', class: 'cc-black' },
-                { id: 'blue', name: 'Bleu', class: 'cc-blue' },
-                { id: 'grey', name: 'Gris', class: 'cc-grey' }
-            ];
-        }
+        if (mode === 'dark') colors = [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }];
+        else colors = [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }];
 
         colors.forEach(c => {
             container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`;
@@ -668,18 +659,9 @@
     // --- SETTINGS CONTROLS ---
     
     function setThemeMode(mode) {
-        // On applique le mode, et on garde l'accent actuel ou on réinitialise si incompatibilité
         let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold';
-        
-        // Si on passe en mode clair et qu'on a un accent "White" ou "Gold" (qui peuvent poser problème), on reset
-        if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) {
-            currentAccent = 'black'; // Défaut mode clair
-        }
-        // Si on passe en mode sombre et qu'on a "black"
-        if(mode === 'dark' && currentAccent === 'black') {
-            currentAccent = 'gold'; // Défaut mode sombre
-        }
-        
+        if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) currentAccent = 'black';
+        if(mode === 'dark' && currentAccent === 'black') currentAccent = 'gold';
         applyTheme(mode, currentAccent);
         updateSettingsUI();
     }
@@ -694,11 +676,9 @@
         const mode = localStorage.getItem('metaThemeMode') || 'dark';
         const accent = localStorage.getItem('metaThemeAccent') || 'gold';
 
-        // Boutons Mode
         document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark');
         document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light');
 
-        // Picker Couleur
         const picker = document.getElementById('settings-color-picker');
         picker.innerHTML = '';
         
@@ -715,17 +695,16 @@
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
-        // Vérifier si c'est la première visite
+        setViewportHeight(); // Appel initial correction
+        
         const hasPrefs = localStorage.getItem('metaThemeMode');
 
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             
             if (!hasPrefs) {
-                // Pas de préférences : Onboarding
                 document.getElementById('onboarding-screen').style.display = 'flex';
             } else {
-                // Préférences existantes : Apply and Login
                 applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
                 document.getElementById('onboarding-screen').style.display = 'none';
                 
