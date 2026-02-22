@@ -118,7 +118,7 @@
         .header-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
         .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
-        .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+        .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; margin-top: 10px; /* Descend les bulles */ }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
         .story-img-wrapper { width: 72px; height: 72px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent); transition: 0.3s; overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 2px; }
@@ -129,8 +129,8 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        /* Content area ajusté pour descendre le contenu */
-        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 20px; padding-bottom: 90px; }
+        /* Content area : LE CONTENU PASSE SOUS LA NAV */
+        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 10px; /* Pas de padding bottom */ }
         
         .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
@@ -157,7 +157,8 @@
         #videos-section::-webkit-scrollbar { display: none; } 
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
-        .video-info { position: absolute; bottom: 100px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
+        /* Info vidéo au-dessus des boutons */
+        .video-info { position: absolute; bottom: 90px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
         
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
@@ -166,7 +167,7 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION FLOTTANTE */
+        /* NAVIGATION : Transparente + Flottante */
         nav {
             position: fixed; 
             bottom: 0; 
@@ -181,6 +182,13 @@
             z-index: 999;
             background: transparent;
             border-top: none;
+        }
+        /* Dégradé pour lecture */
+        nav::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
         }
         
         .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; left: 0; box-shadow: 0 0 10px var(--accent); }
@@ -200,7 +208,7 @@
         .profile-tabs { display: flex; background: transparent; border-bottom: 1px solid var(--border); }
         .p-tab { flex: 1; padding: 20px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.75rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
-        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); }
+        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 80px; /* Espace pour nav */}
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; transition: opacity 0.3s; }
         .grid-item:active { opacity: 0.7; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
@@ -246,32 +254,17 @@
             padding: 10px; border-top: 1px solid var(--border); background: var(--surface); 
             padding-bottom: calc(10px + env(safe-area-inset-bottom));
         }
-        /* Input pour PC (Masqué sur mobile) */
-        .ai-pc-input {
-            display: none; width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; color: var(--text-main); font-size: 0.9rem;
-        }
-        /* Aperçu pour Mobile (Masqué sur PC) */
-        .ai-mobile-preview {
-            display: none; min-height: 40px; font-size: 1rem; color: var(--text-main); 
-            padding: 0 10px 10px 10px; word-break: break-word;
-        }
+        .ai-pc-input { display: none; width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; color: var(--text-main); font-size: 0.9rem; }
+        .ai-mobile-preview { display: none; min-height: 40px; font-size: 1rem; color: var(--text-main); padding: 0 10px 10px 10px; word-break: break-word; }
         .ai-mobile-preview:empty::before { content: "Utilisez le clavier ci-dessous..."; color: var(--text-sec); }
 
-        /* Clavier virtuel (Masqué sur PC) */
-        .ai-keyboard-area {
-            display: none; background: var(--surface); padding: 5px; flex-direction: column; gap: 6px; border-top: 1px solid var(--border);
-        }
+        .ai-keyboard-area { display: none; background: var(--surface); padding: 5px; flex-direction: column; gap: 6px; border-top: 1px solid var(--border); }
         .ai-input-row { display: flex; justify-content: space-between; gap: 4px; }
-        .ai-key {
-            flex: 1; height: 44px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px;
-            color: var(--text-main); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background 0.1s; text-transform: uppercase; font-weight: 500;
-        }
+        .ai-key { flex: 1; height: 44px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.1s; text-transform: uppercase; font-weight: 500; }
         .ai-key:active { background: var(--border); }
         .ai-key.space { flex: 5; }
         .ai-key.accent { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
         
-        /* Classe utilitaire pour switcher PC/Mobile */
         .is-desktop .ai-pc-input { display: block; }
         .is-desktop .ai-mobile-preview { display: none; }
         .is-desktop .ai-keyboard-area { display: none; }
@@ -295,6 +288,8 @@
     </div>
 </div>
 
+<!-- HTML IDENTIQUE AUX PRÉCÉDENTS (Onboarding, Login, App Structure) -->
+<!-- Pour la brièveté, je mets les ID importants. Le HTML complet est dans le bloc ci-dessous -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Officiel</div>
     <div class="ob-subtitle">Personnalisation</div>
@@ -423,14 +418,11 @@
     </div>
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Je suis votre assistant. Posez-moi une question.</div></div>
     
-    <!-- CONTENEUR INPUT (Gère PC vs Mobile) -->
     <div class="ai-input-container">
         <!-- Input PC -->
         <input type="text" class="ai-pc-input" id="ai-pc-input" placeholder="Écrivez ici et appuyez sur Entrée...">
-        
         <!-- Apercu Mobile -->
         <div id="ai-mobile-preview" class="ai-mobile-preview"></div>
-        
         <!-- Clavier Virtuel Mobile -->
         <div class="ai-keyboard-area" id="ai-keyboard">
             <div class="ai-input-row">
@@ -505,11 +497,8 @@
             win.classList.add('active'); 
             currentInput = ""; 
             updateAIPreview();
-            // Focus l'input PC si on est sur desktop
             if(!isMobile()) document.getElementById('ai-pc-input').focus();
-        } else { 
-            win.classList.remove('active'); 
-        }
+        } else { win.classList.remove('active'); }
     }
 
     function addAIMessage(text, sender) {
