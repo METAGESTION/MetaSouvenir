@@ -73,22 +73,12 @@
         .ob-step.active { display: block; }
         
         .ob-options { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .ob-btn { 
-            padding: 20px; border: 1px solid #333; background: transparent; color: #fff; 
-            font-family: 'Montserrat', sans-serif; font-size: 0.8rem; letter-spacing: 2px;
-            text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px;
-        }
+        .ob-btn { padding: 20px; border: 1px solid #333; background: transparent; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px; }
         .ob-btn:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
         .ob-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.05); color: var(--accent); }
 
         .color-options { display: flex; justify-content: center; gap: 25px; margin-top: 10px; }
-        .color-circle {
-            width: 60px; height: 60px; border-radius: 50%; border: 2px solid transparent;
-            cursor: pointer; transition: transform 0.2s, border-color 0.3s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; color: #fff; font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        .color-circle { width: 60px; height: 60px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .color-circle:active { transform: scale(0.9); }
         .color-circle.active { border-color: #fff; transform: scale(1.1); }
         
@@ -115,11 +105,7 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
-        header { 
-            height: calc(70px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); 
-            border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; 
-            padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0;
-        }
+        header { height: calc(70px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; position: relative; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
         .stories-container { display: flex; overflow-x: auto; padding: 25px 20px; gap: 25px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
@@ -161,7 +147,6 @@
         .video-info { position: absolute; bottom: 80px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
         
-        /* NOUVEAU : Badge "Vu" */
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: fadeIn 0.4s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
@@ -202,6 +187,39 @@
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
 
         .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* --- NOUVEAU: AI CHAT MINIMALISTE --- */
+        #ai-btn-header { 
+            position: absolute; top: 50%; right: 20px; transform: translateY(-50%); 
+            background: var(--accent); width: 36px; height: 36px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            color: var(--accent-text); font-size: 0.9rem; cursor: pointer; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 101; border: none; 
+            transition: transform 0.2s;
+        }
+        #ai-btn-header:active { transform: translateY(-50%) scale(0.9); }
+        #ai-btn-header.hidden { display: none; }
+
+        #ai-chat-window {
+            position: fixed; top: 80px; right: 15px; width: 300px; height: 400px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            display: none; flex-direction: column; z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        #ai-chat-window.active { display: flex; }
+        
+        .ai-top-bar { padding: 10px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .ai-top-title { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 0.9rem; }
+
+        .ai-msg-area { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .ai-msg-bubble { max-width: 90%; padding: 8px 12px; border-radius: 15px; font-size: 0.8rem; line-height: 1.3; }
+        .ai-msg-bubble.bot { background: var(--border); align-self: flex-start; color: var(--text-main); border-bottom-left-radius: 2px; }
+        .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        .ai-input-box { padding: 10px; border-top: 1px solid var(--border); display: flex; }
+        .ai-input-box input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 8px 15px; color: var(--text-main); font-size: 0.8rem; outline: none; }
+        .ai-input-box button { background: var(--accent); border: none; width: 30px; height: 30px; border-radius: 50%; margin-left: 8px; cursor: pointer; color: var(--accent-text); display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
@@ -214,12 +232,8 @@
     <div id="ob-step-1" class="ob-step active">
         <div class="ob-subtitle" style="margin-bottom: 30px; font-size: 0.7rem;">Choisissez votre ambiance</div>
         <div class="ob-options">
-            <button class="ob-btn" onclick="setObMode('dark')">
-                <i class="fas fa-moon" style="margin-right: 10px;"></i> Mode Sombre
-            </button>
-            <button class="ob-btn" onclick="setObMode('light')">
-                <i class="fas fa-sun" style="margin-right: 10px;"></i> Mode Clair
-            </button>
+            <button class="ob-btn" onclick="setObMode('dark')"><i class="fas fa-moon" style="margin-right: 10px;"></i> Mode Sombre</button>
+            <button class="ob-btn" onclick="setObMode('light')"><i class="fas fa-sun" style="margin-right: 10px;"></i> Mode Clair</button>
         </div>
     </div>
     <div id="ob-step-2" class="ob-step">
@@ -234,9 +248,7 @@
     <div class="logo">Meta Service</div>
     <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
     <input type="password" id="password" placeholder="PASSWORD">
-    <label class="remember-me">
-        <input type="checkbox" id="remember-me"> Rester connecté
-    </label>
+    <label class="remember-me"><input type="checkbox" id="remember-me"> Rester connecté</label>
     <button class="login-btn btn-press" onclick="handleLogin()" style="margin-top: 20px;">Enter</button>
     <div id="login-error">Access Denied</div>
 </div>
@@ -247,10 +259,8 @@
         <header class="glass" id="main-header">
             <div style="width: 40px;"></div>
             <span>Meta Service</span>
-            <div style="width: 40px; text-align: right;">
-                <button class="header-btn btn-press" id="global-cog" style="display:none;" onclick="toggleSettings(true)" aria-label="Réglages">
-                    <i class="fas fa-cog"></i>
-                </button>
+            <div style="position: relative; width: 40px;">
+                <button id="global-cog" class="header-btn btn-press" style="display:none; position: absolute; right: 0; top: 50%; transform: translateY(-50%);" onclick="toggleSettings(true)" aria-label="Réglages"><i class="fas fa-cog"></i></button>
             </div>
         </header>
 
@@ -273,23 +283,13 @@
             
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
-                    <div id="my-profile-pic-container" class="profile-pic-main">
-                        <i class="fas fa-user"></i>
-                    </div>
+                    <div id="my-profile-pic-container" class="profile-pic-main"><i class="fas fa-user"></i></div>
                     <h2 id="my-name-display" style="font-weight: 300; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;"></h2>
                     <p id="my-handle-display" style="font-size: 0.75rem; color: var(--text-sec); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;"></p>
-                    
                     <div class="profile-stats">
-                        <div class="stat-item">
-                            <span id="stat-posts" class="stat-num">0</span>
-                            <span class="stat-label">Posts</span>
-                        </div>
-                        <div class="stat-item">
-                            <span id="stat-saved" class="stat-num">0</span>
-                            <span class="stat-label">Saved</span>
-                        </div>
+                        <div class="stat-item"><span id="stat-posts" class="stat-num">0</span><span class="stat-label">Posts</span></div>
+                        <div class="stat-item"><span id="stat-saved" class="stat-num">0</span><span class="stat-label">Saved</span></div>
                     </div>
-
                     <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:12px 30px; border-radius:0; background:transparent; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Log Out</button>
                 </div>
                 <div class="profile-tabs glass">
@@ -306,9 +306,7 @@
                     <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond'; letter-spacing: 1px;"></span>
                 </div>
                 <div id="ext-header" style="padding: 40px; text-align: center; background: transparent;">
-                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);">
-                        <i class="fas fa-user"></i>
-                    </div>
+                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
                     <h3 id="ext-display-name" style="font-size: 1.5rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
                 </div>
                 <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
@@ -328,7 +326,6 @@
                     <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
                     <h2 style="margin-left: 10px; font-size: 1rem; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Settings</h2>
                 </div>
-                
                 <div class="settings-group">
                     <div class="settings-title">Apparence</div>
                     <div class="settings-row">
@@ -356,10 +353,31 @@
     </div>
 </div>
 
+<!-- NOUVEAU: Fenêtre Chat IA -->
+<div id="ai-chat-window">
+    <div class="ai-top-bar">
+        <span class="ai-top-title">Meta AI Assistant</span>
+        <button class="ai-top-close" onclick="toggleAIChat(false)"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="ai-msg-area" class="ai-msg-area">
+        <div class="ai-msg-bubble bot">Bonjour ! Je suis prêt. Posez-moi une question.</div>
+    </div>
+    <div class="ai-input-box">
+        <input type="text" id="ai-input" placeholder="Écrivez ici..." onkeypress="if(event.key==='Enter')sendAIRequest()">
+        <button onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
 <script>
     /* ==========================================
-       CONFIGURATION
+       CONFIGURATION GROQ API
        ========================================== */
+    
+    // Configuration pour Groq (remplace OpenAI)
+    const GROQ_API_KEY = "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"; 
+    const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    const MODEL_NAME = "llama-3.1-8b-instant"; // Modèle rapide et gratuit
+
     const CONFIG_USERS = {
         "metaservice": { pass: "Pass.123", avatar: "" },
         "meta actu": { pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1" },
@@ -383,13 +401,83 @@
     ];
 
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
-    // NOUVEAU : Liste des vidéos déjà vues
     let seenVideos = JSON.parse(localStorage.getItem('metaSeenVideos')) || [];
-    
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
 
+    /* ==========================================
+       LOGIQUE IA
+       ========================================== */
+    
+    const aiBtn = document.createElement('button');
+    aiBtn.id = 'ai-btn-header';
+    aiBtn.className = 'btn-press';
+    aiBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i>';
+    aiBtn.onclick = () => toggleAIChat(true);
+    
+    function toggleAIChat(state) {
+        const win = document.getElementById('ai-chat-window');
+        if(state) {
+            win.classList.add('active');
+            document.getElementById('ai-input').focus();
+        } else {
+            win.classList.remove('active');
+        }
+    }
+
+    function addAIMessage(text, sender) {
+        const area = document.getElementById('ai-msg-area');
+        const div = document.createElement('div');
+        div.className = `ai-msg-bubble ${sender}`;
+        div.innerText = text;
+        area.appendChild(div);
+        area.scrollTop = area.scrollHeight;
+    }
+
+    async function sendAIRequest() {
+        const input = document.getElementById('ai-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        addAIMessage(text, 'user');
+        input.value = '';
+        addAIMessage("...", 'bot'); 
+
+        try {
+            const response = await fetch(GROQ_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: MODEL_NAME,
+                    messages: [{role: "user", content: text}]
+                })
+            });
+
+            const data = await response.json();
+            
+            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
+            if(loadingMsg) loadingMsg.remove();
+
+            if (data.choices && data.choices[0]) {
+                addAIMessage(data.choices[0].message.content, 'bot');
+            } else {
+                addAIMessage("Erreur: " + (data.error ? data.error.message : "Inconnue"), 'bot');
+            }
+
+        } catch (error) {
+            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
+            if(loadingMsg) loadingMsg.remove();
+            addAIMessage("Erreur de connexion au service IA.", 'bot');
+        }
+    }
+
+    /* ==========================================
+       LOGIQUE APP
+       ========================================== */
     function setViewportHeight() {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -459,6 +547,8 @@
         document.getElementById("main-app").style.display = "flex";
         document.querySelector("header").style.display = "flex";
         
+        document.querySelector('header').appendChild(aiBtn);
+        
         document.getElementById("my-name-display").innerText = loggedUser;
         document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_');
         document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
@@ -491,8 +581,12 @@
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
         document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
+        
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
+        
+        if(aiBtn) aiBtn.classList.toggle('hidden', (t !== 'feed'));
+        
         moveIndicator(i);
         
         if (t !== 'videos') stopAllVideos();
@@ -515,8 +609,6 @@
         if (videoObserver) videoObserver.disconnect();
         const cards = document.querySelectorAll('.video-card');
         
-        if(videoObserver) videoObserver.disconnect();
-        
         videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const iframe = entry.target.querySelector('iframe');
@@ -525,15 +617,12 @@
                 const videoId = entry.target.getAttribute('data-id');
                 
                 if (entry.isIntersecting) {
-                    // Lecture
                     if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
                     setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200);
                     
-                    // NOUVEAU : Marquer comme vu
                     if(videoId && !seenVideos.includes(videoId)) {
                         seenVideos.push(videoId);
                         localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos));
-                        // Retirer le badge "vu" si présent
                         const badge = entry.target.querySelector('.seen-badge');
                         if(badge) badge.style.display = 'none';
                     }
@@ -561,13 +650,10 @@
             ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))
         ].sort((a,b) => b.date - a.date);
         
-        if (allMedia.length === 0) {
-            grid.innerHTML = `<div class="empty-state">Aucune publication</div>`;
-        } else {
-            allMedia.forEach(m => {
-                grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')" aria-label="Voir la publication">${m.type==='photo'?`<img src="${m.url}" alt="Publication">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`);
-            });
-        }
+        if (allMedia.length === 0) grid.innerHTML = `<div class="empty-state">Aucune publication</div>`;
+        else allMedia.forEach(m => {
+            grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')" aria-label="Voir la publication">${m.type==='photo'?`<img src="${m.url}" alt="Publication">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`);
+        });
         overlay.style.display = 'block';
     }
 
@@ -583,23 +669,11 @@
         document.getElementById('stat-posts').innerText = myPosts.length;
         document.getElementById('stat-saved').innerText = savedItems.length;
 
-        if (myPosts.length === 0) {
-            gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`;
-        } else {
-            myPosts.forEach(p => { 
-                gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); 
-            });
-        }
+        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`;
+        else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); });
 
-        if (savedItems.length === 0) {
-            gridSaved.innerHTML = `<div class="empty-state">Aucun élément sauvegardé</div>`;
-        } else {
-            LISTE_PHOTOS.forEach(p => { 
-                if(savedItems.includes(p.id)) { 
-                    gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); 
-                } 
-            });
-        }
+        if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément sauvegardé</div>`;
+        else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); }});
     }
 
     function switchMyTab(t) {
@@ -614,7 +688,6 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
-        // PHOTOS : Tri par date (récent) - Fixe puis autres
         const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
         const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort((a, b) => b.date - a.date);
         const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
@@ -639,12 +712,8 @@
                 </article>`);
         });
 
-        // VIDEOS : ALGORITHME NOUVEAUTÉ
-        // 1. Séparer les vues des non-vues
         const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
         const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
-        
-        // 2. Concaténer : Non vues d'abord, puis vues
         const sortedVideos = [...unseen, ...seen];
 
         sortedVideos.forEach(v => {
@@ -656,7 +725,6 @@
                     ${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}
                 </div>`);
         });
-        
         setTimeout(observeVideos, 500);
     }
 
