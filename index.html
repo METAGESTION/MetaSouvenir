@@ -65,7 +65,6 @@
         .spinner { width: 40px; height: 40px; border: 1px solid #333; border-top: 1px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
         
-        /* Blocage Install */
         .install-block-text { margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6; }
         .install-arrow { font-size: 2rem; margin: 20px 0; color: var(--accent); animation: bounce 1s infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -114,10 +113,13 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
-        header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
-        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
+        /* Header centré correctement */
+        header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
+        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; text-align: center; }
+        /* Positionnement absolu pour les boutons gauche/droite */
+        .header-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
+        .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
-        /* Stories Container */
         .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
@@ -129,10 +131,8 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        /* Content Area */
         .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; }
         
-        /* Section Transitions */
         .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
         
@@ -163,18 +163,28 @@
         
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
 
-        /* OVERLAY PAGES */
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding-top: calc(35px + env(safe-area-inset-top)); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION */
-        nav { height: auto; width: calc(100% - 30px); margin: 0 auto 15px auto; padding-top: 15px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); border-radius: 25px; border: 1px solid var(--border); background: var(--nav-bg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; z-index: 100; display: flex; justify-content: space-around; align-items: center; }
+        /* NAVIGATION CORRIGÉE (Sans barre de fond) */
+        nav {
+            position: fixed; 
+            bottom: 0; left: 0; width: 100%; 
+            height: auto; 
+            padding: 15px 0; 
+            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            z-index: 100; 
+            background: transparent; /* Pas de fond */
+        }
         
-        .nav-indicator { position: absolute; top: 8px; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--accent); opacity: 0.8; }
+        .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; left: 0; }
         
-        nav button.nav-item { background: none; border: none; font-size: 1.3rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        nav button.nav-item.active { color: var(--accent); transform: translateY(2px); }
+        nav button.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        nav button.nav-item.active { color: var(--accent); transform: translateY(-2px); }
 
         /* PROFILE */
         .profile-header { padding: 50px 20px; text-align: center; background: transparent; }
@@ -206,8 +216,8 @@
 
         .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* --- AI CHAT & BUTTON DESIGN --- */
-        #ai-btn-header { background: var(--ai-gradient); background-size: 200% 200%; animation: gradient-shift 3s ease infinite; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; cursor: pointer; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border: none; transition: transform 0.2s, box-shadow 0.3s; position: relative; }
+        /* AI BUTTON */
+        #ai-btn-header { background: var(--ai-gradient); background-size: 200% 200%; animation: gradient-shift 3s ease infinite; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; cursor: pointer; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border: none; transition: transform 0.2s; position: relative; }
         #ai-btn-header::after { content: ''; position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px; border-radius: 14px; border: 1px solid var(--accent); animation: pulse-ring 2s infinite; }
         #ai-btn-header:active { transform: scale(0.9); }
         #ai-btn-header.hidden { display: none; }
@@ -238,7 +248,6 @@
     <div class="spinner" id="main-spinner"></div>
     <div class="loader-text" id="main-loader-text">Chargement</div>
     
-    <!-- Contenu bloquant (caché au départ) -->
     <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
         <div class="install-arrow"><i class="fas fa-arrow-down"></i></div>
         <div class="install-block-text">
@@ -276,20 +285,20 @@
 <!-- 2. ECRAN DE CONNEXION -->
 <div id="login-screen">
     <div class="logo">Meta Service</div>
-    <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
-    <input type="password" id="password" placeholder="PASSWORD">
+    <input type="text" id="username" placeholder="NOM D'UTILISATEUR" autocomplete="off">
+    <input type="password" id="password" placeholder="MOT DE PASSE">
     <label class="remember-me"><input type="checkbox" id="remember-me"> Rester connecté</label>
-    <button class="login-btn btn-press" onclick="handleLogin()" style="margin-top: 20px;">Enter</button>
-    <div id="login-error">Access Denied</div>
+    <button class="login-btn btn-press" onclick="handleLogin()" style="margin-top: 20px;">Connexion</button>
+    <div id="login-error">Accès Refusé</div>
 </div>
 
 <!-- 3. APPLICATION PRINCIPALE -->
 <div id="app-container">
     <div id="main-app">
         <header class="glass" id="main-header">
-            <div style="width: 40px;"></div>
+            <div class="header-left"><div style="width:40px;"></div></div>
             <span>Meta Service</span>
-            <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="header-right">
                 <button id="ai-btn-header" onclick="toggleAIChat(true)" style="display: none;"><i class="fas fa-brain"></i></button>
                 <button id="global-cog" class="header-btn btn-press" style="display:none;" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>
             </div>
@@ -303,7 +312,7 @@
             
             <div id="search-section" class="section">
                 <div style="padding:20px; position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Search..." oninput="filtrerRecherche()">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Rechercher..." oninput="filtrerRecherche()">
                 </div>
                 <div id="search-results"></div>
             </div>
@@ -316,14 +325,14 @@
                     <h2 id="my-name-display" style="font-weight: 300; font-size: 2rem; font-family: 'Cormorant Garamond', serif;"></h2>
                     <p id="my-handle-display" style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;"></p>
                     <div class="profile-stats">
-                        <div class="stat-item"><span id="stat-posts" class="stat-num">0</span><span class="stat-label">Posts</span></div>
-                        <div class="stat-item"><span id="stat-saved" class="stat-num">0</span><span class="stat-label">Saved</span></div>
+                        <div class="stat-item"><span id="stat-posts" class="stat-num">0</span><span class="stat-label">Publications</span></div>
+                        <div class="stat-item"><span id="stat-saved" class="stat-num">0</span><span class="stat-label">Enregistrés</span></div>
                     </div>
-                    <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:14px 35px; border-radius:12px; background:transparent; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Log Out</button>
+                    <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:14px 35px; border-radius:12px; background:transparent; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Déconnexion</button>
                 </div>
                 <div class="profile-tabs glass">
-                    <button id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">Posts</button>
-                    <button id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">Saved</button>
+                    <button id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">Publications</button>
+                    <button id="my-tab-saved" class="p-tab" onclick="switchMyTab('saved')">Enregistrés</button>
                 </div>
                 <div id="my-posts-grid" class="content-grid"></div>
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
@@ -345,7 +354,7 @@
             <div id="media-view-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
-                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Details</span>
+                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Détails</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
@@ -353,12 +362,12 @@
             <div id="settings-overlay" class="overlay-page">
                 <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
                     <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
-                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Settings</h2>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Paramètres</h2>
                 </div>
                 <div class="settings-group">
                     <div class="settings-title">Apparence</div>
                     <div class="settings-row">
-                        <span class="settings-label">Mode</span>
+                        <span class="settings-label">Thème</span>
                         <div style="display:flex; gap:10px;">
                             <button class="ob-btn" style="padding:10px 18px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
                             <button class="ob-btn" style="padding:10px 18px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
@@ -372,7 +381,8 @@
             </div>
         </div>
 
-        <nav class="glass">
+        <!-- NAVIGATION CORRIGÉE -->
+        <nav>
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
@@ -385,10 +395,10 @@
 <!-- AI CHAT WINDOW -->
 <div id="ai-chat-window">
     <div class="ai-top-bar">
-        <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta AI</span>
+        <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
         <button class="ai-top-close" onclick="toggleAIChat(false)"><i class="fas fa-times"></i></button>
     </div>
-    <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
+    <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Je suis votre assistant. Posez-moi une question.</div></div>
     <div class="ai-input-box">
         <input type="text" id="ai-input" placeholder="Écrivez ici..." onkeypress="if(event.key==='Enter')sendAIRequest()">
         <button onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
@@ -433,9 +443,7 @@
        ========================================== */
     
     function isRunningStandalone() {
-        // iOS Safari
         if (window.navigator.standalone === true) return true;
-        // Android Chrome / autres
         if (window.matchMedia('(display-mode: standalone)').matches) return true;
         return false;
     }
@@ -480,7 +488,7 @@
             const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
             if(loadingMsg) loadingMsg.remove();
             if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot');
-            else addAIMessage("Erreur API", 'bot');
+            else addAIMessage("Erreur de réponse.", 'bot');
         } catch (e) {
             const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
             if(loadingMsg) loadingMsg.remove();
@@ -578,8 +586,13 @@
     }
 
     function moveIndicator(i) {
-        const buttons = document.querySelectorAll('nav button.nav-item'); const indicator = document.getElementById('nav-indicator');
-        if(buttons[i]) { const rect = buttons[i].getBoundingClientRect(); const navRect = buttons[i].parentElement.getBoundingClientRect(); indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px'; }
+        const buttons = document.querySelectorAll('nav button.nav-item');
+        const indicator = document.getElementById('nav-indicator');
+        if(buttons[i]) {
+            const rect = buttons[i].getBoundingClientRect();
+            const navRect = buttons[i].parentElement.getBoundingClientRect();
+            indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px';
+        }
     }
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; }); }
 
@@ -616,8 +629,8 @@
         const gridPosts = document.getElementById('my-posts-grid'); const gridSaved = document.getElementById('my-saved-grid'); gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         const myPosts = LISTE_PHOTOS.filter(p => p.auteur === loggedUser);
         document.getElementById('stat-posts').innerText = myPosts.length; document.getElementById('stat-saved').innerText = savedItems.length;
-        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
-        if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément sauvegardé</div>`;
+        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucune publication</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
+        if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`;
         else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }});
     }
     function switchMyTab(t) {
@@ -649,25 +662,20 @@
     window.addEventListener('load', () => {
         setViewportHeight();
         
-        // === LOGIQUE DE BLOCAGE ===
         setTimeout(() => {
-            // 1. Est-on sur mobile ?
             if (isMobile()) {
-                // 2. Est-on en mode "app" (standalone) ?
                 if (isRunningStandalone()) {
-                    // OK : On lance l'application
                     document.getElementById('loader').style.display = 'none';
                     const hasPrefs = localStorage.getItem('metaThemeMode');
                     if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                     else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 } else {
-                    // BLOCAGE : On affiche les instructions
+                    // Modification du titre pour l'écran d'installation
+                    document.getElementById('main-loader-text').innerText = "META OFFICIEL";
                     document.getElementById('main-spinner').style.display = 'none';
-                    document.getElementById('main-loader-text').style.display = 'none';
                     document.getElementById('install-block-content').style.display = 'flex';
                 }
             } else {
-                // Desktop : Accès normal
                 document.getElementById('loader').style.display = 'none';
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
