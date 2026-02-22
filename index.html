@@ -15,19 +15,17 @@
             --border: #222222; 
             --text-main: #ffffff; 
             --text-sec: #888888;
-            --accent: #D4AF37; /* Or par défaut */
+            --accent: #D4AF37;
             --accent-text: #000000;
             --nav-bg: rgba(5, 5, 5, 0.85);
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            --vh: 1vh; /* Variable pour la correction mobile */
+            --vh: 1vh;
         }
 
-        /* Définition des palettes de couleurs (Accents) */
         body[data-accent="gold"] { --accent: #D4AF37; --accent-text: #000000; }
         body[data-accent="blue"] { --accent: #007AFF; --accent-text: #ffffff; }
         body[data-accent="white"] { --accent: #FFFFFF; --accent-text: #000000; }
         
-        /* Mode Clair */
         body.light-mode { 
             --bg-color: #F5F5F7; 
             --white: #FFFFFF; 
@@ -44,22 +42,14 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* CORRECTION HEIGHT MOBILE */
-        html, body { 
-            height: 100%; 
-            width: 100%; 
-            overflow: hidden; 
-            background-color: var(--bg-color);
-        }
+        html, body { height: 100%; width: 100%; overflow: hidden; background-color: var(--bg-color); }
         body { 
             font-family: 'Montserrat', sans-serif;
-            /* Utilisation de la variable JS pour la hauteur */
             height: calc(var(--vh, 1vh) * 100);
             color: var(--text-main); 
             transition: all 0.4s ease; 
             -webkit-font-smoothing: antialiased;
-            position: fixed; /* Fixe le corps pour éviter le scroll indésirable */
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
         }
         
         :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
@@ -67,7 +57,7 @@
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
         /* LOADER */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease; }
         .spinner { width: 40px; height: 40px; border: 1px solid #333; border-top: 1px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -84,28 +74,17 @@
         
         .ob-options { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .ob-btn { 
-            padding: 20px; 
-            border: 1px solid #333; 
-            background: transparent; 
-            color: #fff; 
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 2px;
+            padding: 20px; border: 1px solid #333; background: transparent; color: #fff; 
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px;
         }
-        .ob-btn:hover { border-color: #fff; }
+        .ob-btn:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
         .ob-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.05); color: var(--accent); }
 
         .color-options { display: flex; justify-content: center; gap: 25px; margin-top: 10px; }
         .color-circle {
-            width: 60px; height: 60px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.3s;
+            width: 60px; height: 60px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: transform 0.2s, border-color 0.3s;
             display: flex; align-items: center; justify-content: center;
             font-size: 0.7rem; color: #fff; font-weight: 600;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -131,22 +110,22 @@
         .login-btn { width: 100%; max-width: 300px; background: transparent; color: var(--accent); padding: 18px; border: 1px solid var(--accent); border-radius: 0; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; transition: 0.3s; }
         .login-btn:active { background: var(--accent); color: var(--accent-text); }
         #login-error { color: #ff4d4d; font-size: 0.7rem; margin-top: 15px; display: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .remember-me { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-sec); font-size: 0.75rem; cursor: pointer; }
+        .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
         header { 
-            height: calc(70px + env(safe-area-inset-top)); 
-            padding-top: env(safe-area-inset-top); 
-            border-bottom: 1px solid var(--border); 
-            display: none; justify-content: space-between; align-items: center; 
-            padding-left: 25px; padding-right: 25px; 
-            background: transparent; z-index: 100; flex-shrink: 0;
+            height: calc(70px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); 
+            border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; 
+            padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0;
         }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
         .stories-container { display: flex; overflow-x: auto; padding: 25px 20px; gap: 25px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 75px; cursor: pointer; border: none; background: none; }
-        .story-img-wrapper { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-color); border: 1px solid var(--accent); transition: 0.3s; overflow: hidden; }
+        .story-img-wrapper { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-color); border: 1px solid var(--accent); transition: 0.3s; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         .story-bubble:active .story-img-wrapper { transform: scale(0.95); border-color: var(--text-main); }
         .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: none; filter: grayscale(30%) contrast(105%); opacity: 0.9; }
         .story-img-wrapper i { font-size: 1.5rem; color: var(--text-sec); }
@@ -157,14 +136,21 @@
         .section { height: 100%; width: 100%; display: none; overflow-y: auto; background: transparent; }
         .section.active { display: block; }
         
-        .post { background: var(--surface); margin: 25px auto; max-width: 500px; border-radius: 2px; overflow: hidden; border: none; box-shadow: var(--card-shadow); }
+        .post { background: var(--surface); margin: 25px auto; max-width: 500px; border-radius: 2px; overflow: hidden; border: none; box-shadow: var(--card-shadow); position: relative; }
         .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.75rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
         .post-user .mini-avatar { width: 28px; height: 28px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
+        
+        .post-img-container { position: relative; cursor: pointer; user-select: none; }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
+        
+        .like-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); pointer-events: none; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); transition: transform 0.2s ease-out; z-index: 10; }
+        .like-overlay.animate { transform: translate(-50%, -50%) scale(1.5); opacity: 0; transition: transform 0.3s ease-out, opacity 0.3s ease-out; }
+
         .post-actions { padding: 18px 20px; display: flex; justify-content: flex-end; border-top: 1px solid var(--border); }
         
-        .action-btn { background: transparent; border: none; padding: 5px; cursor: pointer; color: var(--text-sec); font-size: 1.2rem; transition: color 0.3s; }
-        .action-btn:active { color: var(--text-main); }
+        .action-btn { background: transparent; border: none; padding: 5px; cursor: pointer; color: var(--text-sec); font-size: 1.2rem; transition: color 0.3s, transform 0.2s; }
+        .action-btn:hover { color: var(--text-main); transform: scale(1.1); }
+        .action-btn:active { transform: scale(0.95); }
         .action-btn i { pointer-events: none; }
         .action-btn.saved { color: var(--accent); }
 
@@ -174,6 +160,9 @@
         .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
         .video-info { position: absolute; bottom: 80px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
+        
+        /* NOUVEAU : Badge "Vu" */
+        .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: fadeIn 0.4s ease-out; padding-top: calc(35px + env(safe-area-inset-top)); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -184,8 +173,15 @@
         nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         nav button.nav-item.active { color: var(--accent); }
 
-        /* PROFILE & SETTINGS */
-        .profile-tabs { display: flex; background: transparent; margin-top: 30px; border-bottom: 1px solid var(--border); }
+        /* PROFILE */
+        .profile-header { padding: 50px 20px; text-align: center; background: transparent; }
+        .profile-pic-main { width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent); }
+        .profile-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; color: var(--text-sec); }
+        .stat-item { text-align: center; }
+        .stat-num { display: block; font-size: 1.2rem; color: var(--text-main); font-weight: 600; margin-bottom: 5px; }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .profile-tabs { display: flex; background: transparent; border-bottom: 1px solid var(--border); }
         .p-tab { flex: 1; padding: 18px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); }
@@ -204,6 +200,8 @@
         .picker-colors { display: flex; gap: 15px; }
         .picker-circle { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
+
+        .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 1px; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
@@ -236,7 +234,10 @@
     <div class="logo">Meta Service</div>
     <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
     <input type="password" id="password" placeholder="PASSWORD">
-    <button class="login-btn btn-press" onclick="handleLogin()">Enter</button>
+    <label class="remember-me">
+        <input type="checkbox" id="remember-me"> Rester connecté
+    </label>
+    <button class="login-btn btn-press" onclick="handleLogin()" style="margin-top: 20px;">Enter</button>
     <div id="login-error">Access Denied</div>
 </div>
 
@@ -271,12 +272,24 @@
             </div>
             
             <div id="own-profile-section" class="section">
-                <div style="padding: 50px 20px; text-align: center; background: transparent;">
-                    <div id="my-profile-pic-container" style="width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent);">
+                <div class="profile-header">
+                    <div id="my-profile-pic-container" class="profile-pic-main">
                         <i class="fas fa-user"></i>
                     </div>
                     <h2 id="my-name-display" style="font-weight: 300; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;"></h2>
-                    <p id="my-handle-display" style="font-size: 0.75rem; color: var(--text-sec); margin-bottom: 40px; letter-spacing: 2px; text-transform: uppercase;"></p>
+                    <p id="my-handle-display" style="font-size: 0.75rem; color: var(--text-sec); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;"></p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span id="stat-posts" class="stat-num">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                        <div class="stat-item">
+                            <span id="stat-saved" class="stat-num">0</span>
+                            <span class="stat-label">Saved</span>
+                        </div>
+                    </div>
+
                     <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:12px 30px; border-radius:0; background:transparent; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Log Out</button>
                 </div>
                 <div class="profile-tabs glass">
@@ -359,7 +372,7 @@
         { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 },
         { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 },
         { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 },
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 600 }
+        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 500 }
     ];
 
     const LISTE_PHOTOS = [
@@ -370,24 +383,22 @@
     ];
 
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
+    // NOUVEAU : Liste des vidéos déjà vues
+    let seenVideos = JSON.parse(localStorage.getItem('metaSeenVideos')) || [];
+    
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
 
-    // --- CORRECTION HEIGHT MOBILE ---
     function setViewportHeight() {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
     window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('load', setViewportHeight);
-
-    // --- LOGIQUE THEME & ONBOARDING ---
 
     function applyTheme(mode, accent) {
         if (mode === 'light') document.body.classList.add('light-mode');
         else document.body.classList.remove('light-mode');
-        
         document.body.setAttribute('data-accent', accent);
         localStorage.setItem('metaThemeMode', mode);
         localStorage.setItem('metaThemeAccent', accent);
@@ -397,21 +408,17 @@
         currentObMode = mode;
         document.getElementById('ob-step-1').classList.remove('active');
         document.getElementById('ob-step-2').classList.add('active');
-        
         const container = document.getElementById('ob-color-container');
         container.innerHTML = '';
-        
         let colors = [];
         if (mode === 'dark') colors = [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }];
         else colors = [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }];
-
         colors.forEach(c => {
             container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`;
         });
     }
 
     let selectedObColor = null;
-
     function selectObColor(color, elem) {
         document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active'));
         elem.classList.add('active');
@@ -426,8 +433,6 @@
         document.getElementById('login-screen').style.display = 'flex';
     }
 
-    // --- LOGIQUE APPLICATION ---
-
     function getAvatar(username) {
         const user = CONFIG_USERS[username];
         if (user && user.avatar) return `<img src="${user.avatar}" alt="${username}">`;
@@ -437,11 +442,13 @@
     function handleLogin() {
         const u = document.getElementById("username").value.trim().toLowerCase();
         const p = document.getElementById("password").value;
+        const remember = document.getElementById("remember-me").checked;
         const errorMsg = document.getElementById("login-error");
         
         if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) {
             errorMsg.style.display = "none";
-            localStorage.setItem("metaUser", u);
+            if (remember) localStorage.setItem("metaUser", u);
+            else localStorage.removeItem("metaUser");
             loggedUser = u;
             startApp();
         } else { errorMsg.style.display = "block"; }
@@ -507,20 +514,36 @@
     function observeVideos() {
         if (videoObserver) videoObserver.disconnect();
         const cards = document.querySelectorAll('.video-card');
+        
+        if(videoObserver) videoObserver.disconnect();
+        
         videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const iframe = entry.target.querySelector('iframe');
                 if (!iframe) return;
                 const targetSrc = iframe.getAttribute('data-src');
+                const videoId = entry.target.getAttribute('data-id');
+                
                 if (entry.isIntersecting) {
+                    // Lecture
                     if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
                     setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200);
+                    
+                    // NOUVEAU : Marquer comme vu
+                    if(videoId && !seenVideos.includes(videoId)) {
+                        seenVideos.push(videoId);
+                        localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos));
+                        // Retirer le badge "vu" si présent
+                        const badge = entry.target.querySelector('.seen-badge');
+                        if(badge) badge.style.display = 'none';
+                    }
                 } else {
                     iframe.contentWindow.postMessage('{"method":"pause"}', '*');
                     iframe.src = ""; 
                 }
             });
         }, { threshold: 0.6 });
+        
         cards.forEach(card => videoObserver.observe(card));
     }
 
@@ -539,7 +562,7 @@
         ].sort((a,b) => b.date - a.date);
         
         if (allMedia.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-sec); letter-spacing: 2px; font-size: 0.8rem;">NO PUBLICATIONS</div>`;
+            grid.innerHTML = `<div class="empty-state">Aucune publication</div>`;
         } else {
             allMedia.forEach(m => {
                 grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')" aria-label="Voir la publication">${m.type==='photo'?`<img src="${m.url}" alt="Publication">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`);
@@ -555,15 +578,28 @@
         const gridSaved = document.getElementById('my-saved-grid');
         gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         
-        LISTE_PHOTOS.filter(p => p.auteur === loggedUser).forEach(p => { 
-            gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); 
-        });
+        const myPosts = LISTE_PHOTOS.filter(p => p.auteur === loggedUser);
         
-        LISTE_PHOTOS.forEach(p => { 
-            if(savedItems.includes(p.id)) { 
-                gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); 
-            } 
-        });
+        document.getElementById('stat-posts').innerText = myPosts.length;
+        document.getElementById('stat-saved').innerText = savedItems.length;
+
+        if (myPosts.length === 0) {
+            gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`;
+        } else {
+            myPosts.forEach(p => { 
+                gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); 
+            });
+        }
+
+        if (savedItems.length === 0) {
+            gridSaved.innerHTML = `<div class="empty-state">Aucun élément sauvegardé</div>`;
+        } else {
+            LISTE_PHOTOS.forEach(p => { 
+                if(savedItems.includes(p.id)) { 
+                    gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); 
+                } 
+            });
+        }
     }
 
     function switchMyTab(t) {
@@ -578,8 +614,9 @@
         const videoDiv = document.getElementById('video-list');
         photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
         
+        // PHOTOS : Tri par date (récent) - Fixe puis autres
         const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
-        const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort(() => Math.random() - 0.5);
+        const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort((a, b) => b.date - a.date);
         const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
 
         fluxFinal.forEach(p => {
@@ -590,7 +627,10 @@
                         <div class="mini-avatar">${getAvatar(p.auteur)}</div> 
                         ${p.auteur}
                     </div>
-                    <div class="post-img-container"><img src="${p.url}" alt="Publication de ${p.auteur}"></div>
+                    <div class="post-img-container" ondblclick="animateLike(this)">
+                        <img src="${p.url}" alt="Publication de ${p.auteur}">
+                        <div class="like-overlay"><i class="fas fa-heart" style="font-size: 5rem;"></i></div>
+                    </div>
                     <div class="post-actions">
                         <button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)" aria-label="${isSaved ? 'Retirer' : 'Enregistrer'}">
                             <i class="${isSaved ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
@@ -599,10 +639,32 @@
                 </article>`);
         });
 
-        [...LISTE_VIDEOS].sort(() => Math.random() - 0.5).forEach(v => {
-            videoDiv.insertAdjacentHTML('beforeend', `<div class="video-card"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen" title="Vidéo de ${v.auteur}"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div></div>`);
+        // VIDEOS : ALGORITHME NOUVEAUTÉ
+        // 1. Séparer les vues des non-vues
+        const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
+        const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
+        
+        // 2. Concaténer : Non vues d'abord, puis vues
+        const sortedVideos = [...unseen, ...seen];
+
+        sortedVideos.forEach(v => {
+            const hasBeenSeen = seenVideos.includes(v.id);
+            videoDiv.insertAdjacentHTML('beforeend', `
+                <div class="video-card" data-id="${v.id}">
+                    <iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen" title="Vidéo de ${v.auteur}"></iframe>
+                    <div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>
+                    ${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}
+                </div>`);
         });
+        
         setTimeout(observeVideos, 500);
+    }
+
+    function animateLike(container) {
+        const overlay = container.querySelector('.like-overlay');
+        overlay.classList.remove('animate');
+        void overlay.offsetWidth;
+        overlay.classList.add('animate');
     }
 
     function openMediaView(id, type) {
@@ -653,11 +715,9 @@
             btn.classList.add('saved');
         }
         localStorage.setItem('metaSaved', JSON.stringify(savedItems));
-        if(document.getElementById('own-profile-section').classList.contains('active')) renderMyProfile();
+        renderMyProfile();
     }
 
-    // --- SETTINGS CONTROLS ---
-    
     function setThemeMode(mode) {
         let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold';
         if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) currentAccent = 'black';
@@ -692,11 +752,13 @@
         });
     }
 
-    function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
+    function handleLogout() { 
+        localStorage.removeItem("metaUser"); 
+        location.reload(); 
+    }
 
     window.addEventListener('load', () => {
-        setViewportHeight(); // Appel initial correction
-        
+        setViewportHeight();
         const hasPrefs = localStorage.getItem('metaThemeMode');
 
         setTimeout(() => {
