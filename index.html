@@ -68,17 +68,22 @@
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
-        /* INSTALL POPUP (NOUVEAU) */
-        #install-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 30px; }
-        .install-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; text-align: center; max-width: 320px; width: 100%; animation: popIn 0.3s ease; }
-        .install-icon { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
-        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 15px; }
-        .install-text { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; margin-bottom: 25px; }
-        .install-steps { text-align: left; background: var(--bg-color); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.8rem; color: var(--text-main); }
-        .install-steps div { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .install-steps i { color: var(--accent); width: 20px; text-align: center; }
-        .install-btn { width: 100%; padding: 15px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
-        .install-later { margin-top: 15px; background: transparent; border: none; color: var(--text-sec); font-size: 0.8rem; cursor: pointer; }
+        /* INSTALL POPUP (FORCE) */
+        #install-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 30px; }
+        .install-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 35px; text-align: center; max-width: 340px; width: 100%; animation: popIn 0.4s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .install-icon { font-size: 4rem; color: var(--accent); margin-bottom: 25px; }
+        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 15px; }
+        .install-text { font-size: 0.9rem; color: var(--text-sec); line-height: 1.6; margin-bottom: 30px; }
+        
+        .install-steps { text-align: left; background: var(--bg-color); padding: 20px; border-radius: 15px; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-main); border: 1px solid var(--border); }
+        .install-steps div { margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+        .install-steps div:last-child { margin-bottom: 0; }
+        .install-steps i { color: var(--accent); width: 24px; text-align: center; font-size: 1.1rem; }
+        
+        .install-btn { width: 100%; padding: 16px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .install-btn:disabled { opacity: 0.5; cursor: default; }
+        
+        .ios-safari-icon { width: 50px; height: 50px; background: #fff; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto; margin-bottom: 20px; }
 
         /* --- ONBOARDING SCREEN --- */
         #onboarding-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; overflow-y: auto; }
@@ -124,7 +129,6 @@
         header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
-        /* Stories Container optimisé */
         .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
@@ -136,31 +140,12 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        /* Content Area avec ajustement vertical */
-        .content-area { 
-            flex: 1; position: relative; overflow: hidden; 
-            display: flex; flex-direction: column; 
-            padding-top: 25px; /* Descend le contenu */
-        }
+        /* Content Area */
+        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; }
         
         /* Section Transitions */
-        .section { 
-            height: 100%; width: 100%; 
-            position: absolute; top: 0; left: 0;
-            visibility: hidden; 
-            opacity: 0; 
-            transform: scale(0.98); 
-            transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease;
-            background: var(--bg-color); 
-            overflow-y: auto;
-        }
-        .section.active { 
-            visibility: visible; 
-            opacity: 1; 
-            transform: scale(1); 
-            transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease;
-            z-index: 1; 
-        }
+        .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
+        .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
         
         .post { background: var(--surface); margin: 30px auto; max-width: 500px; border-radius: 12px; overflow: hidden; border: none; box-shadow: var(--card-shadow); position: relative; }
         .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.85rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
@@ -190,12 +175,7 @@
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
 
         /* OVERLAY PAGES */
-        .overlay-page { 
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg-color); z-index: 600; overflow-y: auto; 
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding-top: calc(35px + env(safe-area-inset-top)); 
-        }
+        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding-top: calc(35px + env(safe-area-inset-top)); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
@@ -238,33 +218,15 @@
         .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.9rem; letter-spacing: 1px; }
 
         /* --- AI CHAT & BUTTON DESIGN --- */
-        #ai-btn-header { 
-            background: var(--ai-gradient); background-size: 200% 200%; animation: gradient-shift 3s ease infinite;
-            width: 40px; height: 40px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; 
-            color: #fff; font-size: 1.1rem; cursor: pointer; 
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border: none; 
-            transition: transform 0.2s, box-shadow 0.3s;
-            position: relative;
-        }
-        #ai-btn-header::after {
-            content: ''; position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px;
-            border-radius: 14px; border: 1px solid var(--accent); 
-            animation: pulse-ring 2s infinite;
-        }
+        #ai-btn-header { background: var(--ai-gradient); background-size: 200% 200%; animation: gradient-shift 3s ease infinite; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; cursor: pointer; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border: none; transition: transform 0.2s, box-shadow 0.3s; position: relative; }
+        #ai-btn-header::after { content: ''; position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px; border-radius: 14px; border: 1px solid var(--accent); animation: pulse-ring 2s infinite; }
         #ai-btn-header:active { transform: scale(0.9); }
         #ai-btn-header.hidden { display: none; }
 
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
 
-        #ai-chat-window {
-            position: fixed; top: 85px; right: 15px; width: 320px; height: 450px;
-            background: var(--surface); border: 1px solid var(--border); border-radius: 15px;
-            display: none; flex-direction: column; z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden;
-            animation: popIn 0.3s ease;
-        }
+        #ai-chat-window { position: fixed; top: 85px; right: 15px; width: 320px; height: 450px; background: var(--surface); border: 1px solid var(--border); border-radius: 15px; display: none; flex-direction: column; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden; animation: popIn 0.3s ease; }
         #ai-chat-window.active { display: flex; }
         
         .ai-top-bar { padding: 12px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
@@ -288,15 +250,10 @@
 <div id="install-overlay">
     <div class="install-card">
         <div class="install-icon"><i class="fas fa-mobile-screen"></i></div>
-        <div class="install-title">Installer l'application</div>
-        <div id="install-instructions" class="install-text">
-            Installez Meta Service sur votre écran d'accueil pour une expérience optimale.
-        </div>
-        <div id="install-steps-box" class="install-steps">
-            <!-- Étapes dynamiques insérées par JS -->
-        </div>
-        <button id="install-action-btn" class="install-btn">Installer</button>
-        <button class="install-later" onclick="closeInstallPopup()">Plus tard</button>
+        <div class="install-title">Installation Requise</div>
+        <div id="install-instructions" class="install-text">Pour une meilleure expérience, ajoutez l'application à votre écran d'accueil.</div>
+        <div id="install-steps-box" class="install-steps"></div>
+        <button id="install-action-btn" class="install-btn">Commencer</button>
     </div>
 </div>
 
@@ -343,13 +300,11 @@
         </header>
 
         <div class="content-area">
-            <!-- FEED SECTION -->
             <div id="feed-section" class="section active">
                 <div id="stories-list" class="stories-container" role="list" aria-label="Stories"></div>
                 <div id="photo-list"></div>
             </div>
             
-            <!-- SEARCH SECTION -->
             <div id="search-section" class="section">
                 <div style="padding:20px; background:transparent; position:sticky; top:0; z-index:10;">
                     <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher">
@@ -357,12 +312,10 @@
                 <div id="search-results"></div>
             </div>
             
-            <!-- VIDEOS SECTION -->
             <div id="videos-section" class="section">
                 <div id="video-list" style="height: 100%;"></div>
             </div>
             
-            <!-- PROFILE SECTION -->
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
                     <div id="my-profile-pic-container" class="profile-pic-main"><i class="fas fa-user"></i></div>
@@ -382,7 +335,6 @@
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
-            <!-- OVERLAYS -->
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
@@ -487,63 +439,75 @@
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
-    let deferredPrompt; // Pour l'installation Android
+    let deferredPrompt; 
 
     /* ==========================================
-       LOGIQUE INSTALLATION (NOUVEAU)
+       LOGIQUE INSTALLATION (FORCÉE)
        ========================================== */
     
-    function detectMobile() {
+    function isMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
-    function isRunningStandalone() {
-        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    function isStandalone() {
+        return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
     }
 
-    function closeInstallPopup() {
-        document.getElementById('install-overlay').style.display = 'none';
-    }
-
-    function showInstallInstructions() {
-        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    function showInstallScreen() {
         const overlay = document.getElementById('install-overlay');
         const stepsBox = document.getElementById('install-steps-box');
         const actionBtn = document.getElementById('install-action-btn');
         const instrText = document.getElementById('install-instructions');
         
         overlay.style.display = 'flex';
-        stepsBox.innerHTML = '';
+        
+        // Détection iOS vs Android
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 
         if (isIos) {
-            instrText.innerText = "Ajoutez Meta Service à votre écran d'accueil :";
+            instrText.innerText = "Cette application fonctionne mieux en plein écran. Suivez les étapes ci-dessous :";
             stepsBox.innerHTML = `
-                <div><i class="fas fa-square-arrow-up"></i> 1. Appuyez sur l'icône <strong>Partager</strong> en bas de l'écran.</div>
-                <div><i class="fas fa-plus-square"></i> 2. Faites défiler et appuyez sur <strong>"Sur l'écran d'accueil"</strong>.</div>
-                <div><i class="fas fa-check-circle"></i> 3. Appuyez sur <strong>"Ajouter"</strong> en haut à droite.</div>
+                <div style="justify-content: center; margin-bottom: 20px;">
+                    <div class="ios-safari-icon"><i class="fab fa-safari" style="color: #007AFF;"></i></div>
+                </div>
+                <div><i class="fas fa-arrow-up"></i> 1. Appuyez sur l'icône <strong>Partage</strong> en bas de l'écran.</div>
+                <div><i class="fas fa-plus"></i> 2. Faites défiler et appuyez sur <strong>"Sur l'écran d'accueil"</strong>.</div>
+                <div><i class="fas fa-check"></i> 3. Appuyez sur <strong>"Ajouter"</strong> en haut à droite.</div>
             `;
-            actionBtn.style.display = 'none'; // Pas de bouton direct sur iOS
-            // On ajoute un bouton "J'ai compris" à la place
-            actionBtn.innerText = "J'ai compris";
-            actionBtn.style.display = 'block';
-            actionBtn.onclick = closeInstallPopup;
-            
+            actionBtn.innerText = "J'ai ajouté l'app";
+            // On laisse l'utilisateur cliquer pour fermer une fois qu'il a fait l'action
+            actionBtn.onclick = () => {
+                localStorage.setItem('installShown', 'true');
+                overlay.style.display = 'none';
+                // On recharge pour lancer la version standalone
+                window.location.reload();
+            };
+            actionBtn.disabled = false;
         } else {
             // Android
-            if(deferredPrompt) {
-                instrText.innerText = "Installez l'application pour un accès rapide :";
-                actionBtn.innerText = "Installer";
-                actionBtn.style.display = 'block';
+            instrText.innerText = "Installez l'application pour un accès rapide et optimal :";
+            stepsBox.innerHTML = "";
+            actionBtn.innerText = "Installer";
+            if (deferredPrompt) {
+                actionBtn.disabled = false;
                 actionBtn.onclick = () => {
                     deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(choiceResult => {
-                        if (choiceResult.outcome === 'accepted') { console.log('User accepted A2HS prompt'); }
+                    deferredPrompt.userChoice.then(result => {
+                        if (result.outcome === 'accepted') {
+                            localStorage.setItem('installShown', 'true');
+                            overlay.style.display = 'none';
+                        }
                         deferredPrompt = null;
-                        closeInstallPopup();
                     });
                 };
             } else {
-                closeInstallPopup(); // Ne rien afficher si pas de prompt Android
+                // Si le prompt natif n'est pas dispo (ex: déjà installé ou navigateur non compatible)
+                actionBtn.disabled = false;
+                actionBtn.innerText = "Continuer";
+                actionBtn.onclick = () => {
+                    localStorage.setItem('installShown', 'true');
+                    overlay.style.display = 'none';
+                };
             }
         }
     }
@@ -551,11 +515,6 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // On affiche le popup automatiquement si on est sur mobile et pas déjà installé
-        if (detectMobile() && !isRunningStandalone()) {
-            // On attend un peu que le loader passe
-            setTimeout(showInstallInstructions, 1500);
-        }
     });
 
     /* ==========================================
@@ -564,12 +523,8 @@
     
     function toggleAIChat(state) {
         const win = document.getElementById('ai-chat-window');
-        if(state) {
-            win.classList.add('active');
-            document.getElementById('ai-input').focus();
-        } else {
-            win.classList.remove('active');
-        }
+        if(state) { win.classList.add('active'); document.getElementById('ai-input').focus(); } 
+        else { win.classList.remove('active'); }
     }
 
     function addAIMessage(text, sender) {
@@ -593,27 +548,14 @@
         try {
             const response = await fetch(GROQ_API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: MODEL_NAME,
-                    messages: [{role: "user", content: text}]
-                })
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] })
             });
-
             const data = await response.json();
-            
             const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
             if(loadingMsg) loadingMsg.remove();
-
-            if (data.choices && data.choices[0]) {
-                addAIMessage(data.choices[0].message.content, 'bot');
-            } else {
-                addAIMessage("Erreur: " + (data.error ? data.error.message : "Inconnue"), 'bot');
-            }
-
+            if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot');
+            else addAIMessage("Erreur API", 'bot');
         } catch (error) {
             const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
             if(loadingMsg) loadingMsg.remove();
@@ -624,15 +566,11 @@
     /* ==========================================
        LOGIQUE APP
        ========================================== */
-    function setViewportHeight() {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
+    function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
     window.addEventListener('resize', setViewportHeight);
 
     function applyTheme(mode, accent) {
-        if (mode === 'light') document.body.classList.add('light-mode');
-        else document.body.classList.remove('light-mode');
+        if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode');
         document.body.setAttribute('data-accent', accent);
         localStorage.setItem('metaThemeMode', mode);
         localStorage.setItem('metaThemeAccent', accent);
@@ -647,9 +585,7 @@
         let colors = [];
         if (mode === 'dark') colors = [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }];
         else colors = [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }];
-        colors.forEach(c => {
-            container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`;
-        });
+        colors.forEach(c => { container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`; });
     }
 
     let selectedObColor = null;
@@ -665,13 +601,6 @@
         applyTheme(currentObMode, selectedObColor);
         document.getElementById('onboarding-screen').style.display = 'none';
         document.getElementById('login-screen').style.display = 'flex';
-        
-        // Vérification installation après onboarding
-        if (detectMobile() && !isRunningStandalone()) {
-            // Pour iOS on attend un peu, pour Android le listener beforeinstallprompt gère
-            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-            if (isIos) setTimeout(showInstallInstructions, 500);
-        }
     }
 
     function getAvatar(username) {
@@ -688,8 +617,7 @@
         
         if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) {
             errorMsg.style.display = "none";
-            if (remember) localStorage.setItem("metaUser", u);
-            else localStorage.removeItem("metaUser");
+            if (remember) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser");
             loggedUser = u;
             startApp();
         } else { errorMsg.style.display = "block"; }
@@ -699,305 +627,137 @@
         document.getElementById("login-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
         document.querySelector("header").style.display = "flex";
-        
         document.getElementById('ai-btn-header').style.display = 'flex';
-        
         document.getElementById("my-name-display").innerText = loggedUser;
         document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_');
         document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
-        
-        renderStories();
-        genererContenu();
-        renderMyProfile();
-        switchTab('feed', 0);
-        updateSettingsUI();
+        renderStories(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
     }
 
     function renderStories() {
-        const storiesList = document.getElementById('stories-list');
-        storiesList.innerHTML = "";
+        const storiesList = document.getElementById('stories-list'); storiesList.innerHTML = "";
         Object.keys(CONFIG_USERS).forEach(username => {
-            storiesList.insertAdjacentHTML('beforeend', `
-                <button class="story-bubble btn-press" onclick="openExternalProfile('${username}')" aria-label="Voir le profil de ${username}">
-                    <div class="story-img-wrapper">${getAvatar(username)}</div>
-                    <div class="story-name">${username}</div>
-                </button>
-            `);
+            storiesList.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${username}')"><div class="story-img-wrapper">${getAvatar(username)}</div><div class="story-name">${username}</div></button>`);
         });
     }
 
     function switchTab(t, i) {
-        document.getElementById('settings-overlay').style.display = 'none';
-        document.getElementById('external-profile-overlay').style.display = 'none';
-        document.getElementById('media-view-overlay').style.display = 'none';
-        
+        document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none';
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
-        
         document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
-        
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
-        
-        const aiBtn = document.getElementById('ai-btn-header');
-        if(aiBtn) aiBtn.style.display = (t === 'feed') ? 'flex' : 'none';
-        
+        const aiBtn = document.getElementById('ai-btn-header'); if(aiBtn) aiBtn.style.display = (t === 'feed') ? 'flex' : 'none';
         moveIndicator(i);
-        
-        if (t !== 'videos') stopAllVideos();
-        else setTimeout(observeVideos, 100);
+        if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100);
     }
 
     function moveIndicator(i) {
-        const buttons = document.querySelectorAll('nav button.nav-item');
-        const indicator = document.getElementById('nav-indicator');
-        if(buttons[i]) {
-            const rect = buttons[i].getBoundingClientRect();
-            const navRect = buttons[i].parentElement.getBoundingClientRect();
-            indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px';
-        }
+        const buttons = document.querySelectorAll('nav button.nav-item'); const indicator = document.getElementById('nav-indicator');
+        if(buttons[i]) { const rect = buttons[i].getBoundingClientRect(); const navRect = buttons[i].parentElement.getBoundingClientRect(); indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px'; }
     }
-
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; }); }
 
     function observeVideos() {
         if (videoObserver) videoObserver.disconnect();
         const cards = document.querySelectorAll('.video-card');
-        
         videoObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const iframe = entry.target.querySelector('iframe');
-                if (!iframe) return;
-                const targetSrc = iframe.getAttribute('data-src');
-                const videoId = entry.target.getAttribute('data-id');
-                
+                const iframe = entry.target.querySelector('iframe'); if (!iframe) return;
+                const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id');
                 if (entry.isIntersecting) {
                     if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
                     setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200);
-                    
-                    if(videoId && !seenVideos.includes(videoId)) {
-                        seenVideos.push(videoId);
-                        localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos));
-                        const badge = entry.target.querySelector('.seen-badge');
-                        if(badge) badge.style.display = 'none';
-                    }
-                } else {
-                    iframe.contentWindow.postMessage('{"method":"pause"}', '*');
-                    iframe.src = ""; 
-                }
+                    if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const badge = entry.target.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; }
+                } else { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); iframe.src = ""; }
             });
         }, { threshold: 0.6 });
-        
         cards.forEach(card => videoObserver.observe(card));
     }
 
     function openExternalProfile(username) {
         if(username === loggedUser) { switchTab('own-profile', 3); return; }
         const overlay = document.getElementById('external-profile-overlay');
-        document.getElementById('ext-user-title').innerText = username;
-        document.getElementById('ext-display-name').innerText = username;
-        document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(username);
-        
-        const grid = document.getElementById('ext-posts-grid');
-        grid.innerHTML = "";
-        const allMedia = [
-            ...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), 
-            ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))
-        ].sort((a,b) => b.date - a.date);
-        
+        document.getElementById('ext-user-title').innerText = username; document.getElementById('ext-display-name').innerText = username; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(username);
+        const grid = document.getElementById('ext-posts-grid'); grid.innerHTML = "";
+        const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
         if (allMedia.length === 0) grid.innerHTML = `<div class="empty-state">Aucune publication</div>`;
-        else allMedia.forEach(m => {
-            grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')" aria-label="Voir la publication">${m.type==='photo'?`<img src="${m.url}" alt="Publication">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`);
-        });
+        else allMedia.forEach(m => { grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); });
         overlay.style.display = 'block';
     }
-
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; }
 
     function renderMyProfile() {
-        const gridPosts = document.getElementById('my-posts-grid');
-        const gridSaved = document.getElementById('my-saved-grid');
-        gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
-        
+        const gridPosts = document.getElementById('my-posts-grid'); const gridSaved = document.getElementById('my-saved-grid'); gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         const myPosts = LISTE_PHOTOS.filter(p => p.auteur === loggedUser);
-        
-        document.getElementById('stat-posts').innerText = myPosts.length;
-        document.getElementById('stat-saved').innerText = savedItems.length;
-
-        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`;
-        else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir ma publication"><img src="${p.url}" alt="Ma publication"></button>`); });
-
+        document.getElementById('stat-posts').innerText = myPosts.length; document.getElementById('stat-saved').innerText = savedItems.length;
+        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucun post</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
         if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément sauvegardé</div>`;
-        else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')" aria-label="Voir publication enregistrée"><img src="${p.url}" alt="Publication enregistrée"></button>`); }});
+        else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }});
     }
-
     function switchMyTab(t) {
-        document.getElementById('my-tab-pub').classList.toggle('active', t === 'info');
-        document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved');
-        document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none';
-        document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none';
+        document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved');
+        document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none';
     }
-
     function genererContenu() {
-        const photoDiv = document.getElementById('photo-list');
-        const videoDiv = document.getElementById('video-list');
-        photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
-        
-        const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
-        const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort((a, b) => b.date - a.date);
-        const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
-
+        const photoDiv = document.getElementById('photo-list'); const videoDiv = document.getElementById('video-list'); photoDiv.innerHTML = ""; videoDiv.innerHTML = "";
+        const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort((a, b) => b.date - a.date); const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos;
         fluxFinal.forEach(p => {
             const isSaved = savedItems.includes(p.id);
-            photoDiv.insertAdjacentHTML('beforeend', `
-                <article class="post">
-                    <div class="post-user" onclick="openExternalProfile('${p.auteur}')">
-                        <div class="mini-avatar">${getAvatar(p.auteur)}</div> 
-                        ${p.auteur}
-                    </div>
-                    <div class="post-img-container" ondblclick="animateLike(this)">
-                        <img src="${p.url}" alt="Publication de ${p.auteur}">
-                        <div class="like-overlay"><i class="fas fa-heart" style="font-size: 5rem;"></i></div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)" aria-label="${isSaved ? 'Retirer' : 'Enregistrer'}">
-                            <i class="${isSaved ? 'fas' : 'far'} fa-bookmark" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </article>`);
+            photoDiv.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${p.auteur}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 5rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`);
         });
-
-        const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
-        const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
-        const sortedVideos = [...unseen, ...seen];
-
-        sortedVideos.forEach(v => {
-            const hasBeenSeen = seenVideos.includes(v.id);
-            videoDiv.insertAdjacentHTML('beforeend', `
-                <div class="video-card" data-id="${v.id}">
-                    <iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen" title="Vidéo de ${v.auteur}"></iframe>
-                    <div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>
-                    ${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}
-                </div>`);
-        });
+        const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sortedVideos = [...unseen, ...seen];
+        sortedVideos.forEach(v => { const hasBeenSeen = seenVideos.includes(v.id); videoDiv.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}</div>`); });
         setTimeout(observeVideos, 500);
     }
-
-    function animateLike(container) {
-        const overlay = container.querySelector('.like-overlay');
-        overlay.classList.remove('animate');
-        void overlay.offsetWidth;
-        overlay.classList.add('animate');
-    }
-
-    function openMediaView(id, type) {
-        const overlay = document.getElementById('media-view-overlay');
-        const content = document.getElementById('media-view-content');
-        let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        if(item) {
-             content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%" alt="Vue détaillée">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen" title="Lecteur vidéo"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)" aria-label="Enregistrer"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark" aria-hidden="true"></i></button></div></article>`;
-             overlay.style.display = 'block';
-        }
-    }
-
-    function closeMediaView() { 
-        document.getElementById('media-view-overlay').style.display = 'none'; 
-        document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = "");
-    }
-    
-    function toggleSettings(s) { 
-        document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; 
-        updateSettingsUI();
-    }
-    
-    function filtrerRecherche() {
-        const q = document.getElementById('search-input').value.toLowerCase();
-        const res = document.getElementById('search-results');
-        res.innerHTML = "";
-        if(q.length < 1) return;
-        Object.keys(CONFIG_USERS).forEach(u => { 
-            if(u.includes(q)) {
-                res.insertAdjacentHTML('beforeend', `
-                    <button style="padding:25px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; width:100%; text-align:left; border-left:none; border-right:none; border-top:none;" onclick="openExternalProfile('${u}')">
-                        <div class="mini-avatar" style="width:45px; height:45px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> 
-                        <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-size: 0.9rem;">${u}</b>
-                    </button>`); 
-            }
-        });
-    }
-
-    function toggleSave(id, btn) {
-        const icon = btn.querySelector('i');
-        if (savedItems.includes(id)) { 
-            savedItems = savedItems.filter(i => i !== id); 
-            icon.classList.replace('fas', 'far');
-            btn.classList.remove('saved');
-        } else { 
-            savedItems.push(id); 
-            icon.classList.replace('far', 'fas');
-            btn.classList.add('saved');
-        }
-        localStorage.setItem('metaSaved', JSON.stringify(savedItems));
-        renderMyProfile();
-    }
-
-    function setThemeMode(mode) {
-        let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold';
-        if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) currentAccent = 'black';
-        if(mode === 'dark' && currentAccent === 'black') currentAccent = 'gold';
-        applyTheme(mode, currentAccent);
-        updateSettingsUI();
-    }
-
-    function setThemeAccent(accent) {
-        const mode = localStorage.getItem('metaThemeMode') || 'dark';
-        applyTheme(mode, accent);
-        updateSettingsUI();
-    }
-
-    function updateSettingsUI() {
-        const mode = localStorage.getItem('metaThemeMode') || 'dark';
-        const accent = localStorage.getItem('metaThemeAccent') || 'gold';
-
-        document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark');
-        document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light');
-
-        const picker = document.getElementById('settings-color-picker');
-        picker.innerHTML = '';
-        
-        let colors = (mode === 'dark') 
-            ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}]
-            : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}];
-
-        colors.forEach(c => {
-            const isActive = (c.id === accent);
-            picker.innerHTML += `<div class="picker-circle ${c.class} ${isActive ? 'active' : ''}" onclick="setThemeAccent('${c.id}')"></div>`;
-        });
-    }
-
-    function handleLogout() { 
-        localStorage.removeItem("metaUser"); 
-        location.reload(); 
-    }
+    function animateLike(container) { const overlay = container.querySelector('.like-overlay'); overlay.classList.remove('animate'); void overlay.offsetWidth; overlay.classList.add('animate'); }
+    function openMediaView(id, type) { const overlay = document.getElementById('media-view-overlay'); const content = document.getElementById('media-view-content'); let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(item) { content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; overlay.style.display = 'block'; } }
+    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); }
+    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; updateSettingsUI(); }
+    function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const res = document.getElementById('search-results'); res.innerHTML = ""; if(q.length < 1) return; Object.keys(CONFIG_USERS).forEach(u => { if(u.includes(q)) { res.insertAdjacentHTML('beforeend', `<button style="padding:25px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; width:100%; text-align:left;" onclick="openExternalProfile('${u}')"><div class="mini-avatar" style="width:45px; height:45px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-size: 0.9rem;">${u}</b></button>`); } }); }
+    function toggleSave(id, btn) { const icon = btn.querySelector('i'); if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); icon.classList.replace('fas', 'far'); btn.classList.remove('saved'); } else { savedItems.push(id); icon.classList.replace('far', 'fas'); btn.classList.add('saved'); } localStorage.setItem('metaSaved', JSON.stringify(savedItems)); renderMyProfile(); }
+    function setThemeMode(mode) { let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold'; if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) currentAccent = 'black'; if(mode === 'dark' && currentAccent === 'black') currentAccent = 'gold'; applyTheme(mode, currentAccent); updateSettingsUI(); }
+    function setThemeAccent(accent) { const mode = localStorage.getItem('metaThemeMode') || 'dark'; applyTheme(mode, accent); updateSettingsUI(); }
+    function updateSettingsUI() { const mode = localStorage.getItem('metaThemeMode') || 'dark'; const accent = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light'); const picker = document.getElementById('settings-color-picker'); picker.innerHTML = ''; let colors = (mode === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; colors.forEach(c => { const isActive = (c.id === accent); picker.innerHTML += `<div class="picker-circle ${c.class} ${isActive ? 'active' : ''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
+    function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
     window.addEventListener('load', () => {
         setViewportHeight();
         const hasPrefs = localStorage.getItem('metaThemeMode');
 
+        // LOGIQUE PRINCIPALE AU CHARGEMENT
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             
-            if (!hasPrefs) {
-                document.getElementById('onboarding-screen').style.display = 'flex';
-            } else {
-                applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
-                document.getElementById('onboarding-screen').style.display = 'none';
+            // 1. Vérifier si on est sur mobile
+            if (isMobile()) {
+                // 2. Vérifier si déjà installé (standalone) ou si déjà vu
+                const alreadyShown = localStorage.getItem('installShown');
                 
-                if(loggedUser) startApp();
-                else document.getElementById('login-screen').style.display = 'flex';
+                if (!isStandalone() && !alreadyShown) {
+                    // FORCE INSTALLATION SCREEN
+                    showInstallScreen();
+                } else {
+                    // Si déjà installé ou déjà vu, on lance l'app normale
+                    proceedToApp(hasPrefs);
+                }
+            } else {
+                // Desktop : flux normal
+                proceedToApp(hasPrefs);
             }
-        }, 1200);
+        }, 1500);
     });
+
+    function proceedToApp(hasPrefs) {
+        if (!hasPrefs) {
+            document.getElementById('onboarding-screen').style.display = 'flex';
+        } else {
+            applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
+            document.getElementById('onboarding-screen').style.display = 'none';
+            if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex';
+        }
+    }
 </script>
 </body>
 </html>
