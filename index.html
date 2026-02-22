@@ -7,7 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030303">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="android-mobile-web-app-capable" content="yes">
     <link rel="icon" type="image/png" href="https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1">
     <link rel="apple-touch-icon" href="https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1">
     <title>Meta Officiel</title>
@@ -24,7 +23,7 @@
             --text-sec: #888888;
             --accent: #D4AF37;
             --accent-text: #000000;
-            --nav-bg: transparent; /* Navigation transparente */
+            --nav-bg: transparent;
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --vh: 1vh;
             --ai-gradient: linear-gradient(135deg, #D4AF37, #FFF, #007AFF);
@@ -64,20 +63,12 @@
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
-        /* LOADER & INSTALL BLOCKER */
+        /* LOADER */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease; padding: 30px; }
         .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 50, 0.3); margin-bottom: 20px; }
         .loader-text { margin-top: 15px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
         
-        /* Interface d'installation Android */
-        .install-screen-android {
-            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; width: 100%; padding: 30px;
-        }
-        .install-logo { width: 120px; height: 120px; border-radius: 30px; margin-bottom: 30px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #fff; margin-bottom: 10px; }
-        .install-sub { color: #888; font-size: 0.9rem; margin-bottom: 40px; }
-        .install-btn-main { background: var(--accent); color: var(--accent-text); padding: 18px 50px; border: none; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 50, 0.3); }
-        .install-btn-main:active { transform: scale(0.95); }
+        .install-block-text { margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6; }
 
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
@@ -110,7 +101,7 @@
 
         /* --- LOGIN --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
-        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; text-align: center; width: 100%; }
         input { width: 100%; max-width: 320px; padding: 20px; background: transparent; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; font-size: 14px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
         input:focus { border-color: var(--accent); }
         input::placeholder { color: var(--text-sec); }
@@ -122,8 +113,8 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
-        header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
-        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; text-align: center; }
+        header { height: calc(80px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
+        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; text-align: center; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
         .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
@@ -138,8 +129,8 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        /* Content area ajusté pour nav flottante */
-        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; padding-bottom: 100px; }
+        /* Content area ajusté pour descendre le contenu */
+        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 20px; padding-bottom: 90px; }
         
         .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
@@ -175,7 +166,7 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION FLOTTANTE (Sans fond) */
+        /* NAVIGATION FLOTTANTE */
         nav {
             position: fixed; 
             bottom: 0; 
@@ -188,8 +179,8 @@
             justify-content: space-around; 
             align-items: center; 
             z-index: 999;
-            background: transparent; /* Transparent */
-            border-top: none; /* Pas de bordure */
+            background: transparent;
+            border-top: none;
         }
         
         .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; left: 0; box-shadow: 0 0 10px var(--accent); }
@@ -232,7 +223,7 @@
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
 
-        /* AI CHAT WINDOW & KEYBOARD */
+        /* AI CHAT WINDOW */
         #ai-chat-window {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); border: none;
@@ -250,17 +241,25 @@
         .ai-msg-bubble.bot { background: var(--surface); align-self: flex-start; color: var(--text-main); border-bottom-left-radius: 4px; }
         .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; }
         
-        /* APERCU ET CLAVIER */
-        .ai-preview-area {
-            padding: 10px 20px; min-height: 50px; font-size: 1rem; color: var(--text-main); 
-            border-top: 1px solid var(--border); background: var(--surface); 
-            display: flex; align-items: center;
+        /* ZONE DE TEXTE (PC & Mobile) */
+        .ai-input-container {
+            padding: 10px; border-top: 1px solid var(--border); background: var(--surface); 
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
         }
-        .ai-preview-placeholder { color: var(--text-sec); }
+        /* Input pour PC (Masqué sur mobile) */
+        .ai-pc-input {
+            display: none; width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; color: var(--text-main); font-size: 0.9rem;
+        }
+        /* Aperçu pour Mobile (Masqué sur PC) */
+        .ai-mobile-preview {
+            display: none; min-height: 40px; font-size: 1rem; color: var(--text-main); 
+            padding: 0 10px 10px 10px; word-break: break-word;
+        }
+        .ai-mobile-preview:empty::before { content: "Utilisez le clavier ci-dessous..."; color: var(--text-sec); }
 
+        /* Clavier virtuel (Masqué sur PC) */
         .ai-keyboard-area {
-            background: var(--surface); padding: 5px; padding-bottom: calc(5px + env(safe-area-inset-bottom));
-            display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border);
+            display: none; background: var(--surface); padding: 5px; flex-direction: column; gap: 6px; border-top: 1px solid var(--border);
         }
         .ai-input-row { display: flex; justify-content: space-between; gap: 4px; }
         .ai-key {
@@ -271,36 +270,31 @@
         .ai-key:active { background: var(--border); }
         .ai-key.space { flex: 5; }
         .ai-key.accent { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-        .ai-key.action { background: transparent; border: none; }
+        
+        /* Classe utilitaire pour switcher PC/Mobile */
+        .is-desktop .ai-pc-input { display: block; }
+        .is-desktop .ai-mobile-preview { display: none; }
+        .is-desktop .ai-keyboard-area { display: none; }
+        
+        .is-mobile .ai-pc-input { display: none; }
+        .is-mobile .ai-mobile-preview { display: block; }
+        .is-mobile .ai-keyboard-area { display: flex; }
+
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
 <!-- LOADER -->
 <div id="loader">
-    <!-- Ecran Android -->
-    <div id="android-install-ui" class="install-screen-android">
-        <div class="install-logo"></div>
-        <div class="install-title">Meta Officiel</div>
-        <div class="install-sub">Installez l'application pour une expérience optimale et sécurisée.</div>
-        <button id="install-btn-main" class="install-btn-main" onclick="triggerAndroidInstall()">
-            <i class="fas fa-download" style="margin-right: 10px;"></i> Installer l'application
-        </button>
-    </div>
-    
-    <!-- Loader iOS / Default -->
-    <div id="default-loader-ui">
-        <div class="loader-icon"></div>
-        <div class="loader-text" id="main-loader-text">Meta Officiel</div>
-        <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
-            <div style="margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6;">
-                Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>
-                Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"
-            </div>
+    <div class="loader-icon"></div>
+    <div class="loader-text" id="main-loader-text">Meta Officiel</div>
+    <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
+        <div class="install-block-text">
+            Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>
+            Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"
         </div>
     </div>
 </div>
 
-<!-- HTML ONBOARDING, LOGIN, APP, AI CHAT identiques au précédent -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Officiel</div>
     <div class="ob-subtitle">Personnalisation</div>
@@ -421,7 +415,7 @@
     </div>
 </div>
 
-<!-- AI CHAT WINDOW (CLAVIER INTÉGRÉ) -->
+<!-- AI CHAT WINDOW -->
 <div id="ai-chat-window">
     <div class="ai-top-bar">
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
@@ -429,63 +423,40 @@
     </div>
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Je suis votre assistant. Posez-moi une question.</div></div>
     
-    <!-- APERCU DU TEXTE -->
-    <div id="ai-preview" class="ai-preview-area"><span class="ai-preview-placeholder">Écrivez votre message...</span></div>
-
-    <!-- CLAVIER INTÉGRÉ -->
-    <div class="ai-keyboard-area">
-        <div class="ai-input-row">
-            <button class="ai-key" onclick="aiType('1')">1</button>
-            <button class="ai-key" onclick="aiType('2')">2</button>
-            <button class="ai-key" onclick="aiType('3')">3</button>
-            <button class="ai-key" onclick="aiType('4')">4</button>
-            <button class="ai-key" onclick="aiType('5')">5</button>
-            <button class="ai-key" onclick="aiType('6')">6</button>
-            <button class="ai-key" onclick="aiType('7')">7</button>
-            <button class="ai-key" onclick="aiType('8')">8</button>
-            <button class="ai-key" onclick="aiType('9')">9</button>
-            <button class="ai-key" onclick="aiType('0')">0</button>
-            <button class="ai-key action" onclick="aiDelete()"><i class="fas fa-delete-left"></i></button>
-        </div>
-        <div class="ai-input-row">
-            <button class="ai-key" onclick="aiType('a')">A</button>
-            <button class="ai-key" onclick="aiType('z')">Z</button>
-            <button class="ai-key" onclick="aiType('e')">E</button>
-            <button class="ai-key" onclick="aiType('r')">R</button>
-            <button class="ai-key" onclick="aiType('t')">T</button>
-            <button class="ai-key" onclick="aiType('y')">Y</button>
-            <button class="ai-key" onclick="aiType('u')">U</button>
-            <button class="ai-key" onclick="aiType('i')">I</button>
-            <button class="ai-key" onclick="aiType('o')">O</button>
-            <button class="ai-key" onclick="aiType('p')">P</button>
-        </div>
-        <div class="ai-input-row">
-            <button class="ai-key" onclick="aiType('q')">Q</button>
-            <button class="ai-key" onclick="aiType('s')">S</button>
-            <button class="ai-key" onclick="aiType('d')">D</button>
-            <button class="ai-key" onclick="aiType('f')">F</button>
-            <button class="ai-key" onclick="aiType('g')">G</button>
-            <button class="ai-key" onclick="aiType('h')">H</button>
-            <button class="ai-key" onclick="aiType('j')">J</button>
-            <button class="ai-key" onclick="aiType('k')">K</button>
-            <button class="ai-key" onclick="aiType('l')">L</button>
-            <button class="ai-key" onclick="aiType('m')">M</button>
-        </div>
-        <div class="ai-input-row">
-            <button class="ai-key" onclick="aiType('w')">W</button>
-            <button class="ai-key" onclick="aiType('x')">X</button>
-            <button class="ai-key" onclick="aiType('c')">C</button>
-            <button class="ai-key" onclick="aiType('v')">V</button>
-            <button class="ai-key" onclick="aiType('b')">B</button>
-            <button class="ai-key" onclick="aiType('n')">N</button>
-            <button class="ai-key space" onclick="aiType(' ')"></button>
-            <button class="ai-key accent" onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
+    <!-- CONTENEUR INPUT (Gère PC vs Mobile) -->
+    <div class="ai-input-container">
+        <!-- Input PC -->
+        <input type="text" class="ai-pc-input" id="ai-pc-input" placeholder="Écrivez ici et appuyez sur Entrée...">
+        
+        <!-- Apercu Mobile -->
+        <div id="ai-mobile-preview" class="ai-mobile-preview"></div>
+        
+        <!-- Clavier Virtuel Mobile -->
+        <div class="ai-keyboard-area" id="ai-keyboard">
+            <div class="ai-input-row">
+                <button class="ai-key" onclick="aiType('1')">1</button><button class="ai-key" onclick="aiType('2')">2</button><button class="ai-key" onclick="aiType('3')">3</button><button class="ai-key" onclick="aiType('4')">4</button><button class="ai-key" onclick="aiType('5')">5</button><button class="ai-key" onclick="aiType('6')">6</button><button class="ai-key" onclick="aiType('7')">7</button><button class="ai-key" onclick="aiType('8')">8</button><button class="ai-key" onclick="aiType('9')">9</button><button class="ai-key" onclick="aiType('0')">0</button><button class="ai-key action" onclick="aiDelete()"><i class="fas fa-delete-left"></i></button>
+            </div>
+            <div class="ai-input-row">
+                <button class="ai-key" onclick="aiType('a')">A</button><button class="ai-key" onclick="aiType('z')">Z</button><button class="ai-key" onclick="aiType('e')">E</button><button class="ai-key" onclick="aiType('r')">R</button><button class="ai-key" onclick="aiType('t')">T</button><button class="ai-key" onclick="aiType('y')">Y</button><button class="ai-key" onclick="aiType('u')">U</button><button class="ai-key" onclick="aiType('i')">I</button><button class="ai-key" onclick="aiType('o')">O</button><button class="ai-key" onclick="aiType('p')">P</button>
+            </div>
+            <div class="ai-input-row">
+                <button class="ai-key" onclick="aiType('q')">Q</button><button class="ai-key" onclick="aiType('s')">S</button><button class="ai-key" onclick="aiType('d')">D</button><button class="ai-key" onclick="aiType('f')">F</button><button class="ai-key" onclick="aiType('g')">G</button><button class="ai-key" onclick="aiType('h')">H</button><button class="ai-key" onclick="aiType('j')">J</button><button class="ai-key" onclick="aiType('k')">K</button><button class="ai-key" onclick="aiType('l')">L</button><button class="ai-key" onclick="aiType('m')">M</button>
+            </div>
+            <div class="ai-input-row">
+                <button class="ai-key" onclick="aiType('w')">W</button><button class="ai-key" onclick="aiType('x')">X</button><button class="ai-key" onclick="aiType('c')">C</button><button class="ai-key" onclick="aiType('v')">V</button><button class="ai-key" onclick="aiType('b')">B</button><button class="ai-key" onclick="aiType('n')">N</button><button class="ai-key space" onclick="aiType(' ')"></button><button class="ai-key accent" onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- Configuration ---
+    // ==========================================================
+    // CONFIGURATION
+    // ==========================================================
+    
+    // !! IMPORTANT !! METTEZ VOTRE LIEN ICI POUR ANDROID
+    const ANDROID_REDIRECT_URL = "https://votre-lien-apk-ou-site.com"; 
+
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -517,23 +488,28 @@
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
-    let deferredPrompt; 
     
-    // --- Logique IA & Clavier ---
+    // --- Logique IA ---
     let currentInput = "";
     
     function aiType(char) { currentInput += char; updateAIPreview(); }
     function aiDelete() { currentInput = currentInput.slice(0, -1); updateAIPreview(); }
     function updateAIPreview() {
-        const preview = document.getElementById('ai-preview');
-        if(currentInput.length === 0) preview.innerHTML = '<span class="ai-preview-placeholder">Écrivez votre message...</span>';
-        else preview.innerHTML = currentInput;
+        const preview = document.getElementById('ai-mobile-preview');
+        if(preview) preview.innerText = currentInput;
     }
     
     function toggleAIChat(state) {
         const win = document.getElementById('ai-chat-window');
-        if(state) { win.classList.add('active'); currentInput = ""; updateAIPreview(); } 
-        else { win.classList.remove('active'); }
+        if(state) { 
+            win.classList.add('active'); 
+            currentInput = ""; 
+            updateAIPreview();
+            // Focus l'input PC si on est sur desktop
+            if(!isMobile()) document.getElementById('ai-pc-input').focus();
+        } else { 
+            win.classList.remove('active'); 
+        }
     }
 
     function addAIMessage(text, sender) {
@@ -551,6 +527,7 @@
         addAIMessage(text, 'user');
         currentInput = "";
         updateAIPreview();
+        document.getElementById('ai-pc-input').value = "";
         addAIMessage("...", 'bot'); 
 
         try {
@@ -575,18 +552,6 @@
     function isRunningStandalone() { return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true); }
     function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
     function isAndroid() { return /Android/i.test(navigator.userAgent); }
-
-    function triggerAndroidInstall() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(choiceResult => {
-                if (choiceResult.outcome === 'accepted') { console.log('User accepted'); }
-                deferredPrompt = null;
-                window.location.reload();
-            });
-        } else { window.location.reload(); }
-    }
-    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
     /* LOGIQUE APP */
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
@@ -659,39 +624,44 @@
     function updateSettingsUI() { const mode = localStorage.getItem('metaThemeMode') || 'dark'; const accent = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light'); const picker = document.getElementById('settings-color-picker'); picker.innerHTML = ''; let colors = (mode === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; colors.forEach(c => { const isActive = (c.id === accent); picker.innerHTML += `<div class="picker-circle ${c.class} ${isActive ? 'active' : ''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
+    // INPUT PC EVENT LISTENER
+    document.getElementById('ai-pc-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') { currentInput = this.value; sendAIRequest(); } });
+
     window.addEventListener('load', () => {
         setViewportHeight();
         
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             
-            // --- LOGIQUE DE DÉMARRAGE CORRIGÉE ---
+            // --- LOGIQUE DE DÉMARRAGE ---
             const standalone = isRunningStandalone();
             const android = isAndroid();
 
             if (standalone) {
-                // 1. Si déjà installé -> Accès normal (PC, Android installé, iOS installé)
+                // Déjà installé -> Tout va bien
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
+                
+                // Ajout classe CSS pour PC vs Mobile
+                if(!isMobile()) document.body.classList.add('is-desktop');
+                else document.body.classList.add('is-mobile');
+
             } else if (android) {
-                // 2. Si Android ET non installé -> Forcer installation
-                document.getElementById('loader').style.display = 'flex';
-                document.getElementById('default-loader-ui').style.display = 'none';
-                document.getElementById('android-install-ui').style.display = 'flex';
+                // Android non installé -> REDIRECTION
+                window.location.replace(ANDROID_REDIRECT_URL);
+
             } else if (isMobile()) {
-                // 3. Si iOS (ou autre mobile) non installé -> Instructions iOS
+                // iOS non installé -> Instructions
                 document.getElementById('loader').style.display = 'flex';
-                document.getElementById('default-loader-ui').style.display = 'flex';
-                document.getElementById('android-install-ui').style.display = 'none';
                 document.getElementById('install-block-content').style.display = 'flex';
-                document.querySelector('.loader-icon').style.display = 'block';
-                document.getElementById('main-loader-text').innerText = "Meta Officiel";
+                document.body.classList.add('is-mobile');
             } else {
-                // 4. Si PC (Desktop) -> Accès direct même si non "installé"
+                // PC -> Accès direct
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
+                document.body.classList.add('is-desktop');
             }
         }, 1500);
     });
