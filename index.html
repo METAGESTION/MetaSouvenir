@@ -6,7 +6,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030303">
-    <!-- NOUVEAU FAVICON -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="android-mobile-web-app-capable" content="yes">
     <link rel="icon" type="image/png" href="https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1">
     <link rel="apple-touch-icon" href="https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1">
     <title>Meta Officiel</title>
@@ -23,7 +24,7 @@
             --text-sec: #888888;
             --accent: #D4AF37;
             --accent-text: #000000;
-            --nav-bg: rgba(5, 5, 5, 0.85);
+            --nav-bg: transparent; /* Navigation transparente */
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --vh: 1vh;
             --ai-gradient: linear-gradient(135deg, #D4AF37, #FFF, #007AFF);
@@ -40,7 +41,7 @@
             --border: #E0E0E0; 
             --text-main: #1D1D1F; 
             --text-sec: #86868B;
-            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-bg: transparent;
             --card-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         body.light-mode[data-accent="black"] { --accent: #1D1D1F; --accent-text: #FFFFFF; }
@@ -65,14 +66,19 @@
 
         /* LOADER & INSTALL BLOCKER */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease; padding: 30px; }
-        /* NOUVELLE ICONE DANS LE LOADER */
-        .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); margin-bottom: 20px; }
+        .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 50, 0.3); margin-bottom: 20px; }
         .loader-text { margin-top: 15px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
         
-        .install-block-text { margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6; }
-        .install-arrow { font-size: 2rem; margin: 20px 0; color: var(--accent); animation: bounce 1s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-        
+        /* Interface d'installation Android */
+        .install-screen-android {
+            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; width: 100%; padding: 30px;
+        }
+        .install-logo { width: 120px; height: 120px; border-radius: 30px; margin-bottom: 30px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #fff; margin-bottom: 10px; }
+        .install-sub { color: #888; font-size: 0.9rem; margin-bottom: 40px; }
+        .install-btn-main { background: var(--accent); color: var(--accent-text); padding: 18px 50px; border: none; border-radius: 30px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 50, 0.3); }
+        .install-btn-main:active { transform: scale(0.95); }
+
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
         /* --- ONBOARDING SCREEN --- */
@@ -132,7 +138,8 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; margin-bottom: 85px; }
+        /* Content area ajusté pour nav flottante */
+        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; padding-bottom: 100px; }
         
         .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
@@ -159,7 +166,7 @@
         #videos-section::-webkit-scrollbar { display: none; } 
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
-        .video-info { position: absolute; bottom: 80px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
+        .video-info { position: absolute; bottom: 100px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
         
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; z-index: 5; opacity: 0.7; }
@@ -168,38 +175,37 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION FIXEE EN BAS (Correction placement) */
+        /* NAVIGATION FLOTTANTE (Sans fond) */
         nav {
             position: fixed; 
             bottom: 0; 
             left: 0; width: 100%; 
             height: auto; 
-            padding: 0; /* Enlevé le padding haut */
-            padding-top: 15px;
+            padding: 0;
+            padding-top: 10px;
             padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
             display: flex; 
             justify-content: space-around; 
             align-items: center; 
             z-index: 999;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--border);
+            background: transparent; /* Transparent */
+            border-top: none; /* Pas de bordure */
         }
         
-        .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; left: 0; }
+        .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; left: 0; box-shadow: 0 0 10px var(--accent); }
         
-        nav button.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        nav button.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--text-main); cursor: pointer; z-index: 2; width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
         nav button.nav-item.active { color: var(--accent); transform: translateY(-2px); }
 
         body.has-overlay nav { display: none; }
 
-        /* PROFILE */
+        /* PROFILE & SETTINGS */
         .profile-header { padding: 50px 20px; text-align: center; background: transparent; }
         .profile-pic-main { width: 110px; height: 110px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent); }
         .profile-stats { display: flex; justify-content: center; gap: 50px; margin-bottom: 30px; color: var(--text-sec); }
         .stat-item { text-align: center; }
         .stat-num { display: block; font-size: 1.4rem; color: var(--text-main); font-weight: 600; margin-bottom: 5px; }
         .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
-
         .profile-tabs { display: flex; background: transparent; border-bottom: 1px solid var(--border); }
         .p-tab { flex: 1; padding: 20px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.75rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
@@ -207,10 +213,7 @@
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; transition: opacity 0.3s; }
         .grid-item:active { opacity: 0.7; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
-        
         .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; padding: 8px; }
-
-        /* Settings */
         .settings-group { padding: 25px; border-bottom: 1px solid var(--border); }
         .settings-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 20px; color: var(--text-main); }
         .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -231,76 +234,73 @@
 
         /* AI CHAT WINDOW & KEYBOARD */
         #ai-chat-window {
-            position: fixed; top: 50px; left: 0; width: 100%; height: calc(100% - 50px);
-            background: var(--surface); border: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); border: none;
             display: none; flex-direction: column; z-index: 1100; 
-            box-shadow: none; overflow: hidden; animation: slideUp 0.3s ease;
+            animation: slideUp 0.3s ease;
         }
         #ai-chat-window.active { display: flex; }
         
-        .ai-top-bar { padding: 12px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); min-height: 50px; }
-        .ai-top-title { font-size: 0.9rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1rem; }
+        .ai-top-bar { padding: 15px; background: transparent; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); min-height: 60px; margin-top: env(safe-area-inset-top); }
+        .ai-top-title { font-size: 1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.2rem; }
 
         .ai-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
-        .ai-msg-bubble { max-width: 90%; padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
-        .ai-msg-bubble.bot { background: var(--border); align-self: flex-start; color: var(--text-main); border-bottom-left-radius: 2px; }
-        .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 2px; }
+        .ai-msg-bubble { max-width: 90%; padding: 12px 16px; border-radius: 20px; font-size: 0.95rem; line-height: 1.5; }
+        .ai-msg-bubble.bot { background: var(--surface); align-self: flex-start; color: var(--text-main); border-bottom-left-radius: 4px; }
+        .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; }
         
-        /* CLAVIER INTÉGRÉ */
-        .ai-keyboard-area {
-            background: var(--bg-color); border-top: 1px solid var(--border); padding: 10px 5px; padding-bottom: calc(10px + env(safe-area-inset-bottom));
-            display: flex; flex-direction: column; gap: 8px;
+        /* APERCU ET CLAVIER */
+        .ai-preview-area {
+            padding: 10px 20px; min-height: 50px; font-size: 1rem; color: var(--text-main); 
+            border-top: 1px solid var(--border); background: var(--surface); 
+            display: flex; align-items: center;
         }
-        .ai-input-row { display: flex; justify-content: space-between; gap: 5px; }
+        .ai-preview-placeholder { color: var(--text-sec); }
+
+        .ai-keyboard-area {
+            background: var(--surface); padding: 5px; padding-bottom: calc(5px + env(safe-area-inset-bottom));
+            display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border);
+        }
+        .ai-input-row { display: flex; justify-content: space-between; gap: 4px; }
         .ai-key {
-            flex: 1; height: 42px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-            color: var(--text-main); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background 0.1s; text-transform: uppercase;
+            flex: 1; height: 44px; background: var(--bg-color); border: 1px solid var(--border); border-radius: 6px;
+            color: var(--text-main); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.1s; text-transform: uppercase; font-weight: 500;
         }
         .ai-key:active { background: var(--border); }
-        .ai-key.wide { flex: 2; }
+        .ai-key.space { flex: 5; }
         .ai-key.accent { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
-        
-        /* Bouton install Android */
-        #android-install-btn {
-            position: fixed; bottom: 80px; left: 20px; right: 20px; 
-            background: var(--accent); color: var(--accent-text);
-            padding: 15px; border-radius: 12px; z-index: 998; display: none;
-            text-align: center; font-weight: 600; font-size: 0.9rem; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        .ai-key.action { background: transparent; border: none; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
 <!-- LOADER -->
 <div id="loader">
-    <!-- NOUVELLE ICONE -->
-    <div class="loader-icon"></div>
-    <div class="loader-text" id="main-loader-text">Meta Officiel</div>
+    <!-- Ecran Android -->
+    <div id="android-install-ui" class="install-screen-android">
+        <div class="install-logo"></div>
+        <div class="install-title">Meta Officiel</div>
+        <div class="install-sub">Installez l'application pour une expérience optimale et sécurisée.</div>
+        <button id="install-btn-main" class="install-btn-main" onclick="triggerAndroidInstall()">
+            <i class="fas fa-download" style="margin-right: 10px;"></i> Installer l'application
+        </button>
+    </div>
     
-    <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
-        <div class="install-arrow"><i class="fas fa-arrow-down"></i></div>
-        <div class="install-block-text">
-            Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.
-        </div>
-        <div style="margin-top: 30px; display: flex; gap: 20px; align-items: center; justify-content: center;">
-            <i class="fas fa-share" style="font-size: 1.5rem; color: var(--accent);"></i>
-            <i class="fas fa-arrow-right" style="color: var(--text-sec);"></i>
-            <i class="fas fa-plus-square" style="font-size: 1.5rem; color: var(--accent);"></i>
-        </div>
-        <div class="install-block-text" style="margin-top: 20px; font-size: 0.75rem; color: var(--text-sec);">
-            Safari : Bouton Partage <i class="fas fa-share" style="font-size:0.6rem"></i> > "Sur l'écran d'accueil"
+    <!-- Loader iOS / Default -->
+    <div id="default-loader-ui">
+        <div class="loader-icon"></div>
+        <div class="loader-text" id="main-loader-text">Meta Officiel</div>
+        <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
+            <div style="margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6;">
+                Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>
+                Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"
+            </div>
         </div>
     </div>
 </div>
 
-<!-- BOUTON INSTALL ANDROID -->
-<button id="android-install-btn" onclick="triggerAndroidInstall()">
-    <i class="fas fa-download" style="margin-right: 10px;"></i> Installer l'application
-</button>
-
-<!-- AUTRES ECRANS (Onboarding, Login, App...) -->
-<!-- Le reste du HTML reste identique, je le raccourcis ici pour la lisibilité mais il est complet dans le code final -->
+<!-- HTML ONBOARDING, LOGIN, APP, AI CHAT identiques au précédent -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Officiel</div>
     <div class="ob-subtitle">Personnalisation</div>
@@ -344,9 +344,7 @@
                 <div id="photo-list"></div>
             </div>
             <div id="search-section" class="section">
-                <div style="padding:20px; position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Rechercher..." oninput="filtrerRecherche()">
-                </div>
+                <div style="padding:20px; position:sticky; top:0; z-index:10;"><input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Rechercher..." oninput="filtrerRecherche()"></div>
                 <div id="search-results"></div>
             </div>
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
@@ -431,6 +429,9 @@
     </div>
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Je suis votre assistant. Posez-moi une question.</div></div>
     
+    <!-- APERCU DU TEXTE -->
+    <div id="ai-preview" class="ai-preview-area"><span class="ai-preview-placeholder">Écrivez votre message...</span></div>
+
     <!-- CLAVIER INTÉGRÉ -->
     <div class="ai-keyboard-area">
         <div class="ai-input-row">
@@ -444,6 +445,7 @@
             <button class="ai-key" onclick="aiType('8')">8</button>
             <button class="ai-key" onclick="aiType('9')">9</button>
             <button class="ai-key" onclick="aiType('0')">0</button>
+            <button class="ai-key action" onclick="aiDelete()"><i class="fas fa-delete-left"></i></button>
         </div>
         <div class="ai-input-row">
             <button class="ai-key" onclick="aiType('a')">A</button>
@@ -476,15 +478,14 @@
             <button class="ai-key" onclick="aiType('v')">V</button>
             <button class="ai-key" onclick="aiType('b')">B</button>
             <button class="ai-key" onclick="aiType('n')">N</button>
-            <button class="ai-key" onclick="aiType(' ')">ESPACE</button>
-            <button class="ai-key" onclick="aiType(' ')">ESPACE</button>
+            <button class="ai-key space" onclick="aiType(' ')"></button>
             <button class="ai-key accent" onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 </div>
 
 <script>
-    // Configuration API et Données
+    // --- Configuration ---
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -517,24 +518,22 @@
     let videoObserver = null;
     let currentObMode = 'dark';
     let deferredPrompt; 
-
-    /* LOGIQUE IA & CLAVIER */
+    
+    // --- Logique IA & Clavier ---
     let currentInput = "";
     
-    function aiType(char) {
-        currentInput += char;
-        // Mettre à jour visuellement (optionnel, ici on met à jour le placeholder ou un champ caché)
-        // Pour ce cas, on stocke juste la chaîne
+    function aiType(char) { currentInput += char; updateAIPreview(); }
+    function aiDelete() { currentInput = currentInput.slice(0, -1); updateAIPreview(); }
+    function updateAIPreview() {
+        const preview = document.getElementById('ai-preview');
+        if(currentInput.length === 0) preview.innerHTML = '<span class="ai-preview-placeholder">Écrivez votre message...</span>';
+        else preview.innerHTML = currentInput;
     }
     
     function toggleAIChat(state) {
         const win = document.getElementById('ai-chat-window');
-        if(state) { 
-            win.classList.add('active'); 
-            currentInput = ""; // Reset input
-        } else { 
-            win.classList.remove('active'); 
-        }
+        if(state) { win.classList.add('active'); currentInput = ""; updateAIPreview(); } 
+        else { win.classList.remove('active'); }
     }
 
     function addAIMessage(text, sender) {
@@ -549,9 +548,9 @@
     async function sendAIRequest() {
         const text = currentInput.trim();
         if (!text) return;
-
         addAIMessage(text, 'user');
-        currentInput = ""; // Reset
+        currentInput = "";
+        updateAIPreview();
         addAIMessage("...", 'bot'); 
 
         try {
@@ -573,31 +572,21 @@
     }
 
     /* DETECTION INSTALLATION */
-    function isRunningStandalone() {
-        return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
-    }
+    function isRunningStandalone() { return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true); }
     function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
     function isAndroid() { return /Android/i.test(navigator.userAgent); }
 
-    // Bouton Android
     function triggerAndroidInstall() {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(choiceResult => {
                 if (choiceResult.outcome === 'accepted') { console.log('User accepted'); }
                 deferredPrompt = null;
-                document.getElementById('android-install-btn').style.display = 'none';
+                window.location.reload();
             });
-        }
+        } else { window.location.reload(); }
     }
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        // Afficher le bouton si on est sur Android et pas installé
-        if (isAndroid() && !isRunningStandalone()) {
-            document.getElementById('android-install-btn').style.display = 'block';
-        }
-    });
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
     /* LOGIQUE APP */
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
@@ -617,45 +606,23 @@
         colors.forEach(c => { container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`; });
     }
     let selectedObColor = null;
-    function selectObColor(color, elem) {
-        document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active');
-        selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false;
-    }
-    function validateOnboarding() {
-        if (!selectedObColor) return;
-        applyTheme(currentObMode, selectedObColor);
-        document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex';
-    }
-    function getAvatar(username) {
-        const user = CONFIG_USERS[username];
-        if (user && user.avatar) return `<img src="${user.avatar}" alt="${username}">`;
-        return `<i class="fas fa-user" aria-hidden="true"></i>`;
-    }
+    function selectObColor(color, elem) { document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active'); selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false; }
+    function validateOnboarding() { if (!selectedObColor) return; applyTheme(currentObMode, selectedObColor); document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; }
+    function getAvatar(username) { const user = CONFIG_USERS[username]; if (user && user.avatar) return `<img src="${user.avatar}" alt="${username}">`; return `<i class="fas fa-user" aria-hidden="true"></i>`; }
     function handleLogin() {
-        const u = document.getElementById("username").value.trim().toLowerCase();
-        const p = document.getElementById("password").value;
+        const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value;
         if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) {
             if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser");
             loggedUser = u; startApp();
         } else { document.getElementById("login-error").style.display = "block"; }
     }
     function startApp() {
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex";
+        document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex";
         document.getElementById('ai-btn-header').style.display = 'flex';
-        document.getElementById("my-name-display").innerText = loggedUser;
-        document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_');
-        document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
+        document.getElementById("my-name-display").innerText = loggedUser; document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_'); document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
         renderStories(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
-        // Cacher le bouton android si connecté et installé
-        if (isRunningStandalone()) document.getElementById('android-install-btn').style.display = 'none';
     }
-    function renderStories() {
-        const storiesList = document.getElementById('stories-list'); storiesList.innerHTML = "";
-        Object.keys(CONFIG_USERS).forEach(username => {
-            storiesList.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${username}')"><div class="story-img-wrapper">${getAvatar(username)}</div><div class="story-name">${username}</div></button>`);
-        });
-    }
+    function renderStories() { const storiesList = document.getElementById('stories-list'); storiesList.innerHTML = ""; Object.keys(CONFIG_USERS).forEach(username => { storiesList.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${username}')"><div class="story-img-wrapper">${getAvatar(username)}</div><div class="story-name">${username}</div></button>`); }); }
     function switchTab(t, i) {
         document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none';
         document.body.classList.remove('has-overlay');
@@ -670,25 +637,11 @@
         moveIndicator(i);
         if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100);
     }
-    function moveIndicator(i) {
-        const buttons = document.querySelectorAll('nav button.nav-item'); const indicator = document.getElementById('nav-indicator');
-        if(buttons[i]) { const rect = buttons[i].getBoundingClientRect(); const navRect = buttons[i].parentElement.getBoundingClientRect(); indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px'; }
-    }
+    function moveIndicator(i) { const buttons = document.querySelectorAll('nav button.nav-item'); const indicator = document.getElementById('nav-indicator'); if(buttons[i]) { const rect = buttons[i].getBoundingClientRect(); const navRect = buttons[i].parentElement.getBoundingClientRect(); indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; }); }
     function observeVideos() {
         if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card');
-        videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const iframe = entry.target.querySelector('iframe'); if (!iframe) return;
-                const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id');
-                if (entry.isIntersecting) {
-                    if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
-                    setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200);
-                    if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const badge = entry.target.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; }
-                } else { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); iframe.src = ""; }
-            });
-        }, { threshold: 0.6 });
-        cards.forEach(card => videoObserver.observe(card));
+        videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const iframe = entry.target.querySelector('iframe'); if (!iframe) return; const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id'); if (entry.isIntersecting) { if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200); if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const badge = entry.target.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; } } else { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); iframe.src = ""; } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card));
     }
     function openExternalProfile(username) { if(username === loggedUser) { switchTab('own-profile', 3); return; } const overlay = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = username; document.getElementById('ext-display-name').innerText = username; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(username); const grid = document.getElementById('ext-posts-grid'); grid.innerHTML = ""; const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (allMedia.length === 0) grid.innerHTML = `<div class="empty-state">Aucune publication</div>`; else allMedia.forEach(m => { grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); }); overlay.style.display = 'block'; document.body.classList.add('has-overlay'); }
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
@@ -712,32 +665,30 @@
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             
-            // LOGIQUE ANDROID VS IOS
-            if (isMobile()) {
-                if (isRunningStandalone()) {
-                    // Tout est bon, on lance l'app
-                    const hasPrefs = localStorage.getItem('metaThemeMode');
-                    if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
-                    else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-                    document.getElementById('android-install-btn').style.display = 'none';
-                } else {
-                    // Pas installé
-                    if (isAndroid()) {
-                        // Android : Afficher login + bouton install
-                        document.getElementById('login-screen').style.display = 'flex'; 
-                        document.getElementById('android-install-btn').style.display = 'block';
-                        // Auto-login si mémorisé
-                        if(loggedUser) startApp();
-                    } else {
-                        // iOS : Afficher loader avec instructions
-                        document.getElementById('loader').style.display = 'flex';
-                        document.getElementById('main-loader-text').innerText = "Meta Officiel";
-                        document.querySelector('.loader-icon').style.display = 'block';
-                        document.getElementById('install-block-content').style.display = 'flex';
-                    }
-                }
+            // --- LOGIQUE DE DÉMARRAGE CORRIGÉE ---
+            const standalone = isRunningStandalone();
+            const android = isAndroid();
+
+            if (standalone) {
+                // 1. Si déjà installé -> Accès normal (PC, Android installé, iOS installé)
+                const hasPrefs = localStorage.getItem('metaThemeMode');
+                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
+                else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
+            } else if (android) {
+                // 2. Si Android ET non installé -> Forcer installation
+                document.getElementById('loader').style.display = 'flex';
+                document.getElementById('default-loader-ui').style.display = 'none';
+                document.getElementById('android-install-ui').style.display = 'flex';
+            } else if (isMobile()) {
+                // 3. Si iOS (ou autre mobile) non installé -> Instructions iOS
+                document.getElementById('loader').style.display = 'flex';
+                document.getElementById('default-loader-ui').style.display = 'flex';
+                document.getElementById('android-install-ui').style.display = 'none';
+                document.getElementById('install-block-content').style.display = 'flex';
+                document.querySelector('.loader-icon').style.display = 'block';
+                document.getElementById('main-loader-text').innerText = "Meta Officiel";
             } else {
-                // Desktop
+                // 4. Si PC (Desktop) -> Accès direct même si non "installé"
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
