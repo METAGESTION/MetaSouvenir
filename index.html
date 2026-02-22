@@ -60,30 +60,18 @@
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
-        /* LOADER */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease; }
+        /* LOADER & INSTALL BLOCKER */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.5s ease; padding: 30px; }
         .spinner { width: 40px; height: 40px; border: 1px solid #333; border-top: 1px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; }
+        .loader-text { margin-top: 25px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
+        
+        /* Blocage Install */
+        .install-block-text { margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 280px; line-height: 1.6; }
+        .install-arrow { font-size: 2rem; margin: 20px 0; color: var(--accent); animation: bounce 1s infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
-
-        /* INSTALL POPUP (FORCE) */
-        #install-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 30px; }
-        .install-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 35px; text-align: center; max-width: 340px; width: 100%; animation: popIn 0.4s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .install-icon { font-size: 4rem; color: var(--accent); margin-bottom: 25px; }
-        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 15px; }
-        .install-text { font-size: 0.9rem; color: var(--text-sec); line-height: 1.6; margin-bottom: 30px; }
-        
-        .install-steps { text-align: left; background: var(--bg-color); padding: 20px; border-radius: 15px; margin-bottom: 25px; font-size: 0.85rem; color: var(--text-main); border: 1px solid var(--border); }
-        .install-steps div { margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-        .install-steps div:last-child { margin-bottom: 0; }
-        .install-steps i { color: var(--accent); width: 24px; text-align: center; font-size: 1.1rem; }
-        
-        .install-btn { width: 100%; padding: 16px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        .install-btn:disabled { opacity: 0.5; cursor: default; }
-        
-        .ios-safari-icon { width: 50px; height: 50px; background: #fff; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto; margin-bottom: 20px; }
 
         /* --- ONBOARDING SCREEN --- */
         #onboarding-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; overflow-y: auto; }
@@ -129,6 +117,7 @@
         header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
+        /* Stories Container */
         .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
@@ -244,16 +233,25 @@
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
-<div id="loader"><div class="spinner"></div><div class="loader-text">Loading</div></div>
-
-<!-- INSTALL POPUP -->
-<div id="install-overlay">
-    <div class="install-card">
-        <div class="install-icon"><i class="fas fa-mobile-screen"></i></div>
-        <div class="install-title">Installation Requise</div>
-        <div id="install-instructions" class="install-text">Pour une meilleure expérience, ajoutez l'application à votre écran d'accueil.</div>
-        <div id="install-steps-box" class="install-steps"></div>
-        <button id="install-action-btn" class="install-btn">Commencer</button>
+<!-- LOADER / INSTALL BLOCKER -->
+<div id="loader">
+    <div class="spinner" id="main-spinner"></div>
+    <div class="loader-text" id="main-loader-text">Chargement</div>
+    
+    <!-- Contenu bloquant (caché au départ) -->
+    <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
+        <div class="install-arrow"><i class="fas fa-arrow-down"></i></div>
+        <div class="install-block-text">
+            Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.
+        </div>
+        <div style="margin-top: 30px; display: flex; gap: 20px; align-items: center; justify-content: center;">
+            <i class="fas fa-share" style="font-size: 1.5rem; color: var(--accent);"></i>
+            <i class="fas fa-arrow-right" style="color: var(--text-sec);"></i>
+            <i class="fas fa-plus-square" style="font-size: 1.5rem; color: var(--accent);"></i>
+        </div>
+        <div class="install-block-text" style="margin-top: 20px; font-size: 0.75rem; color: var(--text-sec);">
+            Safari : Bouton Partage <i class="fas fa-share" style="font-size:0.6rem"></i> > "Sur l'écran d'accueil"
+        </div>
     </div>
 </div>
 
@@ -292,29 +290,25 @@
             <div style="width: 40px;"></div>
             <span>Meta Service</span>
             <div style="display: flex; align-items: center; gap: 15px;">
-                <button id="ai-btn-header" onclick="toggleAIChat(true)" style="display: none;">
-                    <i class="fas fa-brain"></i>
-                </button>
-                <button id="global-cog" class="header-btn btn-press" style="display:none;" onclick="toggleSettings(true)" aria-label="Réglages"><i class="fas fa-cog"></i></button>
+                <button id="ai-btn-header" onclick="toggleAIChat(true)" style="display: none;"><i class="fas fa-brain"></i></button>
+                <button id="global-cog" class="header-btn btn-press" style="display:none;" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>
             </div>
         </header>
 
         <div class="content-area">
             <div id="feed-section" class="section active">
-                <div id="stories-list" class="stories-container" role="list" aria-label="Stories"></div>
+                <div id="stories-list" class="stories-container"></div>
                 <div id="photo-list"></div>
             </div>
             
             <div id="search-section" class="section">
-                <div style="padding:20px; background:transparent; position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher">
+                <div style="padding:20px; position:sticky; top:0; z-index:10;">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Search..." oninput="filtrerRecherche()">
                 </div>
                 <div id="search-results"></div>
             </div>
             
-            <div id="videos-section" class="section">
-                <div id="video-list" style="height: 100%;"></div>
-            </div>
+            <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
@@ -336,12 +330,12 @@
             </div>
 
             <div id="external-profile-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
-                    <button class="header-btn btn-press" onclick="closeExternalProfile()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
-                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond'; letter-spacing: 1px;"></span>
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
+                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond';"></span>
                 </div>
-                <div id="ext-header" style="padding: 40px; text-align: center; background: transparent;">
-                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
+                <div id="ext-header" style="padding: 40px; text-align: center;">
+                    <div id="ext-profile-pic-container" style="width: 90px; height: 90px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
                     <h3 id="ext-display-name" style="font-size: 1.5rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
                 </div>
                 <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
@@ -349,17 +343,17 @@
             </div>
 
             <div id="media-view-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
-                    <button class="header-btn btn-press" onclick="closeMediaView()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
+                    <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
                     <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Details</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
 
             <div id="settings-overlay" class="overlay-page">
-                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav-bg);">
-                    <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
-                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Settings</h2>
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Settings</h2>
                 </div>
                 <div class="settings-group">
                     <div class="settings-title">Apparence</div>
@@ -371,7 +365,7 @@
                         </div>
                     </div>
                     <div class="settings-row">
-                        <span class="settings-label">Couleur Accent</span>
+                        <span class="settings-label">Couleur</span>
                         <div id="settings-color-picker" class="picker-colors"></div>
                     </div>
                 </div>
@@ -380,10 +374,10 @@
 
         <nav class="glass">
             <div class="nav-indicator" id="nav-indicator"></div>
-            <button class="nav-item btn-press active" onclick="switchTab('feed', 0)" aria-label="Accueil"><i class="fas fa-house"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('search', 1)" aria-label="Rechercher"><i class="fas fa-magnifying-glass"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('videos', 2)" aria-label="Vidéos"><i class="fas fa-clapperboard"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('own-profile', 3)" aria-label="Mon profil"><i class="fas fa-circle-user"></i></button>
+            <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('videos', 2)"><i class="fas fa-clapperboard"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('own-profile', 3)"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
 </div>
@@ -394,9 +388,7 @@
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta AI</span>
         <button class="ai-top-close" onclick="toggleAIChat(false)"><i class="fas fa-times"></i></button>
     </div>
-    <div id="ai-msg-area" class="ai-msg-area">
-        <div class="ai-msg-bubble bot">Bonjour ! Je suis prêt. Posez-moi une question.</div>
-    </div>
+    <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
     <div class="ai-input-box">
         <input type="text" id="ai-input" placeholder="Écrivez ici..." onkeypress="if(event.key==='Enter')sendAIRequest()">
         <button onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
@@ -404,10 +396,6 @@
 </div>
 
 <script>
-    /* ==========================================
-       CONFIGURATION GROQ API
-       ========================================== */
-    
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -439,83 +427,22 @@
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
-    let deferredPrompt; 
 
     /* ==========================================
-       LOGIQUE INSTALLATION (FORCÉE)
+       DETECTION INSTALLATION (BLOCAGE)
        ========================================== */
     
+    function isRunningStandalone() {
+        // iOS Safari
+        if (window.navigator.standalone === true) return true;
+        // Android Chrome / autres
+        if (window.matchMedia('(display-mode: standalone)').matches) return true;
+        return false;
+    }
+
     function isMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
-
-    function isStandalone() {
-        return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
-    }
-
-    function showInstallScreen() {
-        const overlay = document.getElementById('install-overlay');
-        const stepsBox = document.getElementById('install-steps-box');
-        const actionBtn = document.getElementById('install-action-btn');
-        const instrText = document.getElementById('install-instructions');
-        
-        overlay.style.display = 'flex';
-        
-        // Détection iOS vs Android
-        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-
-        if (isIos) {
-            instrText.innerText = "Cette application fonctionne mieux en plein écran. Suivez les étapes ci-dessous :";
-            stepsBox.innerHTML = `
-                <div style="justify-content: center; margin-bottom: 20px;">
-                    <div class="ios-safari-icon"><i class="fab fa-safari" style="color: #007AFF;"></i></div>
-                </div>
-                <div><i class="fas fa-arrow-up"></i> 1. Appuyez sur l'icône <strong>Partage</strong> en bas de l'écran.</div>
-                <div><i class="fas fa-plus"></i> 2. Faites défiler et appuyez sur <strong>"Sur l'écran d'accueil"</strong>.</div>
-                <div><i class="fas fa-check"></i> 3. Appuyez sur <strong>"Ajouter"</strong> en haut à droite.</div>
-            `;
-            actionBtn.innerText = "J'ai ajouté l'app";
-            // On laisse l'utilisateur cliquer pour fermer une fois qu'il a fait l'action
-            actionBtn.onclick = () => {
-                localStorage.setItem('installShown', 'true');
-                overlay.style.display = 'none';
-                // On recharge pour lancer la version standalone
-                window.location.reload();
-            };
-            actionBtn.disabled = false;
-        } else {
-            // Android
-            instrText.innerText = "Installez l'application pour un accès rapide et optimal :";
-            stepsBox.innerHTML = "";
-            actionBtn.innerText = "Installer";
-            if (deferredPrompt) {
-                actionBtn.disabled = false;
-                actionBtn.onclick = () => {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(result => {
-                        if (result.outcome === 'accepted') {
-                            localStorage.setItem('installShown', 'true');
-                            overlay.style.display = 'none';
-                        }
-                        deferredPrompt = null;
-                    });
-                };
-            } else {
-                // Si le prompt natif n'est pas dispo (ex: déjà installé ou navigateur non compatible)
-                actionBtn.disabled = false;
-                actionBtn.innerText = "Continuer";
-                actionBtn.onclick = () => {
-                    localStorage.setItem('installShown', 'true');
-                    overlay.style.display = 'none';
-                };
-            }
-        }
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
 
     /* ==========================================
        LOGIQUE IA
@@ -540,11 +467,9 @@
         const input = document.getElementById('ai-input');
         const text = input.value.trim();
         if (!text) return;
-
         addAIMessage(text, 'user');
         input.value = '';
         addAIMessage("...", 'bot'); 
-
         try {
             const response = await fetch(GROQ_API_URL, {
                 method: 'POST',
@@ -556,7 +481,7 @@
             if(loadingMsg) loadingMsg.remove();
             if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot');
             else addAIMessage("Erreur API", 'bot');
-        } catch (error) {
+        } catch (e) {
             const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
             if(loadingMsg) loadingMsg.remove();
             addAIMessage("Erreur de connexion.", 'bot');
@@ -614,7 +539,6 @@
         const p = document.getElementById("password").value;
         const remember = document.getElementById("remember-me").checked;
         const errorMsg = document.getElementById("login-error");
-        
         if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) {
             errorMsg.style.display = "none";
             if (remember) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser");
@@ -724,40 +648,33 @@
 
     window.addEventListener('load', () => {
         setViewportHeight();
-        const hasPrefs = localStorage.getItem('metaThemeMode');
-
-        // LOGIQUE PRINCIPALE AU CHARGEMENT
+        
+        // === LOGIQUE DE BLOCAGE ===
         setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-            
-            // 1. Vérifier si on est sur mobile
+            // 1. Est-on sur mobile ?
             if (isMobile()) {
-                // 2. Vérifier si déjà installé (standalone) ou si déjà vu
-                const alreadyShown = localStorage.getItem('installShown');
-                
-                if (!isStandalone() && !alreadyShown) {
-                    // FORCE INSTALLATION SCREEN
-                    showInstallScreen();
+                // 2. Est-on en mode "app" (standalone) ?
+                if (isRunningStandalone()) {
+                    // OK : On lance l'application
+                    document.getElementById('loader').style.display = 'none';
+                    const hasPrefs = localStorage.getItem('metaThemeMode');
+                    if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
+                    else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 } else {
-                    // Si déjà installé ou déjà vu, on lance l'app normale
-                    proceedToApp(hasPrefs);
+                    // BLOCAGE : On affiche les instructions
+                    document.getElementById('main-spinner').style.display = 'none';
+                    document.getElementById('main-loader-text').style.display = 'none';
+                    document.getElementById('install-block-content').style.display = 'flex';
                 }
             } else {
-                // Desktop : flux normal
-                proceedToApp(hasPrefs);
+                // Desktop : Accès normal
+                document.getElementById('loader').style.display = 'none';
+                const hasPrefs = localStorage.getItem('metaThemeMode');
+                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
+                else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
             }
         }, 1500);
     });
-
-    function proceedToApp(hasPrefs) {
-        if (!hasPrefs) {
-            document.getElementById('onboarding-screen').style.display = 'flex';
-        } else {
-            applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
-            document.getElementById('onboarding-screen').style.display = 'none';
-            if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex';
-        }
-    }
 </script>
 </body>
 </html>
