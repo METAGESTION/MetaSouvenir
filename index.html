@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#030303">
     <title>Meta Service | Private</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
@@ -65,6 +68,18 @@
         
         #app-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
 
+        /* INSTALL POPUP (NOUVEAU) */
+        #install-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 30px; }
+        .install-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; text-align: center; max-width: 320px; width: 100%; animation: popIn 0.3s ease; }
+        .install-icon { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
+        .install-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 15px; }
+        .install-text { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; margin-bottom: 25px; }
+        .install-steps { text-align: left; background: var(--bg-color); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.8rem; color: var(--text-main); }
+        .install-steps div { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .install-steps i { color: var(--accent); width: 20px; text-align: center; }
+        .install-btn { width: 100%; padding: 15px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .install-later { margin-top: 15px; background: transparent; border: none; color: var(--text-sec); font-size: 0.8rem; cursor: pointer; }
+
         /* --- ONBOARDING SCREEN --- */
         #onboarding-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; overflow-y: auto; }
         .ob-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
@@ -74,12 +89,12 @@
         .ob-step.active { display: block; }
         
         .ob-options { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .ob-btn { padding: 20px; border: 1px solid #333; background: transparent; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px; }
+        .ob-btn { padding: 20px; border: 1px solid #333; background: transparent; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 12px; }
         .ob-btn:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
         .ob-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.05); color: var(--accent); }
 
         .color-options { display: flex; justify-content: center; gap: 25px; margin-top: 10px; }
-        .color-circle { width: 60px; height: 60px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .color-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .color-circle:active { transform: scale(0.9); }
         .color-circle.active { border-color: #fff; transform: scale(1.1); }
         
@@ -89,46 +104,46 @@
         .cc-black { background: #1D1D1F; }
         .cc-grey { background: #555; }
 
-        .ob-validate-btn { margin-top: 40px; padding: 15px 40px; background: #fff; color: #000; border: none; font-weight: 600; letter-spacing: 1px; cursor: pointer; transition: opacity 0.2s; }
+        .ob-validate-btn { margin-top: 40px; padding: 15px 40px; background: #fff; color: #000; border: none; font-weight: 600; letter-spacing: 1px; cursor: pointer; transition: opacity 0.2s; border-radius: 12px; }
         .ob-validate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         /* --- LOGIN --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
-        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; }
-        input { width: 100%; max-width: 300px; padding: 18px; background: transparent; border: 1px solid var(--border); border-radius: 0; margin-bottom: 20px; font-size: 13px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; }
+        input { width: 100%; max-width: 320px; padding: 20px; background: transparent; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; font-size: 14px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
         input:focus { border-color: var(--accent); }
         input::placeholder { color: var(--text-sec); }
-        .login-btn { width: 100%; max-width: 300px; background: transparent; color: var(--accent); padding: 18px; border: 1px solid var(--accent); border-radius: 0; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; transition: 0.3s; }
+        .login-btn { width: 100%; max-width: 320px; background: transparent; color: var(--accent); padding: 20px; border: 1px solid var(--accent); border-radius: 12px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; transition: 0.3s; }
         .login-btn:active { background: var(--accent); color: var(--accent-text); }
-        #login-error { color: #ff4d4d; font-size: 0.7rem; margin-top: 15px; display: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+        #login-error { color: #ff4d4d; font-size: 0.8rem; margin-top: 15px; display: none; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
         
-        .remember-me { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-sec); font-size: 0.75rem; cursor: pointer; }
+        .remember-me { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-sec); font-size: 0.8rem; cursor: pointer; }
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
-        header { height: calc(70px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
-        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
+        header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: space-between; align-items: center; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
+        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
 
-        .stories-container { display: flex; overflow-x: auto; padding: 25px 20px; gap: 25px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+        /* Stories Container optimisé */
+        .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; }
         .stories-container::-webkit-scrollbar { display: none; }
-        .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 75px; cursor: pointer; border: none; background: none; }
-        .story-img-wrapper { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent); transition: 0.3s; overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 2px; }
+        .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
+        .story-img-wrapper { width: 72px; height: 72px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent); transition: 0.3s; overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 2px; }
         .story-bubble:active .story-img-wrapper { transform: scale(0.95); border-color: var(--text-main); }
         .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: none; }
         .story-img-wrapper i { font-size: 1.5rem; color: var(--text-sec); }
-        .story-name { font-size: 0.65rem; color: var(--text-sec); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 10px; }
+        .story-name { font-size: 0.7rem; color: var(--text-sec); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 12px; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        /* CONTENT AREA AJUSTEMENT */
+        /* Content Area avec ajustement vertical */
         .content-area { 
             flex: 1; position: relative; overflow: hidden; 
             display: flex; flex-direction: column; 
-            /* Ajout pour descendre le contenu sur mobile */
-            padding-top: 20px; 
+            padding-top: 25px; /* Descend le contenu */
         }
         
-        /* SECTION TRANSITIONS */
+        /* Section Transitions */
         .section { 
             height: 100%; width: 100%; 
             position: absolute; top: 0; left: 0;
@@ -147,9 +162,9 @@
             z-index: 1; 
         }
         
-        .post { background: var(--surface); margin: 25px auto; max-width: 500px; border-radius: 2px; overflow: hidden; border: none; box-shadow: var(--card-shadow); position: relative; }
-        .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.75rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
-        .post-user .mini-avatar { width: 28px; height: 28px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
+        .post { background: var(--surface); margin: 30px auto; max-width: 500px; border-radius: 12px; overflow: hidden; border: none; box-shadow: var(--card-shadow); position: relative; }
+        .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.85rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
+        .post-user .mini-avatar { width: 35px; height: 35px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
         
         .post-img-container { position: relative; cursor: pointer; user-select: none; }
         .post-img-container img { width: 100%; display: block; object-fit: cover; }
@@ -159,7 +174,7 @@
 
         .post-actions { padding: 18px 20px; display: flex; justify-content: flex-end; border-top: 1px solid var(--border); }
         
-        .action-btn { background: transparent; border: none; padding: 5px; cursor: pointer; color: var(--text-sec); font-size: 1.2rem; transition: color 0.3s, transform 0.2s; }
+        .action-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--text-sec); font-size: 1.4rem; transition: color 0.3s, transform 0.2s; }
         .action-btn:hover { color: var(--text-main); transform: scale(1.1); }
         .action-btn:active { transform: scale(0.95); }
         .action-btn i { pointer-events: none; }
@@ -182,52 +197,52 @@
             padding-top: calc(35px + env(safe-area-inset-top)); 
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
         /* NAVIGATION */
-        nav { height: auto; width: calc(100% - 40px); margin: 0 auto 20px auto; padding-top: 15px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); border-radius: 30px; border: 1px solid var(--border); background: var(--nav-bg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; z-index: 100; display: flex; justify-content: space-around; align-items: center; }
+        nav { height: auto; width: calc(100% - 30px); margin: 0 auto 15px auto; padding-top: 15px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); border-radius: 25px; border: 1px solid var(--border); background: var(--nav-bg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; z-index: 100; display: flex; justify-content: space-around; align-items: center; }
         
         .nav-indicator { position: absolute; top: 8px; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--accent); opacity: 0.8; }
         
-        nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        nav button.nav-item { background: none; border: none; font-size: 1.3rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         nav button.nav-item.active { color: var(--accent); transform: translateY(2px); }
 
         /* PROFILE */
         .profile-header { padding: 50px 20px; text-align: center; background: transparent; }
-        .profile-pic-main { width: 100px; height: 100px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent); }
-        .profile-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; color: var(--text-sec); }
+        .profile-pic-main { width: 110px; height: 110px; background: #111; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--accent); overflow: hidden; border: 1px solid var(--accent); }
+        .profile-stats { display: flex; justify-content: center; gap: 50px; margin-bottom: 30px; color: var(--text-sec); }
         .stat-item { text-align: center; }
-        .stat-num { display: block; font-size: 1.2rem; color: var(--text-main); font-weight: 600; margin-bottom: 5px; }
-        .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-num { display: block; font-size: 1.4rem; color: var(--text-main); font-weight: 600; margin-bottom: 5px; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
 
         .profile-tabs { display: flex; background: transparent; border-bottom: 1px solid var(--border); }
-        .p-tab { flex: 1; padding: 18px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.65rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
+        .p-tab { flex: 1; padding: 20px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.75rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); }
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; transition: opacity 0.3s; }
         .grid-item:active { opacity: 0.7; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
         
-        .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.1rem; cursor: pointer; padding: 8px; }
+        .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; padding: 8px; }
 
         /* Settings specific */
         .settings-group { padding: 25px; border-bottom: 1px solid var(--border); }
-        .settings-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; margin-bottom: 20px; color: var(--text-main); }
+        .settings-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 20px; color: var(--text-main); }
         .settings-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .settings-label { font-size: 0.8rem; letter-spacing: 1px; color: var(--text-sec); text-transform: uppercase; }
+        .settings-label { font-size: 0.9rem; letter-spacing: 1px; color: var(--text-sec); text-transform: uppercase; }
         
         .picker-colors { display: flex; gap: 15px; }
-        .picker-circle { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+        .picker-circle { width: 35px; height: 35px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
 
-        .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.8rem; letter-spacing: 1px; }
+        .empty-state { grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-sec); font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* --- NOUVEAU: AI CHAT & BUTTON DESIGN --- */
+        /* --- AI CHAT & BUTTON DESIGN --- */
         #ai-btn-header { 
             background: var(--ai-gradient); background-size: 200% 200%; animation: gradient-shift 3s ease infinite;
-            width: 36px; height: 36px; border-radius: 12px; 
+            width: 40px; height: 40px; border-radius: 12px; 
             display: flex; align-items: center; justify-content: center; 
-            color: #fff; font-size: 1rem; cursor: pointer; 
+            color: #fff; font-size: 1.1rem; cursor: pointer; 
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border: none; 
             transition: transform 0.2s, box-shadow 0.3s;
             position: relative;
@@ -244,31 +259,46 @@
         @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
 
         #ai-chat-window {
-            position: fixed; top: 80px; right: 15px; width: 300px; height: 400px;
-            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            position: fixed; top: 85px; right: 15px; width: 320px; height: 450px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 15px;
             display: none; flex-direction: column; z-index: 1000;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden;
             animation: popIn 0.3s ease;
         }
         #ai-chat-window.active { display: flex; }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
-        .ai-top-bar { padding: 10px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .ai-top-title { font-size: 0.8rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 0.9rem; }
+        .ai-top-bar { padding: 12px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .ai-top-title { font-size: 0.9rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1rem; }
 
-        .ai-msg-area { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .ai-msg-bubble { max-width: 90%; padding: 8px 12px; border-radius: 15px; font-size: 0.8rem; line-height: 1.3; }
+        .ai-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .ai-msg-bubble { max-width: 90%; padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
         .ai-msg-bubble.bot { background: var(--border); align-self: flex-start; color: var(--text-main); border-bottom-left-radius: 2px; }
         .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 2px; }
         
-        .ai-input-box { padding: 10px; border-top: 1px solid var(--border); display: flex; }
-        .ai-input-box input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 8px 15px; color: var(--text-main); font-size: 0.8rem; outline: none; }
-        .ai-input-box button { background: var(--accent); border: none; width: 30px; height: 30px; border-radius: 50%; margin-left: 8px; cursor: pointer; color: var(--accent-text); display: flex; align-items: center; justify-content: center; }
+        .ai-input-box { padding: 12px; border-top: 1px solid var(--border); display: flex; }
+        .ai-input-box input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 10px 15px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+        .ai-input-box button { background: var(--accent); border: none; width: 35px; height: 35px; border-radius: 50%; margin-left: 10px; cursor: pointer; color: var(--accent-text); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
 <div id="loader"><div class="spinner"></div><div class="loader-text">Loading</div></div>
+
+<!-- INSTALL POPUP -->
+<div id="install-overlay">
+    <div class="install-card">
+        <div class="install-icon"><i class="fas fa-mobile-screen"></i></div>
+        <div class="install-title">Installer l'application</div>
+        <div id="install-instructions" class="install-text">
+            Installez Meta Service sur votre écran d'accueil pour une expérience optimale.
+        </div>
+        <div id="install-steps-box" class="install-steps">
+            <!-- Étapes dynamiques insérées par JS -->
+        </div>
+        <button id="install-action-btn" class="install-btn">Installer</button>
+        <button class="install-later" onclick="closeInstallPopup()">Plus tard</button>
+    </div>
+</div>
 
 <!-- 1. ECRAN D'ONBOARDING -->
 <div id="onboarding-screen">
@@ -322,7 +352,7 @@
             <!-- SEARCH SECTION -->
             <div id="search-section" class="section">
                 <div style="padding:20px; background:transparent; position:sticky; top:0; z-index:10;">
-                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher">
+                    <input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Search..." oninput="filtrerRecherche()" aria-label="Rechercher">
                 </div>
                 <div id="search-results"></div>
             </div>
@@ -336,13 +366,13 @@
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
                     <div id="my-profile-pic-container" class="profile-pic-main"><i class="fas fa-user"></i></div>
-                    <h2 id="my-name-display" style="font-weight: 300; font-size: 1.8rem; font-family: 'Cormorant Garamond', serif;"></h2>
-                    <p id="my-handle-display" style="font-size: 0.75rem; color: var(--text-sec); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;"></p>
+                    <h2 id="my-name-display" style="font-weight: 300; font-size: 2rem; font-family: 'Cormorant Garamond', serif;"></h2>
+                    <p id="my-handle-display" style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;"></p>
                     <div class="profile-stats">
                         <div class="stat-item"><span id="stat-posts" class="stat-num">0</span><span class="stat-label">Posts</span></div>
                         <div class="stat-item"><span id="stat-saved" class="stat-num">0</span><span class="stat-label">Saved</span></div>
                     </div>
-                    <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:12px 30px; border-radius:0; background:transparent; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Log Out</button>
+                    <button onclick="handleLogout()" class="btn-press" style="color: var(--text-sec); border:1px solid var(--border); padding:14px 35px; border-radius:12px; background:transparent; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">Log Out</button>
                 </div>
                 <div class="profile-tabs glass">
                     <button id="my-tab-pub" class="p-tab active" onclick="switchMyTab('info')">Posts</button>
@@ -369,7 +399,7 @@
             <div id="media-view-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; background: var(--nav-bg); display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeMediaView()" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
-                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;">Details</span>
+                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Details</span>
                 </div>
                 <div id="media-view-content"></div>
             </div>
@@ -377,15 +407,15 @@
             <div id="settings-overlay" class="overlay-page">
                 <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav-bg);">
                     <button class="header-btn btn-press" onclick="toggleSettings(false)" aria-label="Retour"><i class="fas fa-arrow-left"></i></button>
-                    <h2 style="margin-left: 10px; font-size: 1rem; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Settings</h2>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Settings</h2>
                 </div>
                 <div class="settings-group">
                     <div class="settings-title">Apparence</div>
                     <div class="settings-row">
                         <span class="settings-label">Mode</span>
                         <div style="display:flex; gap:10px;">
-                            <button class="ob-btn" style="padding:8px 15px; font-size:0.6rem;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
-                            <button class="ob-btn" style="padding:8px 15px; font-size:0.6rem;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
+                            <button class="ob-btn" style="padding:10px 18px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
+                            <button class="ob-btn" style="padding:10px 18px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
                         </div>
                     </div>
                     <div class="settings-row">
@@ -457,6 +487,76 @@
     let loggedUser = localStorage.getItem("metaUser") || "";
     let videoObserver = null;
     let currentObMode = 'dark';
+    let deferredPrompt; // Pour l'installation Android
+
+    /* ==========================================
+       LOGIQUE INSTALLATION (NOUVEAU)
+       ========================================== */
+    
+    function detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    function isRunningStandalone() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    function closeInstallPopup() {
+        document.getElementById('install-overlay').style.display = 'none';
+    }
+
+    function showInstallInstructions() {
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        const overlay = document.getElementById('install-overlay');
+        const stepsBox = document.getElementById('install-steps-box');
+        const actionBtn = document.getElementById('install-action-btn');
+        const instrText = document.getElementById('install-instructions');
+        
+        overlay.style.display = 'flex';
+        stepsBox.innerHTML = '';
+
+        if (isIos) {
+            instrText.innerText = "Ajoutez Meta Service à votre écran d'accueil :";
+            stepsBox.innerHTML = `
+                <div><i class="fas fa-square-arrow-up"></i> 1. Appuyez sur l'icône <strong>Partager</strong> en bas de l'écran.</div>
+                <div><i class="fas fa-plus-square"></i> 2. Faites défiler et appuyez sur <strong>"Sur l'écran d'accueil"</strong>.</div>
+                <div><i class="fas fa-check-circle"></i> 3. Appuyez sur <strong>"Ajouter"</strong> en haut à droite.</div>
+            `;
+            actionBtn.style.display = 'none'; // Pas de bouton direct sur iOS
+            // On ajoute un bouton "J'ai compris" à la place
+            actionBtn.innerText = "J'ai compris";
+            actionBtn.style.display = 'block';
+            actionBtn.onclick = closeInstallPopup;
+            
+        } else {
+            // Android
+            if(deferredPrompt) {
+                instrText.innerText = "Installez l'application pour un accès rapide :";
+                actionBtn.innerText = "Installer";
+                actionBtn.style.display = 'block';
+                actionBtn.onclick = () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(choiceResult => {
+                        if (choiceResult.outcome === 'accepted') { console.log('User accepted A2HS prompt'); }
+                        deferredPrompt = null;
+                        closeInstallPopup();
+                    });
+                };
+            } else {
+                closeInstallPopup(); // Ne rien afficher si pas de prompt Android
+            }
+        }
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // On affiche le popup automatiquement si on est sur mobile et pas déjà installé
+        if (detectMobile() && !isRunningStandalone()) {
+            // On attend un peu que le loader passe
+            setTimeout(showInstallInstructions, 1500);
+        }
+    });
 
     /* ==========================================
        LOGIQUE IA
@@ -565,6 +665,13 @@
         applyTheme(currentObMode, selectedObColor);
         document.getElementById('onboarding-screen').style.display = 'none';
         document.getElementById('login-screen').style.display = 'flex';
+        
+        // Vérification installation après onboarding
+        if (detectMobile() && !isRunningStandalone()) {
+            // Pour iOS on attend un peu, pour Android le listener beforeinstallprompt gère
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            if (isIos) setTimeout(showInstallInstructions, 500);
+        }
     }
 
     function getAvatar(username) {
@@ -813,7 +920,7 @@
                 res.insertAdjacentHTML('beforeend', `
                     <button style="padding:25px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; width:100%; text-align:left; border-left:none; border-right:none; border-top:none;" onclick="openExternalProfile('${u}')">
                         <div class="mini-avatar" style="width:45px; height:45px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> 
-                        <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-size: 0.8rem;">${u}</b>
+                        <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-size: 0.9rem;">${u}</b>
                     </button>`); 
             }
         });
