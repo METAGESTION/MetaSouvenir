@@ -6,6 +6,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030303">
+    <!-- FAVICON INTEGRE (Votre image) -->
+    <link rel="icon" type="image/png" href="https://fv5-5.files.fm/thumb_show.php?i=gmzzebn86a&view&v=1">
+    <link rel="apple-touch-icon" href="https://fv5-5.files.fm/thumb_show.php?i=gmzzebn86a&view&v=1">
     <title>Meta Service | Private</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
@@ -113,10 +116,9 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); accent-color: var(--accent); }
 
         /* --- MAIN APP --- */
-        /* Header centré correctement */
+        /* Header centré */
         header { height: calc(75px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 25px; padding-right: 25px; background: transparent; z-index: 100; flex-shrink: 0; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; text-align: center; }
-        /* Positionnement absolu pour les boutons gauche/droite */
         .header-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
         .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
@@ -131,7 +133,7 @@
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         
-        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; }
+        .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 25px; margin-bottom: 80px; /* Espace pour les boutons fixes en bas */ }
         
         .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
@@ -154,6 +156,7 @@
         .action-btn i { pointer-events: none; }
         .action-btn.saved { color: var(--accent); }
 
+        /* Section Vidéos sans marge bas pour plein écran, mais boutons au-dessus */
         #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         #videos-section::-webkit-scrollbar { display: none; } 
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
@@ -167,24 +170,29 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION CORRIGÉE (Sans barre de fond) */
+        /* NAVIGATION FIXEE EN BAS (ET NULLE PART AILLEURS) */
         nav {
             position: fixed; 
-            bottom: 0; left: 0; width: 100%; 
+            bottom: 0; 
+            left: 0; width: 100%; 
             height: auto; 
             padding: 15px 0; 
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+            padding-bottom: calc(25px + env(safe-area-inset-bottom)); 
             display: flex; 
             justify-content: space-around; 
             align-items: center; 
-            z-index: 100; 
-            background: transparent; /* Pas de fond */
+            z-index: 999; /* Toujours au-dessus du contenu */
+            background: var(--nav-bg);
+            border-top: 1px solid var(--border);
         }
         
         .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; left: 0; }
         
         nav button.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--text-sec); cursor: pointer; z-index: 2; width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         nav button.nav-item.active { color: var(--accent); transform: translateY(-2px); }
+
+        /* Cache la nav sur les overlays */
+        body.has-overlay nav { display: none; }
 
         /* PROFILE */
         .profile-header { padding: 50px 20px; text-align: center; background: transparent; }
@@ -225,7 +233,7 @@
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0; } }
 
-        #ai-chat-window { position: fixed; top: 85px; right: 15px; width: 320px; height: 450px; background: var(--surface); border: 1px solid var(--border); border-radius: 15px; display: none; flex-direction: column; z-index: 1000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden; animation: popIn 0.3s ease; }
+        #ai-chat-window { position: fixed; top: 85px; right: 15px; width: 320px; height: 450px; background: var(--surface); border: 1px solid var(--border); border-radius: 15px; display: none; flex-direction: column; z-index: 1100; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden; animation: popIn 0.3s ease; }
         #ai-chat-window.active { display: flex; }
         
         .ai-top-bar { padding: 12px 15px; background: var(--bg-color); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
@@ -381,7 +389,7 @@
             </div>
         </div>
 
-        <!-- NAVIGATION CORRIGÉE -->
+        <!-- NAVIGATION FIXEE EN BAS -->
         <nav>
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
@@ -574,7 +582,19 @@
     }
 
     function switchTab(t, i) {
-        document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none';
+        // Gestion des overlays (paramètres, profil externe, média)
+        const isOverlayOpen = (t === 'settings' || t === 'external-profile' || t === 'media-view');
+        
+        document.getElementById('settings-overlay').style.display = 'none'; 
+        document.getElementById('external-profile-overlay').style.display = 'none'; 
+        document.getElementById('media-view-overlay').style.display = 'none';
+        
+        document.body.classList.remove('has-overlay'); // Affiche la navigation
+
+        if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; }
+        if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
+        if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
+
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
         document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
@@ -620,18 +640,19 @@
         const grid = document.getElementById('ext-posts-grid'); grid.innerHTML = "";
         const allMedia = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
         if (allMedia.length === 0) grid.innerHTML = `<div class="empty-state">Aucune publication</div>`;
-        else allMedia.forEach(m => { grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); });
+        else allMedia.forEach(m => { grid.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); });
         overlay.style.display = 'block';
+        document.body.classList.add('has-overlay'); // Cache la nav
     }
-    function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; }
+    function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
 
     function renderMyProfile() {
         const gridPosts = document.getElementById('my-posts-grid'); const gridSaved = document.getElementById('my-saved-grid'); gridPosts.innerHTML = ""; gridSaved.innerHTML = "";
         const myPosts = LISTE_PHOTOS.filter(p => p.auteur === loggedUser);
         document.getElementById('stat-posts').innerText = myPosts.length; document.getElementById('stat-saved').innerText = savedItems.length;
-        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucune publication</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
+        if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucune publication</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
         if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`;
-        else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }});
+        else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }});
     }
     function switchMyTab(t) {
         document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved');
@@ -649,9 +670,9 @@
         setTimeout(observeVideos, 500);
     }
     function animateLike(container) { const overlay = container.querySelector('.like-overlay'); overlay.classList.remove('animate'); void overlay.offsetWidth; overlay.classList.add('animate'); }
-    function openMediaView(id, type) { const overlay = document.getElementById('media-view-overlay'); const content = document.getElementById('media-view-content'); let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(item) { content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; overlay.style.display = 'block'; } }
-    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); }
-    function toggleSettings(s) { document.getElementById('settings-overlay').style.display = s ? 'block' : 'none'; updateSettingsUI(); }
+    function openMediaView(id, type) { const overlay = document.getElementById('media-view-overlay'); const content = document.getElementById('media-view-content'); let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(item) { content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; overlay.style.display = 'block'; document.body.classList.add('has-overlay'); } }
+    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
+    function toggleSettings(s) { if(s) { document.getElementById('settings-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); } else { document.getElementById('settings-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); } updateSettingsUI(); }
     function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const res = document.getElementById('search-results'); res.innerHTML = ""; if(q.length < 1) return; Object.keys(CONFIG_USERS).forEach(u => { if(u.includes(q)) { res.insertAdjacentHTML('beforeend', `<button style="padding:25px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; width:100%; text-align:left;" onclick="openExternalProfile('${u}')"><div class="mini-avatar" style="width:45px; height:45px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; font-size: 0.9rem;">${u}</b></button>`); } }); }
     function toggleSave(id, btn) { const icon = btn.querySelector('i'); if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); icon.classList.replace('fas', 'far'); btn.classList.remove('saved'); } else { savedItems.push(id); icon.classList.replace('far', 'fas'); btn.classList.add('saved'); } localStorage.setItem('metaSaved', JSON.stringify(savedItems)); renderMyProfile(); }
     function setThemeMode(mode) { let currentAccent = localStorage.getItem('metaThemeAccent') || 'gold'; if(mode === 'light' && (currentAccent === 'white' || currentAccent === 'gold')) currentAccent = 'black'; if(mode === 'dark' && currentAccent === 'black') currentAccent = 'gold'; applyTheme(mode, currentAccent); updateSettingsUI(); }
@@ -670,7 +691,7 @@
                     if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                     else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 } else {
-                    // Modification du titre pour l'écran d'installation
+                    // Titre modifié pour META OFFICIEL
                     document.getElementById('main-loader-text').innerText = "META OFFICIEL";
                     document.getElementById('main-spinner').style.display = 'none';
                     document.getElementById('install-block-content').style.display = 'flex';
