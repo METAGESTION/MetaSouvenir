@@ -23,7 +23,7 @@
             --text-sec: #888888;
             --accent: #D4AF37;
             --accent-text: #000000;
-            --nav-bg: transparent;
+            --nav-bg: transparent; /* Transparent */
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --vh: 1vh;
             --ai-gradient: linear-gradient(135deg, #D4AF37, #FFF, #007AFF);
@@ -118,7 +118,7 @@
         .header-left { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
         .header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
-        .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; margin-top: 10px; /* Descend les bulles */ }
+        .stories-container { display: flex; overflow-x: auto; padding: 30px 20px; gap: 30px; background: transparent; border-bottom: 1px solid var(--border); scrollbar-width: none; margin-top: 10px; }
         .stories-container::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; min-width: 80px; cursor: pointer; border: none; background: none; }
         .story-img-wrapper { width: 72px; height: 72px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent); transition: 0.3s; overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 2px; }
@@ -132,8 +132,12 @@
         /* Content area : LE CONTENU PASSE SOUS LA NAV */
         .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; padding-top: 10px; /* Pas de padding bottom */ }
         
-        .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; }
+        .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; transform: scale(0.98); transition: visibility 0s linear 0.3s, opacity 0.3s ease, transform 0.3s ease; background: var(--bg-color); overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .section.active { visibility: visible; opacity: 1; transform: scale(1); transition: visibility 0s linear 0s, opacity 0.3s ease, transform 0.3s ease; z-index: 1; }
+
+        /* Important : Masquer la scrollbar pour le style TikTok */
+        .section::-webkit-scrollbar { display: none; }
+        .section { scrollbar-width: none; }
         
         .post { background: var(--surface); margin: 30px auto; max-width: 500px; border-radius: 12px; overflow: hidden; border: none; box-shadow: var(--card-shadow); position: relative; }
         .post-user { padding: 18px 20px; font-weight: 500; display: flex; align-items: center; gap: 15px; font-size: 0.85rem; cursor: pointer; color: var(--text-main); text-transform: uppercase; letter-spacing: 2px; }
@@ -153,11 +157,10 @@
         .action-btn i { pointer-events: none; }
         .action-btn.saved { color: var(--accent); }
 
-        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        #videos-section { background: #000; overflow-y: scroll; scroll-snap-type: y mandatory; }
         #videos-section::-webkit-scrollbar { display: none; } 
         .video-card { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; pointer-events: auto; }
-        /* Info vidéo au-dessus des boutons */
         .video-info { position: absolute; bottom: 90px; left: 20px; color: white; z-index: 10; text-shadow: 0 2px 10px rgba(0,0,0,0.8); pointer-events: none; width: 80%; }
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.4rem; }
         
@@ -167,26 +170,33 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        /* NAVIGATION : Transparente + Flottante */
+        /* NAVIGATION TIKTOK STYLE */
         nav {
             position: fixed; 
             bottom: 0; 
             left: 0; width: 100%; 
             height: auto; 
             padding: 0;
-            padding-top: 10px;
-            padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
+            padding-top: 15px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
             display: flex; 
             justify-content: space-around; 
             align-items: center; 
             z-index: 999;
-            background: transparent;
+            background: transparent; /* Transparent */
             border-top: none;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animation */
+        }
+        /* Classe pour cacher la nav */
+        nav.hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
         }
         /* Dégradé pour lecture */
         nav::before {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%);
+            background: linear-gradient(to top, var(--bg-color) 10%, transparent 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -208,7 +218,7 @@
         .profile-tabs { display: flex; background: transparent; border-bottom: 1px solid var(--border); }
         .p-tab { flex: 1; padding: 20px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.75rem; font-weight: 500; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
-        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 80px; /* Espace pour nav */}
+        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 100px; /* Espace pour nav */}
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; position: relative; cursor: pointer; border: none; padding: 0; transition: opacity 0.3s; }
         .grid-item:active { opacity: 0.7; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); }
@@ -288,8 +298,7 @@
     </div>
 </div>
 
-<!-- HTML IDENTIQUE AUX PRÉCÉDENTS (Onboarding, Login, App Structure) -->
-<!-- Pour la brièveté, je mets les ID importants. Le HTML complet est dans le bloc ci-dessous -->
+<!-- HTML ONBOARDING, LOGIN, APP STRUCTURE (Identique) -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Officiel</div>
     <div class="ob-subtitle">Personnalisation</div>
@@ -331,10 +340,12 @@
             <div id="feed-section" class="section active">
                 <div id="stories-list" class="stories-container"></div>
                 <div id="photo-list"></div>
+                <!-- Espace vide en bas pour que le contenu ne soit pas caché par la nav -->
+                <div style="height: 100px;"></div>
             </div>
             <div id="search-section" class="section">
                 <div style="padding:20px; position:sticky; top:0; z-index:10;"><input type="text" id="search-input" style="width:100%; margin-bottom:0; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Rechercher..." oninput="filtrerRecherche()"></div>
-                <div id="search-results"></div>
+                <div id="search-results" style="padding-bottom: 100px;"></div>
             </div>
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
@@ -357,6 +368,7 @@
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
+            <!-- Overlays (Settings, Media, etc...) -->
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:10;">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
@@ -400,7 +412,8 @@
             </div>
         </div>
 
-        <nav>
+        <!-- NAVIGATION TIKTOK -->
+        <nav id="main-nav">
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
@@ -419,11 +432,8 @@
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Je suis votre assistant. Posez-moi une question.</div></div>
     
     <div class="ai-input-container">
-        <!-- Input PC -->
         <input type="text" class="ai-pc-input" id="ai-pc-input" placeholder="Écrivez ici et appuyez sur Entrée...">
-        <!-- Apercu Mobile -->
         <div id="ai-mobile-preview" class="ai-mobile-preview"></div>
-        <!-- Clavier Virtuel Mobile -->
         <div class="ai-keyboard-area" id="ai-keyboard">
             <div class="ai-input-row">
                 <button class="ai-key" onclick="aiType('1')">1</button><button class="ai-key" onclick="aiType('2')">2</button><button class="ai-key" onclick="aiType('3')">3</button><button class="ai-key" onclick="aiType('4')">4</button><button class="ai-key" onclick="aiType('5')">5</button><button class="ai-key" onclick="aiType('6')">6</button><button class="ai-key" onclick="aiType('7')">7</button><button class="ai-key" onclick="aiType('8')">8</button><button class="ai-key" onclick="aiType('9')">9</button><button class="ai-key" onclick="aiType('0')">0</button><button class="ai-key action" onclick="aiDelete()"><i class="fas fa-delete-left"></i></button>
@@ -447,7 +457,7 @@
     // ==========================================================
     
     // !! IMPORTANT !! METTEZ VOTRE LIEN ICI POUR ANDROID
-    const ANDROID_REDIRECT_URL = "https://votre-lien-apk-ou-site.com"; 
+    const ANDROID_REDIRECT_URL = "https://www.mediafire.com/file/aaaauzbq91vzge5/Meta+Service.apk/file"; 
 
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -486,55 +496,32 @@
     
     function aiType(char) { currentInput += char; updateAIPreview(); }
     function aiDelete() { currentInput = currentInput.slice(0, -1); updateAIPreview(); }
-    function updateAIPreview() {
-        const preview = document.getElementById('ai-mobile-preview');
-        if(preview) preview.innerText = currentInput;
-    }
+    function updateAIPreview() { const preview = document.getElementById('ai-mobile-preview'); if(preview) preview.innerText = currentInput; }
     
     function toggleAIChat(state) {
         const win = document.getElementById('ai-chat-window');
-        if(state) { 
-            win.classList.add('active'); 
-            currentInput = ""; 
-            updateAIPreview();
-            if(!isMobile()) document.getElementById('ai-pc-input').focus();
-        } else { win.classList.remove('active'); }
+        if(state) { win.classList.add('active'); currentInput = ""; updateAIPreview(); if(!isMobile()) document.getElementById('ai-pc-input').focus(); } 
+        else { win.classList.remove('active'); }
     }
 
     function addAIMessage(text, sender) {
         const area = document.getElementById('ai-msg-area');
-        const div = document.createElement('div');
-        div.className = `ai-msg-bubble ${sender}`;
-        div.innerText = text;
-        area.appendChild(div);
-        area.scrollTop = area.scrollHeight;
+        const div = document.createElement('div'); div.className = `ai-msg-bubble ${sender}`; div.innerText = text;
+        area.appendChild(div); area.scrollTop = area.scrollHeight;
     }
 
     async function sendAIRequest() {
-        const text = currentInput.trim();
-        if (!text) return;
-        addAIMessage(text, 'user');
-        currentInput = "";
-        updateAIPreview();
-        document.getElementById('ai-pc-input').value = "";
-        addAIMessage("...", 'bot'); 
-
+        const text = currentInput.trim(); if (!text) return;
+        addAIMessage(text, 'user'); currentInput = ""; updateAIPreview(); document.getElementById('ai-pc-input').value = ""; addAIMessage("...", 'bot'); 
         try {
             const response = await fetch(GROQ_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                 body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] })
             });
             const data = await response.json();
-            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
-            if(loadingMsg) loadingMsg.remove();
-            if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot');
-            else addAIMessage("Erreur de réponse.", 'bot');
-        } catch (e) {
-            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
-            if(loadingMsg) loadingMsg.remove();
-            addAIMessage("Erreur de connexion.", 'bot');
-        }
+            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove();
+            if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur de réponse.", 'bot');
+        } catch (e) { const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur de connexion.", 'bot'); }
     }
 
     /* DETECTION INSTALLATION */
@@ -547,8 +534,7 @@
     window.addEventListener('resize', setViewportHeight);
     function applyTheme(mode, accent) {
         if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode');
-        document.body.setAttribute('data-accent', accent);
-        localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent);
+        document.body.setAttribute('data-accent', accent); localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent);
     }
     function setObMode(mode) {
         currentObMode = mode;
@@ -577,6 +563,7 @@
         renderStories(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
     }
     function renderStories() { const storiesList = document.getElementById('stories-list'); storiesList.innerHTML = ""; Object.keys(CONFIG_USERS).forEach(username => { storiesList.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${username}')"><div class="story-img-wrapper">${getAvatar(username)}</div><div class="story-name">${username}</div></button>`); }); }
+    
     function switchTab(t, i) {
         document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none';
         document.body.classList.remove('has-overlay');
@@ -601,7 +588,54 @@
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
     function renderMyProfile() { const gridPosts = document.getElementById('my-posts-grid'); const gridSaved = document.getElementById('my-saved-grid'); gridPosts.innerHTML = ""; gridSaved.innerHTML = ""; const myPosts = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); document.getElementById('stat-posts').innerText = myPosts.length; document.getElementById('stat-saved').innerText = savedItems.length; if (myPosts.length === 0) gridPosts.innerHTML = `<div class="empty-state">Aucune publication</div>`; else myPosts.forEach(p => { gridPosts.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); if (savedItems.length === 0) gridSaved.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gridSaved.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }}); }
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
-    function genererContenu() { const photoDiv = document.getElementById('photo-list'); const videoDiv = document.getElementById('video-list'); photoDiv.innerHTML = ""; videoDiv.innerHTML = ""; const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe").sort((a, b) => b.date - a.date); const fluxFinal = postMeta ? [postMeta, ...autresPhotos] : autresPhotos; fluxFinal.forEach(p => { const isSaved = savedItems.includes(p.id); photoDiv.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${p.auteur}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 5rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); }); const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sortedVideos = [...unseen, ...seen]; sortedVideos.forEach(v => { const hasBeenSeen = seenVideos.includes(v.id); videoDiv.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}</div>`); }); setTimeout(observeVideos, 500); }
+    
+    // FONCTION MELANGER PHOTOS (ALEATOIRE)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // SCROLL SPY POUR NAVIGATION TIKTOK
+    function setupScrollSpy() {
+        const sections = document.querySelectorAll('.section');
+        const nav = document.getElementById('main-nav');
+        
+        sections.forEach(section => {
+            let lastScrollTop = 0;
+            section.addEventListener('scroll', function() {
+                const st = section.scrollTop;
+                if (st > lastScrollTop && st > 50) {
+                    // Scroll vers le bas -> Cacher
+                    nav.classList.add('hidden');
+                } else {
+                    // Scroll vers le haut -> Montrer
+                    nav.classList.remove('hidden');
+                }
+                lastScrollTop = st <= 0 ? 0 : st;
+            });
+        });
+    }
+
+    function genererContenu() { 
+        const photoDiv = document.getElementById('photo-list'); const videoDiv = document.getElementById('video-list'); photoDiv.innerHTML = ""; videoDiv.innerHTML = ""; 
+        
+        // MELANGER LES PHOTOS (Aleatoire)
+        const postMeta = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
+        const autresPhotos = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe");
+        const shuffledPhotos = shuffleArray([...autresPhotos]);
+        const fluxFinal = postMeta ? [postMeta, ...shuffledPhotos] : shuffledPhotos;
+
+        fluxFinal.forEach(p => {
+            const isSaved = savedItems.includes(p.id);
+            photoDiv.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${p.auteur}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 5rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${isSaved ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`);
+        });
+        const unseen = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const seen = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sortedVideos = [...unseen, ...seen];
+        sortedVideos.forEach(v => { const hasBeenSeen = seenVideos.includes(v.id); videoDiv.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>${hasBeenSeen ? '<div class="seen-badge">Vu</div>' : ''}</div>`); });
+        setTimeout(observeVideos, 500);
+    }
     function animateLike(container) { const overlay = container.querySelector('.like-overlay'); overlay.classList.remove('animate'); void overlay.offsetWidth; overlay.classList.add('animate'); }
     function openMediaView(id, type) { const overlay = document.getElementById('media-view-overlay'); const content = document.getElementById('media-view-content'); let item = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(item) { content.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${item.auteur}')"><div class="mini-avatar">${getAvatar(item.auteur)}</div> ${item.auteur}</div>${type==='photo'?`<img src="${item.url}" style="width:100%">`:`<iframe src="${item.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(item.id)?'saved':''}" onclick="toggleSave('${item.id}', this)"><i class="${savedItems.includes(item.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; overlay.style.display = 'block'; document.body.classList.add('has-overlay'); } }
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
@@ -632,14 +666,11 @@
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 
-                // Ajout classe CSS pour PC vs Mobile
-                if(!isMobile()) document.body.classList.add('is-desktop');
-                else document.body.classList.add('is-mobile');
-
+                if(!isMobile()) document.body.classList.add('is-desktop'); else document.body.classList.add('is-mobile');
+                setupScrollSpy(); // Activer le scroll spy
             } else if (android) {
                 // Android non installé -> REDIRECTION
                 window.location.replace(ANDROID_REDIRECT_URL);
-
             } else if (isMobile()) {
                 // iOS non installé -> Instructions
                 document.getElementById('loader').style.display = 'flex';
@@ -651,6 +682,7 @@
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 document.body.classList.add('is-desktop');
+                setupScrollSpy(); // Activer le scroll spy
             }
         }, 1500);
     });
