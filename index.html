@@ -124,7 +124,7 @@
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + env(safe-area-inset-top)); }
         
-        /* --- NAVIGATION FIXE (TAILLE TIKTOK) --- */
+        /* --- NAVIGATION FIXE (iOS Safe Area + Ordre Changé) --- */
         nav { 
             position: fixed; 
             bottom: 0; 
@@ -134,9 +134,8 @@
             align-items: center; 
             z-index: 999; 
             background: transparent; 
-            /* PLUS DE TRANSITION NI DE TRANSFORM */
-            height: 50px; /* Plus compact */
-            padding-bottom: env(safe-area-inset-bottom);
+            height: 60px; 
+            padding-bottom: calc(20px + env(safe-area-inset-bottom)); /* Descendu pour iOS */
         }
         nav::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%); z-index: -1; }
         .nav-indicator { position: absolute; top: 0; width: 25px; height: 2px; background: var(--accent); border-radius: 3px; left: 0; }
@@ -153,7 +152,7 @@
         .profile-tabs { display: flex; border-bottom: 1px solid var(--border); }
         .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.7rem; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
-        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 80px; }
+        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 100px; }
         .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; border: none; padding: 0; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
         .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.1rem; cursor: pointer; padding: 5px; }
@@ -166,7 +165,21 @@
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
         .empty-state { grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: var(--text-sec); }
 
-        /* AI PAGE (VIA BOUTON CHAT) */
+        /* MESSAGES LIST PAGE */
+        #messages-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1500; display: none; flex-direction: column; }
+        #messages-page.active { display: flex; }
+        .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: center; }
+        .msg-list-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+        .msg-list-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
+        .msg-list-content { flex: 1; overflow-y: auto; }
+        .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+        .msg-list-item:active { background: var(--surface); }
+        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; }
+        .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
+        .msg-info p { font-size: 0.85rem; color: var(--text-sec); }
+
+        /* AI CHAT PAGE */
         #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 2000; display: none; flex-direction: column; }
         #ai-page.active { display: flex; }
         .ai-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: center; }
@@ -230,7 +243,6 @@
             <div class="header-left"><div style="width:35px;"></div></div>
             <span>Meta Officiel</span>
             <div class="header-right">
-                <!-- BOUTON IA ENLEVE D'ICI -->
                 <button id="global-cog" class="header-btn btn-press" style="display:none;" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>
             </div>
         </header>
@@ -266,6 +278,7 @@
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
+            <!-- Overlays classiques -->
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
@@ -309,26 +322,47 @@
             </div>
         </div>
 
-        <!-- NAVIGATION FIXE AVEC BOUTON CHAT -->
+        <!-- NAVIGATION: Ordre changé (Profil à droite, Chat à côté) -->
         <nav id="main-nav">
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('videos', 2)"><i class="fas fa-clapperboard"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('own-profile', 3)"><i class="fas fa-circle-user"></i></button>
-            <button class="nav-item btn-press" onclick="openAIPage()"><i class="fas fa-paper-plane"></i></button>
+            <!-- Chat à côté du profil -->
+            <button class="nav-item btn-press" onclick="openMessagesList()"><i class="fas fa-paper-plane"></i></button>
+            <!-- Profil tout à droite -->
+            <button class="nav-item btn-press" onclick="switchTab('own-profile', 4)"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
 </div>
 
-<!-- AI PAGE (PAGE DÉDIÉE) -->
+<!-- MESSAGES LIST (Nouvelle Page) -->
+<div id="messages-page">
+    <div class="msg-list-header glass">
+        <span class="msg-list-title">Messages</span>
+        <button class="msg-list-close" onclick="closeMessagesList()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="msg-list-content">
+        <!-- Liste des conversations -->
+        <div class="msg-list-item" onclick="openAIPage()">
+            <div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div>
+            <div class="msg-info">
+                <h4>Meta IA</h4>
+                <p>Discutez avec l'intelligence artificielle...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI CHAT PAGE -->
 <div id="ai-page">
     <div class="ai-top-bar glass">
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
-        <button class="ai-top-close" onclick="closeAIPage()"><i class="fas fa-times"></i></button>
+        <button class="ai-top-close" onclick="closeAIPage()"><i class="fas fa-arrow-left"></i></button>
     </div>
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
     <div class="ai-input-container">
+        <!-- Aperçu unique -->
         <div id="ai-msg-preview" class="ai-msg-preview"></div>
         <div class="ai-input-row">
             <input type="text" id="ai-text-input" class="ai-text-input" placeholder="Message..." oninput="updateAIPreview()" onkeypress="if(event.key==='Enter')sendAIRequest()">
@@ -368,8 +402,16 @@
     // --- IA LOGIC ---
     function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
     
-    function openAIPage() { document.getElementById('ai-page').classList.add('active'); document.body.classList.add('has-overlay'); setTimeout(() => document.getElementById('ai-text-input').focus(), 100); }
-    function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); document.body.classList.remove('has-overlay'); }
+    // Gestion des pages Messages et Chat
+    function openMessagesList() { document.getElementById('messages-page').classList.add('active'); document.body.classList.add('has-overlay'); }
+    function closeMessagesList() { document.getElementById('messages-page').classList.remove('active'); document.body.classList.remove('has-overlay'); }
+    
+    function openAIPage() { 
+        closeMessagesList(); // Ferme la liste
+        document.getElementById('ai-page').classList.add('active'); 
+        setTimeout(() => document.getElementById('ai-text-input').focus(), 100); 
+    }
+    function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); }
     
     function addAIMessage(text, sender) {
         const area = document.getElementById('ai-msg-area');
@@ -446,9 +488,12 @@
     function renderStories() { const l = document.getElementById('stories-list'); l.innerHTML = ""; Object.keys(CONFIG_USERS).forEach(u => { l.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${u}')"><div class="story-img-wrapper">${getAvatar(u)}</div><div class="story-name">${u}</div></button>`); }); }
     
     function switchTab(t, i) {
+        // Ferme tout
         document.getElementById('settings-overlay').style.display = 'none';
         document.getElementById('external-profile-overlay').style.display = 'none';
         document.getElementById('media-view-overlay').style.display = 'none';
+        closeMessagesList();
+        closeAIPage();
         document.body.classList.remove('has-overlay');
 
         if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; }
@@ -457,7 +502,14 @@
 
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
+        
+        // Gestion indicateur actif (indices décalés car 5 boutons)
+        let realIndex = i;
+        // Feed=0, Search=1, Videos=2, Chat=3, Profile=4
+        // Mais dans le HTML: Feed, Search, Videos, Profile (index 3 devient 4), Chat (index 4 devient 3)
+        // Pour simplifier, on map l'index du bouton cliqué
         document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
+        
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
@@ -486,7 +538,7 @@
     }
     
     function openExternalProfile(username) {
-        if(username === loggedUser) { switchTab('own-profile', 3); return; }
+        if(username === loggedUser) { switchTab('own-profile', 4); return; } // Index 4 pour profil
         const o = document.getElementById('external-profile-overlay');
         document.getElementById('ext-user-title').innerText = username;
         document.getElementById('ext-display-name').innerText = username;
