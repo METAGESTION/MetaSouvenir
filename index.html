@@ -159,8 +159,9 @@
         .p-tab { flex: 1; padding: 15px; text-align: center; color: var(--text-sec); cursor: pointer; font-size: 0.7rem; letter-spacing: 3px; border-bottom: 1px solid transparent; background: none; }
         .p-tab.active { color: var(--text-main); border-bottom: 1px solid var(--accent); }
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: var(--border); margin-bottom: 100px; }
-        .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; border: none; padding: 0; }
+        .grid-item { aspect-ratio: 1/1; background: var(--surface); overflow: hidden; border: none; padding: 0; position: relative; }
         .grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        .grid-item .vid-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); pointer-events: none; }
         .header-btn { background: none; border: none; color: var(--text-sec); font-size: 1.1rem; cursor: pointer; padding: 5px; }
         
         /* SETTINGS PAGE */
@@ -320,15 +321,9 @@
                 <div id="ext-posts-grid" class="content-grid"></div>
             </div>
 
-            <div id="media-view-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
-                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Détails</span>
-                </div>
-                <div id="media-view-content"></div>
-            </div>
-
-            <!-- SETTINGS OVERLAY (COMPLET) -->
+            <div id="media-view-overlay" class="overlay-page">...</div>
+            
+            <!-- SETTINGS OVERLAY -->
             <div id="settings-overlay" class="overlay-page">
                 <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
                     <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
@@ -364,20 +359,7 @@
 </div>
 
 <!-- CHAT PAGE -->
-<div id="chat-page">
-    <div class="chat-top-bar glass">
-        <span class="chat-top-title"><i class="fas fa-comments"></i> <span id="chat-target-name">Chat</span></span>
-        <button class="chat-top-close" onclick="closeChatPage()"><i class="fas fa-arrow-left"></i></button>
-    </div>
-    <div id="chat-msg-area" class="chat-msg-area"></div>
-    <div class="chat-input-container">
-        <div id="chat-msg-preview" class="chat-msg-preview"></div>
-        <div class="chat-input-row">
-            <input type="text" id="chat-text-input" class="chat-text-input" placeholder="Message..." oninput="updateChatPreview()" onkeypress="if(event.key==='Enter')sendChatMsg()">
-            <button class="chat-send-btn" onclick="sendChatMsg()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-</div>
+<div id="chat-page">...</div>
 
 <!-- COMMENTS POPUP -->
 <div id="comments-popup">
@@ -409,29 +391,16 @@
         { id: "user", pass: "12345", avatar: "", name: "Utilisateur" }
     ];
 
-    const LISTE_VIDEOS = [
-        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "Baston Abdelkabir vs El Gazzer", date: 800 },
-        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "🔥", date: 700 },
-        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "ABO PRIME", date: 600 },
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 }
-    ];
-
-    const LISTE_PHOTOS = [
-        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 },
-        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 },
-        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 },
-        { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 }
-    ];
+    const LISTE_VIDEOS = [ { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "🔥", date: 700 }, { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "ABO PRIME", date: 600 }, { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 } ];
+    const LISTE_PHOTOS = [ { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 }, { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } ];
 
     // VARIABLES
     let loggedUser = localStorage.getItem("metaUser") || "";
-    // CLÉS SPECIFIQUES UTILISATEUR
     function getSavedKey() { return `saved_${loggedUser}`; }
     function getSeenKey() { return `seen_${loggedUser}`; }
     
     let savedItems = JSON.parse(localStorage.getItem(getSavedKey())) || [];
     let seenVideos = JSON.parse(localStorage.getItem(getSeenKey())) || [];
-    
     let videoObserver = null;
     let currentObMode = 'dark';
     let currentInput = "";
@@ -444,18 +413,7 @@
 
     // --- GENERATION AUTOMATIQUE ---
     function renderStories() { const container = document.getElementById('stories-list'); container.innerHTML = ""; CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); }); }
-    
-    function renderMessagesList() {
-        const container = document.getElementById('msg-list-content'); container.innerHTML = "";
-        container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('meta_ai')"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'intelligence artificielle...</p></div></div>`);
-        CONFIG_USERS.forEach(user => {
-            if(user.id === loggedUser) return;
-            const chatKey = `chat_${loggedUser}_${user.id}`;
-            const msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
-            const lastMsg = msgs.length > 0 ? msgs[msgs.length-1].text : "Appuyez pour discuter...";
-            container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('${user.id}')"><div class="msg-avatar">${getAvatar(user.id)}</div><div class="msg-info"><h4>${user.name}</h4><p>${lastMsg}</p></div></div>`);
-        });
-    }
+    function renderMessagesList() { const container = document.getElementById('msg-list-content'); container.innerHTML = ""; container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('meta_ai')"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'intelligence artificielle...</p></div></div>`); CONFIG_USERS.forEach(user => { if(user.id === loggedUser) return; const chatKey = `chat_${loggedUser}_${user.id}`; const msgs = JSON.parse(localStorage.getItem(chatKey)) || []; const lastMsg = msgs.length > 0 ? msgs[msgs.length-1].text : "Appuyez pour discuter..."; container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('${user.id}')"><div class="msg-avatar">${getAvatar(user.id)}</div><div class="msg-info"><h4>${user.name}</h4><p>${lastMsg}</p></div></div>`); }); }
     function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return; CONFIG_USERS.forEach(user => { if(user.name.toLowerCase().includes(q) || user.id.toLowerCase().includes(q)) { r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${user.id}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(user.id)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${user.name}</b></button>`); } }); }
 
     // --- LOGIQUE CHAT ---
@@ -468,31 +426,10 @@
     function removeLastLoading() { const loadingMsg = document.querySelector('.chat-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); }
 
     // --- COMMENTAIRES ---
-    function openComments(videoId) {
-        currentVideoId = videoId;
-        document.getElementById('comments-popup').classList.add('active');
-        renderComments();
-    }
+    function openComments(videoId) { currentVideoId = videoId; document.getElementById('comments-popup').classList.add('active'); renderComments(); }
     function closeComments() { document.getElementById('comments-popup').classList.remove('active'); }
-    function renderComments() {
-        const key = `comments_${currentVideoId}`;
-        const comments = JSON.parse(localStorage.getItem(key)) || [];
-        const list = document.getElementById('comments-list');
-        list.innerHTML = "";
-        if(comments.length === 0) list.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-sec);'>Aucun commentaire.</div>";
-        else comments.forEach(c => { list.innerHTML += `<div class="comment-item"><div class="comment-user">${c.user}</div><div class="comment-text">${c.text}</div></div>`; });
-    }
-    function postComment() {
-        const input = document.getElementById('comment-input');
-        const text = input.value.trim();
-        if(!text) return;
-        const key = `comments_${currentVideoId}`;
-        let comments = JSON.parse(localStorage.getItem(key)) || [];
-        comments.push({user: loggedUser, text: text, time: Date.now()});
-        localStorage.setItem(key, JSON.stringify(comments));
-        input.value = "";
-        renderComments();
-    }
+    function renderComments() { const key = `comments_${currentVideoId}`; const comments = JSON.parse(localStorage.getItem(key)) || []; const list = document.getElementById('comments-list'); list.innerHTML = ""; if(comments.length === 0) list.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-sec);'>Aucun commentaire.</div>"; else comments.forEach(c => { list.innerHTML += `<div class="comment-item"><div class="comment-user">${c.user}</div><div class="comment-text">${c.text}</div></div>`; }); }
+    function postComment() { const input = document.getElementById('comment-input'); const text = input.value.trim(); if(!text) return; const key = `comments_${currentVideoId}`; let comments = JSON.parse(localStorage.getItem(key)) || []; comments.push({user: loggedUser, text: text, time: Date.now()}); localStorage.setItem(key, JSON.stringify(comments)); input.value = ""; renderComments(); }
 
     // --- LOGIQUE APP ---
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
@@ -508,46 +445,68 @@
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card').forEach(vc => { vc.classList.remove('playing'); const iframe = vc.querySelector('iframe'); if(iframe) iframe.src = ""; }); }
     
-    function observeVideos() { 
-        if (videoObserver) videoObserver.disconnect(); 
-        const cards = document.querySelectorAll('.video-card'); 
-        videoObserver = new IntersectionObserver((entries) => { 
-            entries.forEach(entry => { 
-                const card = entry.target;
-                const videoId = card.getAttribute('data-id'); 
-                if (entry.isIntersecting) {
-                    if(!card.classList.contains('playing')) {
-                        card.classList.add('playing');
-                        const iframe = card.querySelector('iframe');
-                        const targetSrc = iframe.getAttribute('data-src');
-                        if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
-                        setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200);
-                    }
-                    if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem(getSeenKey(), JSON.stringify(seenVideos)); const badge = card.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; }
-                } else { 
-                    if(card.classList.contains('playing')) {
-                        card.classList.remove('playing');
-                        const iframe = card.querySelector('iframe');
-                        try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} 
-                        iframe.src = "";
-                    }
-                } 
-            }); 
-        }, { threshold: 0.6 }); 
-        cards.forEach(card => videoObserver.observe(card)); 
-    }
+    function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const card = entry.target; const videoId = card.getAttribute('data-id'); if (entry.isIntersecting) { if(!card.classList.contains('playing')) { card.classList.add('playing'); const iframe = card.querySelector('iframe'); const targetSrc = iframe.getAttribute('data-src'); if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200); } if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem(getSeenKey(), JSON.stringify(seenVideos)); const badge = card.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; } } else { if(card.classList.contains('playing')) { card.classList.remove('playing'); const iframe = card.querySelector('iframe'); try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} iframe.src = ""; } } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
     
-    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}">`}</button>`); }); o.style.display = 'block'; document.body.classList.add('has-overlay'); }
+    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }); o.style.display = 'block'; document.body.classList.add('has-overlay'); }
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
-    function renderMyProfile() { const gP = document.getElementById('my-posts-grid'); const gS = document.getElementById('my-saved-grid'); gP.innerHTML = ""; gS.innerHTML = ""; const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); document.getElementById('stat-posts').innerText = mP.length; document.getElementById('stat-saved').innerText = savedItems.length; if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }}); }
+    
+    // --- CORRECTION: ENREGISTREMENTS PHOTOS ET VIDEOS ---
+    function renderMyProfile() { 
+        const gP = document.getElementById('my-posts-grid'); 
+        const gS = document.getElementById('my-saved-grid'); 
+        gP.innerHTML = ""; gS.innerHTML = ""; 
+        const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); 
+        document.getElementById('stat-posts').innerText = mP.length; 
+        document.getElementById('stat-saved').innerText = savedItems.length; 
+        if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; 
+        else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); 
+        
+        // Affichage des enregistrés (Photos ET Vidéos)
+        if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; 
+        else {
+            savedItems.forEach(id => {
+                let item = LISTE_PHOTOS.find(p => p.id === id);
+                let type = 'photo';
+                if(!item) { item = LISTE_VIDEOS.find(v => v.id === id); type = 'video'; }
+                if(item) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${item.id}', '${type}')">${type==='photo'?`<img src="${item.url}">`:`<img src="${item.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }
+            });
+        }
+    }
+
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
     function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-    function genererContenu() { const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = ""; const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP; fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); }); const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sVid = [...uV, ...sV]; sVid.forEach(v => { const hBS = seenVideos.includes(v.id); const iS = savedItems.includes(v.id); vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><img class="video-thumb" src="${v.thumb}"><div class="video-play-overlay"><i class="fas fa-play"></i></div><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${getUserById(v.auteur).name}</h3><p>${v.legende}</p></div><div class="video-sidebar"><button class="sidebar-btn"><i class="fas fa-heart"></i><span>0</span></button><button class="sidebar-btn" onclick="openComments('${v.id}')"><i class="fas fa-comment-dots"></i><span>Chat</span></button><button class="sidebar-btn ${iS ? 'saved' : ''}" onclick="toggleSave('${v.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i><span>Save</span></button></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`); }); setTimeout(observeVideos, 500); }
+    
+    // --- GENERATION VIDEOS AVEC BOUTONS (LIKE ENLEVÉ) ---
+    function genererContenu() { 
+        const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = ""; 
+        const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP; 
+        fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); }); 
+        
+        const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sVid = [...uV, ...sV]; 
+        sVid.forEach(v => { 
+            const hBS = seenVideos.includes(v.id); 
+            const iS = savedItems.includes(v.id); 
+            // Bouton Like retiré, seulement Commentaires et Enregistrer
+            vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><img class="video-thumb" src="${v.thumb}"><div class="video-play-overlay"><i class="fas fa-play"></i></div><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${getUserById(v.auteur).name}</h3><p>${v.legende}</p></div><div class="video-sidebar"><button class="sidebar-btn" onclick="openComments('${v.id}')"><i class="fas fa-comment-dots"></i><span>Chat</span></button><button class="sidebar-btn ${iS ? 'saved' : ''}" onclick="toggleSave('${v.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i><span>Save</span></button></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`); 
+        }); 
+        setTimeout(observeVideos, 500); 
+    }
+
     function animateLike(c) { const o = c.querySelector('.like-overlay'); o.classList.remove('animate'); void o.offsetWidth; o.classList.add('animate'); }
     function openMediaView(id, type) { const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content'); let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(it) { c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${getUserById(it.auteur).name}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(it.id)?'saved':''}" onclick="toggleSave('${it.id}', this)"><i class="${savedItems.includes(it.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; o.style.display = 'block'; document.body.classList.add('has-overlay'); } }
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
     function toggleSettings(s) { if(s) { document.getElementById('settings-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); } else { document.getElementById('settings-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); } updateSettingsUI(); }
-    function toggleSave(id, btn) { const icon = btn.querySelector('i'); if(icon) { if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); if(icon) icon.classList.replace('fas', 'far'); if(btn) btn.classList.remove('saved'); } else { savedItems.push(id); if(icon) icon.classList.replace('far', 'fas'); if(btn) btn.classList.add('saved'); } localStorage.setItem(getSavedKey(), JSON.stringify(savedItems)); renderMyProfile(); } }
+    
+    function toggleSave(id, btn) { 
+        const icon = btn.querySelector('i'); 
+        if(icon) { 
+            if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); if(icon) icon.classList.replace('fas', 'far'); if(btn) btn.classList.remove('saved'); } 
+            else { savedItems.push(id); if(icon) icon.classList.replace('far', 'fas'); if(btn) btn.classList.add('saved'); } 
+            localStorage.setItem(getSavedKey(), JSON.stringify(savedItems)); 
+            renderMyProfile(); 
+        } 
+    }
+    
     function setThemeMode(mode) { let cA = localStorage.getItem('metaThemeAccent') || 'gold'; if(mode === 'light' && (cA === 'white' || cA === 'gold')) cA = 'black'; if(mode === 'dark' && cA === 'black') cA = 'gold'; applyTheme(mode, cA); updateSettingsUI(); }
     function setThemeAccent(accent) { const m = localStorage.getItem('metaThemeMode') || 'dark'; applyTheme(m, accent); updateSettingsUI(); }
     function updateSettingsUI() { const m = localStorage.getItem('metaThemeMode') || 'dark'; const a = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', m === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', m === 'light'); const p = document.getElementById('settings-color-picker'); p.innerHTML = ''; let c = (m === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; c.forEach(c => { p.innerHTML += `<div class="picker-circle ${c.class} ${(c.id === a)?'active':''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
@@ -557,29 +516,17 @@
     window.addEventListener('load', () => {
         setViewportHeight();
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } 
-        else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
-
+        if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
-            
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true);
             const isAndroidApp = document.referrer.startsWith('android-app://');
             const appLaunched = isStandalone || isIosWebApp || isAndroidApp;
             const isAndroid = /Android/i.test(navigator.userAgent);
-
-            if (appLaunched || isAndroid) {
-                const hasPrefs = localStorage.getItem('metaThemeMode');
-                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
-                else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-            } else if (isIos) {
-                document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex';
-            } else {
-                const hasPrefs = localStorage.getItem('metaThemeMode');
-                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
-                else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-            }
+            if (appLaunched || isAndroid) { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
+            else if (isIos) { document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex'; }
+            else { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
         }, 1500);
     });
 </script>
