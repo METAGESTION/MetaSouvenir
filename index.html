@@ -360,7 +360,7 @@
     // 2. API Future (Lien vide)
     const external_api_url = ""; 
 
-    // 3. LISTE DES UTILISATEURS (AJOUTEZ VOS USERS ICI)
+    // 3. LISTE DES UTILISATEURS
     const CONFIG_USERS = [
         { id: "metaservice", pass: "Pass.123", avatar: "", name: "Meta Service" },
         { id: "meta_actu", pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", name: "Meta Actu" },
@@ -512,21 +512,32 @@
     // --- START ---
     window.addEventListener('load', () => {
         setViewportHeight();
-        // iOS Fix
+        
+        // FIX iOS Safe Area (Dynamic Island)
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } 
         else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
 
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
-            const standalone = (window.matchMedia('(display-mode: standalone)').matches || document.referrer.startsWith('android-app://'));
-            if (standalone) {
+            
+            // CORRECTION BUG iOS : Détection améliorée
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true);
+            const isAndroidApp = document.referrer.startsWith('android-app://');
+            
+            const appLaunched = isStandalone || isIosWebApp || isAndroidApp;
+
+            if (appLaunched) {
+                // APP LANCEE
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
             } else if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // MOBILE NAVIGATEUR (pas installée)
                 document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex';
             } else {
+                // DESKTOP
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
