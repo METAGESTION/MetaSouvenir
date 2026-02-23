@@ -43,7 +43,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; width: 100%; overflow: hidden; background-color: var(--bg-color); }
-        body { font-family: 'Montserrat', sans-serif; height: calc(var(--vh, 1vh) * 100); color: var(--text-main); transition: all 0.4s ease; -webkit-font-smoothing: antialiased; position: fixed; top: 0; left: 0; }
+        body { font-family: 'Montserrat', sans-serif; height: calc(var(--vh, 1vh) * 100); color: var(--text-main); transition: all 0.4s ease; -webkit-font-smoothing: antialiased; /* PLUS DE POSITION FIXED ICI */ }
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
@@ -83,7 +83,7 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); }
 
         /* Main App */
-        header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; }
+        header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; flex-shrink: 0; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); }
         .header-right { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; }
@@ -124,7 +124,7 @@
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + env(safe-area-inset-top)); }
         
-        /* --- NAVIGATION FIXE (iOS Safe Area + Ordre Changé) --- */
+        /* --- NAVIGATION FIXE --- */
         nav { 
             position: fixed; 
             bottom: 0; 
@@ -135,13 +135,14 @@
             z-index: 999; 
             background: transparent; 
             height: 60px; 
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); /* Descendu pour iOS */
+            padding-bottom: env(safe-area-inset-bottom); /* Safe Area iOS */
         }
         nav::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%); z-index: -1; }
         .nav-indicator { position: absolute; top: 0; width: 25px; height: 2px; background: var(--accent); border-radius: 3px; left: 0; }
         nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; width: 50px; height: 40px; display: flex; align-items: center; justify-content: center; }
         nav button.nav-item.active { color: var(--accent); transform: translateY(-1px); }
-        body.has-overlay nav { display: none; }
+        /* On ne cache plus la nav avec has-overlay car la section messages fait partie du flux */
+        body.has-overlay nav { display: none; } /* Gardé pour les profils externes/settings */
 
         /* PROFILE */
         .profile-header { padding: 40px 20px; text-align: center; }
@@ -165,13 +166,11 @@
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
         .empty-state { grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: var(--text-sec); }
 
-        /* MESSAGES LIST PAGE */
-        #messages-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1500; display: none; flex-direction: column; }
-        #messages-page.active { display: flex; }
-        .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: center; }
+        /* MESSAGES SECTION (N'est plus une page overlay) */
+        #messages-section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background: var(--bg-color); overflow-y: auto; }
+        .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--bg-color); z-index: 10; }
         .msg-list-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
-        .msg-list-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
-        .msg-list-content { flex: 1; overflow-y: auto; }
+        .msg-list-content { padding-bottom: 100px; }
         .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
         .msg-list-item:active { background: var(--surface); }
         .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; }
@@ -179,8 +178,8 @@
         .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
         .msg-info p { font-size: 0.85rem; color: var(--text-sec); }
 
-        /* AI CHAT PAGE */
-        #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 2000; display: none; flex-direction: column; }
+        /* AI CHAT SUB-PAGE (Toujours en overlay par-dessus la section messages) */
+        #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
         #ai-page.active { display: flex; }
         .ai-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: center; }
         .ai-top-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
@@ -248,6 +247,7 @@
         </header>
 
         <div class="content-area">
+            <!-- SECTIONS STANDARDS -->
             <div id="feed-section" class="section active">
                 <div id="stories-list" class="stories-container"></div>
                 <div id="photo-list"></div>
@@ -259,6 +259,23 @@
             </div>
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
+            <!-- NOUVELLE SECTION MESSAGES (Dans le flux, pas overlay) -->
+            <div id="messages-section" class="section">
+                <div class="msg-list-header glass">
+                    <span class="msg-list-title">Messages</span>
+                    <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="msg-list-content">
+                    <div class="msg-list-item" onclick="openAIPage()">
+                        <div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div>
+                        <div class="msg-info">
+                            <h4>Meta IA</h4>
+                            <p>Discutez avec l'intelligence artificielle...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
                     <div id="my-profile-pic-container" class="profile-pic-main"><i class="fas fa-user"></i></div>
@@ -278,7 +295,7 @@
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
-            <!-- Overlays classiques -->
+            <!-- OVERLAYS (Profil externe, Media, Settings) -->
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
@@ -322,39 +339,19 @@
             </div>
         </div>
 
-        <!-- NAVIGATION: Ordre changé (Profil à droite, Chat à côté) -->
+        <!-- NAVIGATION: Chat à côté de Profil -->
         <nav id="main-nav">
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('videos', 2)"><i class="fas fa-clapperboard"></i></button>
-            <!-- Chat à côté du profil -->
-            <button class="nav-item btn-press" onclick="openMessagesList()"><i class="fas fa-paper-plane"></i></button>
-            <!-- Profil tout à droite -->
+            <button class="nav-item btn-press" onclick="switchTab('messages', 3)"><i class="fas fa-paper-plane"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('own-profile', 4)"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
 </div>
 
-<!-- MESSAGES LIST (Nouvelle Page) -->
-<div id="messages-page">
-    <div class="msg-list-header glass">
-        <span class="msg-list-title">Messages</span>
-        <button class="msg-list-close" onclick="closeMessagesList()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="msg-list-content">
-        <!-- Liste des conversations -->
-        <div class="msg-list-item" onclick="openAIPage()">
-            <div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div>
-            <div class="msg-info">
-                <h4>Meta IA</h4>
-                <p>Discutez avec l'intelligence artificielle...</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- AI CHAT PAGE -->
+<!-- AI CHAT PAGE (Popup par dessus tout) -->
 <div id="ai-page">
     <div class="ai-top-bar glass">
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
@@ -362,7 +359,6 @@
     </div>
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
     <div class="ai-input-container">
-        <!-- Aperçu unique -->
         <div id="ai-msg-preview" class="ai-msg-preview"></div>
         <div class="ai-input-row">
             <input type="text" id="ai-text-input" class="ai-text-input" placeholder="Message..." oninput="updateAIPreview()" onkeypress="if(event.key==='Enter')sendAIRequest()">
@@ -402,13 +398,9 @@
     // --- IA LOGIC ---
     function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
     
-    // Gestion des pages Messages et Chat
-    function openMessagesList() { document.getElementById('messages-page').classList.add('active'); document.body.classList.add('has-overlay'); }
-    function closeMessagesList() { document.getElementById('messages-page').classList.remove('active'); document.body.classList.remove('has-overlay'); }
-    
     function openAIPage() { 
-        closeMessagesList(); // Ferme la liste
         document.getElementById('ai-page').classList.add('active'); 
+        // On ne met pas has-overlay pour ne pas cacher la nav si besoin, mais ai-page est en z-index haut
         setTimeout(() => document.getElementById('ai-text-input').focus(), 100); 
     }
     function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); }
@@ -492,7 +484,6 @@
         document.getElementById('settings-overlay').style.display = 'none';
         document.getElementById('external-profile-overlay').style.display = 'none';
         document.getElementById('media-view-overlay').style.display = 'none';
-        closeMessagesList();
         closeAIPage();
         document.body.classList.remove('has-overlay');
 
@@ -502,14 +493,7 @@
 
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(t + '-section').classList.add('active');
-        
-        // Gestion indicateur actif (indices décalés car 5 boutons)
-        let realIndex = i;
-        // Feed=0, Search=1, Videos=2, Chat=3, Profile=4
-        // Mais dans le HTML: Feed, Search, Videos, Profile (index 3 devient 4), Chat (index 4 devient 3)
-        // Pour simplifier, on map l'index du bouton cliqué
         document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
-        
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
         moveIndicator(i);
@@ -538,7 +522,7 @@
     }
     
     function openExternalProfile(username) {
-        if(username === loggedUser) { switchTab('own-profile', 4); return; } // Index 4 pour profil
+        if(username === loggedUser) { switchTab('own-profile', 4); return; }
         const o = document.getElementById('external-profile-overlay');
         document.getElementById('ext-user-title').innerText = username;
         document.getElementById('ext-display-name').innerText = username;
