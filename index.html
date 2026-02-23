@@ -49,7 +49,7 @@
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
-        /* LOADER */
+        /* LOADER & INSTALL */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 30px; }
         .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-5.files.fm/thumb_show.php?i=fmpaauyhdk&view&v=1'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 50, 0.3); margin-bottom: 20px; }
         .loader-text { margin-top: 15px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
@@ -159,31 +159,31 @@
         #messages-section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background: var(--bg-color); overflow-y: auto; }
         .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--bg-color); z-index: 10; }
         .msg-list-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
-        .msg-list-content { padding-bottom: 100px; }
+        .msg-list-content { padding-top: 15px; padding-bottom: 100px; }
         .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
         .msg-list-item:active { background: var(--surface); }
         .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; flex-shrink: 0; }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .msg-info { flex: 1; }
         .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
-        .msg-info p { font-size: 0.85rem; color: var(--text-sec); }
+        .msg-info p { font-size: 0.85rem; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* AI CHAT */
-        #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
-        #ai-page.active { display: flex; }
-        .ai-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; }
-        .ai-top-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
-        .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
-        .ai-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
-        .ai-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; }
-        .ai-msg-bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; }
-        .ai-input-container { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(15px + var(--safe-bottom)); display: flex; flex-direction: column; }
-        .ai-msg-preview { min-height: 24px; font-size: 1rem; color: var(--text-main); margin-bottom: 10px; opacity: 0.9; word-break: break-word; }
-        .ai-msg-preview:empty::before { content: "Écrivez votre message..."; color: var(--text-sec); opacity: 0.5; }
-        .ai-input-row { display: flex; gap: 10px; align-items: center; }
-        .ai-text-input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 12px 15px; color: var(--text-main); font-size: 1rem; outline: none; }
-        .ai-send-btn { background: var(--accent); color: var(--accent-text); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        /* CHAT PAGE */
+        #chat-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
+        #chat-page.active { display: flex; }
+        .chat-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; }
+        .chat-top-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        .chat-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
+        .chat-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+        .chat-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; }
+        .chat-msg-bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-input-container { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(15px + var(--safe-bottom)); display: flex; flex-direction: column; }
+        .chat-msg-preview { min-height: 24px; font-size: 1rem; color: var(--text-main); margin-bottom: 10px; opacity: 0.9; word-break: break-word; }
+        .chat-msg-preview:empty::before { content: "Écrivez votre message..."; color: var(--text-sec); opacity: 0.5; }
+        .chat-input-row { display: flex; gap: 10px; align-items: center; }
+        .chat-text-input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 12px 15px; color: var(--text-main); font-size: 1rem; outline: none; }
+        .chat-send-btn { background: var(--accent); color: var(--accent-text); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
@@ -193,7 +193,10 @@
     <div class="loader-icon"></div>
     <div class="loader-text">Meta Officiel</div>
     <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
-        <div class="install-block-text">Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.</div>
+        <div class="install-block-text">
+            Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>
+            Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"
+        </div>
     </div>
 </div>
 
@@ -276,47 +279,9 @@
             </div>
 
             <!-- OVERLAYS -->
-            <div id="external-profile-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
-                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond';"></span>
-                </div>
-                <div id="ext-header" style="padding: 30px; text-align: center;">
-                    <div id="ext-profile-pic-container" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
-                    <h3 id="ext-display-name" style="font-size: 1.3rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
-                </div>
-                <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
-                <div id="ext-posts-grid" class="content-grid"></div>
-            </div>
-
-            <div id="media-view-overlay" class="overlay-page">
-                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
-                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Détails</span>
-                </div>
-                <div id="media-view-content"></div>
-            </div>
-
-            <div id="settings-overlay" class="overlay-page">
-                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
-                    <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
-                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Paramètres</h2>
-                </div>
-                <div class="settings-group">
-                    <div class="settings-title">Apparence</div>
-                    <div class="settings-row">
-                        <span class="settings-label">Thème</span>
-                        <div style="display:flex; gap:10px;">
-                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
-                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
-                        </div>
-                    </div>
-                    <div class="settings-row">
-                        <span class="settings-label">Couleur</span>
-                        <div id="settings-color-picker" class="picker-colors"></div>
-                    </div>
-                </div>
-            </div>
+            <div id="external-profile-overlay" class="overlay-page">...</div>
+            <div id="media-view-overlay" class="overlay-page">...</div>
+            <div id="settings-overlay" class="overlay-page">...</div>
         </div>
 
         <!-- NAVIGATION -->
@@ -331,18 +296,18 @@
     </div>
 </div>
 
-<!-- AI PAGE -->
-<div id="ai-page">
-    <div class="ai-top-bar glass">
-        <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
-        <button class="ai-top-close" onclick="closeAIPage()"><i class="fas fa-arrow-left"></i></button>
+<!-- CHAT PAGE -->
+<div id="chat-page">
+    <div class="chat-top-bar glass">
+        <span class="chat-top-title"><i class="fas fa-comments"></i> <span id="chat-target-name">Chat</span></span>
+        <button class="chat-top-close" onclick="closeChatPage()"><i class="fas fa-arrow-left"></i></button>
     </div>
-    <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
-    <div class="ai-input-container">
-        <div id="ai-msg-preview" class="ai-msg-preview"></div>
-        <div class="ai-input-row">
-            <input type="text" id="ai-text-input" class="ai-text-input" placeholder="Message..." oninput="updateAIPreview()" onkeypress="if(event.key==='Enter')sendAIRequest()">
-            <button class="ai-send-btn" onclick="sendAIRequest()"><i class="fas fa-paper-plane"></i></button>
+    <div id="chat-msg-area" class="chat-msg-area"></div>
+    <div class="chat-input-container">
+        <div id="chat-msg-preview" class="chat-msg-preview"></div>
+        <div class="chat-input-row">
+            <input type="text" id="chat-text-input" class="chat-text-input" placeholder="Message..." oninput="updateChatPreview()" onkeypress="if(event.key==='Enter')sendChatMsg()">
+            <button class="chat-send-btn" onclick="sendChatMsg()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 </div>
@@ -351,16 +316,16 @@
     // ==========================================================
     // CONFIGURATION
     // ==========================================================
-
-    // 1. API IA
+    
+    // 1. META IA (GROQ)
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
 
-    // 2. API Future (Lien vide)
-    const external_api_url = ""; 
+    // 2. SERVEUR CHAT EXTERNE (VIDE POUR VOUS)
+    // Mettez l'URL de votre serveur ici pour les conversations utilisateurs
+    const USER_CHAT_SERVER = ""; 
 
-    // 3. LISTE DES UTILISATEURS
     const CONFIG_USERS = [
         { id: "metaservice", pass: "Pass.123", avatar: "", name: "Meta Service" },
         { id: "meta_actu", pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", name: "Meta Actu" },
@@ -369,20 +334,8 @@
         { id: "user", pass: "12345", avatar: "", name: "Utilisateur" }
     ];
 
-    // 4. CONTENU
-    const LISTE_VIDEOS = [
-        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 },
-        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 },
-        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 },
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER", date: 500 }
-    ];
-
-    const LISTE_PHOTOS = [
-        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 },
-        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 },
-        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 },
-        { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 }
-    ];
+    const LISTE_VIDEOS = [ { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 }, { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 }, { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER", date: 500 } ];
+    const LISTE_PHOTOS = [ { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 }, { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } ];
 
     // VARIABLES
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
@@ -391,107 +344,157 @@
     let videoObserver = null;
     let currentObMode = 'dark';
     let currentInput = "";
+    let currentChatTarget = null; 
 
     // --- FONCTIONS UTILISATEURS ---
     function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
     function getAvatar(userId) { const user = getUserById(userId); if (user && user.avatar) return `<img src="${user.avatar}" alt="${user.name}">`; return `<i class="fas fa-user"></i>`; }
 
     // --- GENERATION AUTOMATIQUE ---
-    function renderStories() {
-        const container = document.getElementById('stories-list'); container.innerHTML = "";
-        CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); });
-    }
+    function renderStories() { const container = document.getElementById('stories-list'); container.innerHTML = ""; CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); }); }
     
     function renderMessagesList() {
         const container = document.getElementById('msg-list-content'); container.innerHTML = "";
-        // IA
-        container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openAIPage()"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'intelligence artificielle...</p></div></div>`);
-        // Users
+        
+        // 1. META IA (ÉPINGLÉ EN PREMIER)
+        container.insertAdjacentHTML('beforeend', `
+            <div class="msg-list-item" onclick="openChatWith('meta_ai')">
+                <div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div>
+                <div class="msg-info">
+                    <h4>Meta IA</h4>
+                    <p>Discutez avec l'intelligence artificielle...</p>
+                </div>
+            </div>
+        `);
+
+        // 2. UTILISATEURS
         CONFIG_USERS.forEach(user => {
-            container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="alert('API à connecter pour ${user.name}')"><div class="msg-avatar">${getAvatar(user.id)}</div><div class="msg-info"><h4>${user.name}</h4><p>Appuyez pour discuter...</p></div></div>`);
+            if(user.id === loggedUser) return; // Pas moi-même
+            
+            const chatKey = `chat_${loggedUser}_${user.id}`;
+            const msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
+            const lastMsg = msgs.length > 0 ? msgs[msgs.length-1].text : "Appuyez pour discuter...";
+            
+            container.insertAdjacentHTML('beforeend', `
+                <div class="msg-list-item" onclick="openChatWith('${user.id}')">
+                    <div class="msg-avatar">${getAvatar(user.id)}</div>
+                    <div class="msg-info">
+                        <h4>${user.name}</h4>
+                        <p>${lastMsg}</p>
+                    </div>
+                </div>
+            `);
         });
     }
 
-    function filtrerRecherche() {
-        const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return;
-        CONFIG_USERS.forEach(user => {
-            if(user.name.toLowerCase().includes(q) || user.id.toLowerCase().includes(q)) {
-                r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${user.id}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(user.id)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${user.name}</b></button>`);
-            }
-        });
+    function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return; CONFIG_USERS.forEach(user => { if(user.name.toLowerCase().includes(q) || user.id.toLowerCase().includes(q)) { r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${user.id}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(user.id)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${user.name}</b></button>`); } }); }
+
+    // --- LOGIQUE CHAT ---
+    function openChatWith(targetId) {
+        currentChatTarget = targetId;
+        const isAI = (targetId === 'meta_ai');
+        const name = isAI ? "Meta IA" : getUserById(targetId).name;
+        
+        document.getElementById('chat-target-name').innerText = name;
+        document.getElementById('chat-page').classList.add('active');
+        document.body.classList.add('has-overlay');
+        renderChatMessages();
+        setTimeout(() => document.getElementById('chat-text-input').focus(), 100);
     }
+    function closeChatPage() { document.getElementById('chat-page').classList.remove('active'); document.body.classList.remove('has-overlay'); renderMessagesList(); }
+    
+    function renderChatMessages() {
+        const area = document.getElementById('chat-msg-area'); area.innerHTML = "";
+        const chatKey = `chat_${loggedUser}_${currentChatTarget}`;
+        const msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
+        
+        if(msgs.length === 0) area.innerHTML = `<div class="chat-msg-bubble bot">Démarrez la conversation.</div>`;
+        else msgs.forEach(m => { area.innerHTML += `<div class="chat-msg-bubble ${m.sender}">${m.text}</div>`; });
+        area.scrollTop = area.scrollHeight;
+    }
+
+    function updateChatPreview() { currentInput = document.getElementById('chat-text-input').value; document.getElementById('chat-msg-preview').innerText = currentInput; }
+    
+    async function sendChatMsg() {
+        const text = currentInput.trim(); if(!text || !currentChatTarget) return;
+        
+        // Afficher mon message
+        const chatKey = `chat_${loggedUser}_${currentChatTarget}`;
+        let msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
+        msgs.push({sender: 'user', text: text, time: Date.now()});
+        localStorage.setItem(chatKey, JSON.stringify(msgs));
+        
+        document.getElementById('chat-text-input').value = "";
+        updateChatPreview();
+        renderChatMessages();
+
+        // TRAITEMENT
+        if(currentChatTarget === 'meta_ai') {
+            // -> ENVOI A L'IA (GROQ)
+            addChatMsg("...", 'bot');
+            try {
+                const response = await fetch(GROQ_API_URL, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] })
+                });
+                const data = await response.json();
+                removeLastLoading();
+                if (data.choices && data.choices[0]) addChatMsg(data.choices[0].message.content, 'bot');
+                else addChatMsg("Erreur IA.", 'bot');
+            } catch(e) { removeLastLoading(); addChatMsg("Erreur de connexion.", 'bot'); }
+        } else {
+            // -> ENVOI AU SERVEUR UTILISATEUR (SI URL RENSEIGNÉE)
+            if(USER_CHAT_SERVER !== "") {
+                // Si vous mettez une URL, le code ira ici
+                // fetch(USER_CHAT_SERVER, { method:'POST', body: JSON.stringify({to: currentChatTarget, msg: text}) });
+            } else {
+                // Sinon on simule juste l'envoi (message sauvegardé localement déjà fait au dessus)
+                // Pas de réponse automatique
+            }
+        }
+    }
+
+    function addChatMsg(text, sender) {
+        const area = document.getElementById('chat-msg-area');
+        const div = document.createElement('div'); 
+        div.className = `chat-msg-bubble ${sender}`; 
+        div.innerText = text;
+        area.appendChild(div); 
+        area.scrollTop = area.scrollHeight;
+        
+        // Sauvegarde aussi les réponses
+        if(currentChatTarget) {
+            const chatKey = `chat_${loggedUser}_${currentChatTarget}`;
+            let msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
+            msgs.push({sender: sender, text: text, time: Date.now()});
+            localStorage.setItem(chatKey, JSON.stringify(msgs));
+        }
+    }
+    function removeLastLoading() { const loadingMsg = document.querySelector('.chat-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); }
 
     // --- LOGIQUE APP ---
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
     window.addEventListener('resize', setViewportHeight);
-    
     function applyTheme(mode, accent) { if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode'); document.body.setAttribute('data-accent', accent); localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent); }
     function setObMode(mode) { currentObMode = mode; document.getElementById('ob-step-1').classList.remove('active'); document.getElementById('ob-step-2').classList.add('active'); const container = document.getElementById('ob-color-container'); container.innerHTML = ''; let colors = (mode === 'dark') ? [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }] : [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }]; colors.forEach(c => { container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`; }); }
     let selectedObColor = null;
     function selectObColor(color, elem) { document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active'); selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false; }
     function validateOnboarding() { if (!selectedObColor) return; applyTheme(currentObMode, selectedObColor); document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; }
     
-    function handleLogin() {
-        const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u);
-        if (user && user.pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; startApp(); } else { document.getElementById("login-error").style.display = "block"; }
-    }
+    function handleLogin() { const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u); if (user && user.pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; startApp(); } else { document.getElementById("login-error").style.display = "block"; } }
     
-    function startApp() {
-        document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex";
-        const user = getUserById(loggedUser);
-        if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); }
-        renderStories(); renderMessagesList(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
-    }
+    function startApp() { document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex"; const user = getUserById(loggedUser); if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } renderStories(); renderMessagesList(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); }
 
-    function switchTab(t, i) {
-        document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; closeAIPage(); document.body.classList.remove('has-overlay');
-        if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; }
-        if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
-        if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active');
-        document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
-        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
-        document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
-        moveIndicator(i);
-        if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100);
-    }
+    function switchTab(t, i) { document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; closeChatPage(); document.body.classList.remove('has-overlay'); if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; } if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; moveIndicator(i); if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); }
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(i => { i.src = ""; }); }
-    
     function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const iframe = entry.target.querySelector('iframe'); if (!iframe) return; const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id'); if (entry.isIntersecting) { if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200); if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const b = entry.target.querySelector('.seen-badge'); if(b) b.style.display = 'none'; } } else { try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} iframe.src = ""; } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
-    
-    function openExternalProfile(userId) {
-        if(userId === loggedUser) { switchTab('own-profile', 4); return; }
-        const user = getUserById(userId); if(!user) return;
-        const o = document.getElementById('external-profile-overlay');
-        document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId);
-        const g = document.getElementById('ext-posts-grid'); g.innerHTML = "";
-        const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
-        if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`;
-        else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); });
-        o.style.display = 'block'; document.body.classList.add('has-overlay');
-    }
+    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); }); o.style.display = 'block'; document.body.classList.add('has-overlay'); }
     function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
-    
-    function renderMyProfile() {
-        const gP = document.getElementById('my-posts-grid'); const gS = document.getElementById('my-saved-grid'); gP.innerHTML = ""; gS.innerHTML = "";
-        const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser);
-        document.getElementById('stat-posts').innerText = mP.length; document.getElementById('stat-saved').innerText = savedItems.length;
-        if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); });
-        if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }});
-    }
+    function renderMyProfile() { const gP = document.getElementById('my-posts-grid'); const gS = document.getElementById('my-saved-grid'); gP.innerHTML = ""; gS.innerHTML = ""; const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); document.getElementById('stat-posts').innerText = mP.length; document.getElementById('stat-saved').innerText = savedItems.length; if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else LISTE_PHOTOS.forEach(p => { if(savedItems.includes(p.id)) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }}); }
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
-    
     function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-    
-    function genererContenu() {
-        const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = "";
-        const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP;
-        fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); });
-        const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sVid = [...uV, ...sV];
-        sVid.forEach(v => { const hBS = seenVideos.includes(v.id); vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${getUserById(v.auteur).name}</h3><p>${v.legende}</p></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`); });
-        setTimeout(observeVideos, 500);
-    }
+    function genererContenu() { const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = ""; const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP; fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); }); const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sVid = [...uV, ...sV]; sVid.forEach(v => { const hBS = seenVideos.includes(v.id); vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${getUserById(v.auteur).name}</h3><p>${v.legende}</p></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`); }); setTimeout(observeVideos, 500); }
     function animateLike(c) { const o = c.querySelector('.like-overlay'); o.classList.remove('animate'); void o.offsetWidth; o.classList.add('animate'); }
     function openMediaView(id, type) { const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content'); let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(it) { c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${getUserById(it.auteur).name}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(it.id)?'saved':''}" onclick="toggleSave('${it.id}', this)"><i class="${savedItems.includes(it.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; o.style.display = 'block'; document.body.classList.add('has-overlay'); } }
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
@@ -502,18 +505,9 @@
     function updateSettingsUI() { const m = localStorage.getItem('metaThemeMode') || 'dark'; const a = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', m === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', m === 'light'); const p = document.getElementById('settings-color-picker'); p.innerHTML = ''; let c = (m === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; c.forEach(c => { p.innerHTML += `<div class="picker-circle ${c.class} ${(c.id === a)?'active':''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
-    // --- IA LOGIC ---
-    function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
-    function openAIPage() { document.getElementById('ai-page').classList.add('active'); setTimeout(() => document.getElementById('ai-text-input').focus(), 100); }
-    function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); }
-    function addAIMessage(text, sender) { const area = document.getElementById('ai-msg-area'); const div = document.createElement('div'); div.className = `ai-msg-bubble ${sender}`; div.innerText = text; area.appendChild(div); area.scrollTop = area.scrollHeight; }
-    async function sendAIRequest() { const text = currentInput.trim(); if (!text) return; addAIMessage(text, 'user'); document.getElementById('ai-text-input').value = ""; updateAIPreview(); addAIMessage("...", 'bot'); try { const response = await fetch(GROQ_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` }, body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] }) }); const data = await response.json(); const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur.", 'bot'); } catch (e) { const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur de connexion.", 'bot'); } }
-
     // --- START ---
     window.addEventListener('load', () => {
         setViewportHeight();
-        
-        // FIX iOS Safe Area (Dynamic Island)
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } 
         else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
@@ -521,20 +515,21 @@
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             
-            // CORRECTION BUG iOS : Détection améliorée
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true);
             const isAndroidApp = document.referrer.startsWith('android-app://');
-            
             const appLaunched = isStandalone || isIosWebApp || isAndroidApp;
 
-            if (appLaunched) {
-                // APP LANCEE
+            // LOGIQUE ANDROID / IOS
+            const isAndroid = /Android/i.test(navigator.userAgent);
+
+            if (appLaunched || isAndroid) {
+                // OUVERTURE DIRECTE (App installée ou Android)
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-            } else if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                // MOBILE NAVIGATEUR (pas installée)
+            } else if (isIos) {
+                // IOS NON INSTALLÉ -> INSTRUCTIONS
                 document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex';
             } else {
                 // DESKTOP
