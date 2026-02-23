@@ -24,7 +24,7 @@
             --accent-text: #000000;
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --vh: 1vh;
-            --safe-top: 0px; /* Variable pour iOS */
+            --safe-top: 0px;
             --safe-bottom: 0px;
         }
         body[data-accent="gold"] { --accent: #D4AF37; --accent-text: #000000; }
@@ -85,7 +85,7 @@
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); }
 
         /* Main App */
-        header { height: calc(60px + var(--safe-top)); /* Utilisation variable */ padding-top: var(--safe-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; flex-shrink: 0; }
+        header { height: calc(60px + var(--safe-top)); padding-top: var(--safe-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; flex-shrink: 0; }
         header span { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); }
         .header-right { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; }
@@ -125,19 +125,8 @@
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + var(--safe-top)); }
         
-        /* --- NAVIGATION FIXE (Variable) --- */
-        nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; width: 100%; 
-            display: flex; 
-            justify-content: space-around; 
-            align-items: center; 
-            z-index: 999; 
-            background: transparent; 
-            height: 60px; 
-            padding-bottom: var(--safe-bottom); /* Variable */
-        }
+        /* NAVIGATION */
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; align-items: center; z-index: 999; background: transparent; height: 60px; padding-bottom: var(--safe-bottom); }
         nav::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%); z-index: -1; }
         .nav-indicator { position: absolute; top: 0; width: 25px; height: 2px; background: var(--accent); border-radius: 3px; left: 0; }
         nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; width: 50px; height: 40px; display: flex; align-items: center; justify-content: center; }
@@ -173,11 +162,13 @@
         .msg-list-content { padding-bottom: 100px; }
         .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
         .msg-list-item:active { background: var(--surface); }
-        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; }
+        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; flex-shrink: 0; }
+        .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .msg-info { flex: 1; }
         .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
         .msg-info p { font-size: 0.85rem; color: var(--text-sec); }
 
-        /* AI CHAT SUB-PAGE */
+        /* AI CHAT */
         #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
         #ai-page.active { display: flex; }
         .ai-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; }
@@ -202,7 +193,7 @@
     <div class="loader-icon"></div>
     <div class="loader-text">Meta Officiel</div>
     <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
-        <div class="install-block-text">Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"</div>
+        <div class="install-block-text">Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.</div>
     </div>
 </div>
 
@@ -246,7 +237,6 @@
         </header>
 
         <div class="content-area">
-            <!-- SECTIONS STANDARDS -->
             <div id="feed-section" class="section active">
                 <div id="stories-list" class="stories-container"></div>
                 <div id="photo-list"></div>
@@ -258,21 +248,12 @@
             </div>
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
-            <!-- MESSAGES SECTION -->
             <div id="messages-section" class="section">
                 <div class="msg-list-header glass">
                     <span class="msg-list-title">Messages</span>
                     <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="msg-list-content">
-                    <div class="msg-list-item" onclick="openAIPage()">
-                        <div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div>
-                        <div class="msg-info">
-                            <h4>Meta IA</h4>
-                            <p>Discutez avec l'intelligence artificielle...</p>
-                        </div>
-                    </div>
-                </div>
+                <div id="msg-list-content" class="msg-list-content"></div>
             </div>
 
             <div id="own-profile-section" class="section">
@@ -350,7 +331,7 @@
     </div>
 </div>
 
-<!-- AI CHAT PAGE -->
+<!-- AI PAGE -->
 <div id="ai-page">
     <div class="ai-top-bar glass">
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
@@ -367,26 +348,43 @@
 </div>
 
 <script>
-    // --- CONFIGURATION ---
+    // ==========================================================
+    // CONFIGURATION
+    // ==========================================================
+
+    // 1. API IA
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
-    const CONFIG_USERS = {
-        "metaservice": { pass: "Pass.123", avatar: "" }, "meta actu": { pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1" }, "mazine2.0": { pass: "mazine.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1" }, "walid_hchm": { pass: "Pass.123", avatar: "" }, "user": { pass: "12345", avatar: "" }
-    };
+
+    // 2. API Future (Lien vide)
+    const external_api_url = ""; 
+
+    // 3. LISTE DES UTILISATEURS (AJOUTEZ VOS USERS ICI)
+    const CONFIG_USERS = [
+        { id: "metaservice", pass: "Pass.123", avatar: "", name: "Meta Service" },
+        { id: "meta_actu", pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", name: "Meta Actu" },
+        { id: "mazine2.0", pass: "mazine.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", name: "Mazine 2.0" },
+        { id: "walid_hchm", pass: "Pass.123", avatar: "", name: "Walid Hchm" },
+        { id: "user", pass: "12345", avatar: "", name: "Utilisateur" }
+    ];
+
+    // 4. CONTENU
     const LISTE_VIDEOS = [
         { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 },
         { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 },
         { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 },
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 500 }
+        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER", date: 500 }
     ];
+
     const LISTE_PHOTOS = [
-        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta actu", date: 9999999 },
+        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 },
         { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 },
         { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 },
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 }
     ];
 
+    // VARIABLES
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let seenVideos = JSON.parse(localStorage.getItem('metaSeenVideos')) || [];
     let loggedUser = localStorage.getItem("metaUser") || "";
@@ -394,101 +392,63 @@
     let currentObMode = 'dark';
     let currentInput = "";
 
-    // --- IA LOGIC ---
-    function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
-    
-    function openAIPage() { 
-        document.getElementById('ai-page').classList.add('active'); 
-        setTimeout(() => document.getElementById('ai-text-input').focus(), 100); 
+    // --- FONCTIONS UTILISATEURS ---
+    function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
+    function getAvatar(userId) { const user = getUserById(userId); if (user && user.avatar) return `<img src="${user.avatar}" alt="${user.name}">`; return `<i class="fas fa-user"></i>`; }
+
+    // --- GENERATION AUTOMATIQUE ---
+    function renderStories() {
+        const container = document.getElementById('stories-list'); container.innerHTML = "";
+        CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); });
     }
-    function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); }
     
-    function addAIMessage(text, sender) {
-        const area = document.getElementById('ai-msg-area');
-        const div = document.createElement('div'); 
-        div.className = `ai-msg-bubble ${sender}`; 
-        div.innerText = text;
-        area.appendChild(div); 
-        area.scrollTop = area.scrollHeight; 
-    }
-    async function sendAIRequest() {
-        const text = currentInput.trim(); if (!text) return;
-        addAIMessage(text, 'user');
-        document.getElementById('ai-text-input').value = "";
-        updateAIPreview();
-        addAIMessage("...", 'bot'); 
-        try {
-            const response = await fetch(GROQ_API_URL, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] })
-            });
-            const data = await response.json();
-            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
-            if(loadingMsg) loadingMsg.remove();
-            if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur.", 'bot');
-        } catch (e) {
-            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child');
-            if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur.", 'bot');
-        }
+    function renderMessagesList() {
+        const container = document.getElementById('msg-list-content'); container.innerHTML = "";
+        // IA
+        container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openAIPage()"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'intelligence artificielle...</p></div></div>`);
+        // Users
+        CONFIG_USERS.forEach(user => {
+            container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="alert('API à connecter pour ${user.name}')"><div class="msg-avatar">${getAvatar(user.id)}</div><div class="msg-info"><h4>${user.name}</h4><p>Appuyez pour discuter...</p></div></div>`);
+        });
     }
 
-    // --- APP LOGIC ---
+    function filtrerRecherche() {
+        const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return;
+        CONFIG_USERS.forEach(user => {
+            if(user.name.toLowerCase().includes(q) || user.id.toLowerCase().includes(q)) {
+                r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${user.id}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(user.id)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${user.name}</b></button>`);
+            }
+        });
+    }
+
+    // --- LOGIQUE APP ---
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
     window.addEventListener('resize', setViewportHeight);
     
-    function applyTheme(mode, accent) {
-        if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode');
-        document.body.setAttribute('data-accent', accent);
-        localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent);
-    }
-    
-    function setObMode(mode) {
-        currentObMode = mode;
-        document.getElementById('ob-step-1').classList.remove('active'); document.getElementById('ob-step-2').classList.add('active');
-        const container = document.getElementById('ob-color-container');
-        container.innerHTML = '';
-        let colors = (mode === 'dark') ? [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }] : [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }];
-        colors.forEach(c => { container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`; });
-    }
+    function applyTheme(mode, accent) { if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode'); document.body.setAttribute('data-accent', accent); localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent); }
+    function setObMode(mode) { currentObMode = mode; document.getElementById('ob-step-1').classList.remove('active'); document.getElementById('ob-step-2').classList.add('active'); const container = document.getElementById('ob-color-container'); container.innerHTML = ''; let colors = (mode === 'dark') ? [{ id: 'gold', name: 'Or', class: 'cc-gold' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'white', name: 'Blanc', class: 'cc-white' }] : [{ id: 'black', name: 'Noir', class: 'cc-black' }, { id: 'blue', name: 'Bleu', class: 'cc-blue' }, { id: 'grey', name: 'Gris', class: 'cc-grey' }]; colors.forEach(c => { container.innerHTML += `<div class="color-circle ${c.class}" onclick="selectObColor('${c.id}', this)">${c.name}</div>`; }); }
     let selectedObColor = null;
     function selectObColor(color, elem) { document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active'); selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false; }
     function validateOnboarding() { if (!selectedObColor) return; applyTheme(currentObMode, selectedObColor); document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; }
-    function getAvatar(username) { const user = CONFIG_USERS[username]; if (user && user.avatar) return `<img src="${user.avatar}" alt="${username}">`; return `<i class="fas fa-user"></i>`; }
     
     function handleLogin() {
-        const u = document.getElementById("username").value.trim().toLowerCase();
-        const p = document.getElementById("password").value;
-        if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) {
-            if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser");
-            loggedUser = u; startApp();
-        } else { document.getElementById("login-error").style.display = "block"; }
+        const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u);
+        if (user && user.pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; startApp(); } else { document.getElementById("login-error").style.display = "block"; }
     }
     
     function startApp() {
-        document.getElementById("login-screen").style.display = "none";
-        document.getElementById("main-app").style.display = "flex";
-        document.querySelector("header").style.display = "flex";
-        document.getElementById("my-name-display").innerText = loggedUser;
-        document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_');
-        document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser);
-        renderStories(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
+        document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex";
+        const user = getUserById(loggedUser);
+        if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); }
+        renderStories(); renderMessagesList(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI();
     }
 
-    function renderStories() { const l = document.getElementById('stories-list'); l.innerHTML = ""; Object.keys(CONFIG_USERS).forEach(u => { l.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${u}')"><div class="story-img-wrapper">${getAvatar(u)}</div><div class="story-name">${u}</div></button>`); }); }
-    
     function switchTab(t, i) {
-        document.getElementById('settings-overlay').style.display = 'none';
-        document.getElementById('external-profile-overlay').style.display = 'none';
-        document.getElementById('media-view-overlay').style.display = 'none';
-        closeAIPage();
-        document.body.classList.remove('has-overlay');
-
+        document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; closeAIPage(); document.body.classList.remove('has-overlay');
         if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; }
         if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
         if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
-
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(t + '-section').classList.add('active');
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active');
         document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
         document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
@@ -498,33 +458,15 @@
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(i => { i.src = ""; }); }
     
-    function observeVideos() {
-        if (videoObserver) videoObserver.disconnect();
-        const cards = document.querySelectorAll('.video-card');
-        videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const iframe = entry.target.querySelector('iframe');
-                if (!iframe) return;
-                const targetSrc = iframe.getAttribute('data-src');
-                const videoId = entry.target.getAttribute('data-id');
-                if (entry.isIntersecting) {
-                    if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc;
-                    setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200);
-                    if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const b = entry.target.querySelector('.seen-badge'); if(b) b.style.display = 'none'; }
-                } else { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); iframe.src = ""; }
-            });
-        }, { threshold: 0.6 });
-        cards.forEach(card => videoObserver.observe(card));
-    }
+    function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const iframe = entry.target.querySelector('iframe'); if (!iframe) return; const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id'); if (entry.isIntersecting) { if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200); if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const b = entry.target.querySelector('.seen-badge'); if(b) b.style.display = 'none'; } } else { try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} iframe.src = ""; } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
     
-    function openExternalProfile(username) {
-        if(username === loggedUser) { switchTab('own-profile', 4); return; }
+    function openExternalProfile(userId) {
+        if(userId === loggedUser) { switchTab('own-profile', 4); return; }
+        const user = getUserById(userId); if(!user) return;
         const o = document.getElementById('external-profile-overlay');
-        document.getElementById('ext-user-title').innerText = username;
-        document.getElementById('ext-display-name').innerText = username;
-        document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(username);
+        document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId);
         const g = document.getElementById('ext-posts-grid'); g.innerHTML = "";
-        const m = [...LISTE_PHOTOS.filter(p => p.auteur === username).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === username).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
+        const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date);
         if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`;
         else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<div style="height:100%;display:flex;align-items:center;justify-content:center;background:#000;color:white;"><i class="fas fa-play"></i></div>`}</button>`); });
         o.style.display = 'block'; document.body.classList.add('has-overlay');
@@ -544,99 +486,53 @@
     
     function genererContenu() {
         const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = "";
-        const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe");
-        const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe");
-        const sP = shuffleArray([...aP]);
-        const fF = pM ? [pM, ...sP] : sP;
-        
-        fF.forEach(p => {
-            const iS = savedItems.includes(p.id);
-            pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${p.auteur}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`);
-        });
-
-        const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
-        const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date);
-        const sVid = [...uV, ...sV];
-        sVid.forEach(v => {
-            const hBS = seenVideos.includes(v.id);
-            vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${v.auteur}</h3><p>${v.legende}</p></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`);
-        });
+        const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP;
+        fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); });
+        const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sVid = [...uV, ...sV];
+        sVid.forEach(v => { const hBS = seenVideos.includes(v.id); vD.insertAdjacentHTML('beforeend', `<div class="video-card" data-id="${v.id}"><iframe data-src="${v.vimeo_url}&autoplay=1" src="" frameborder="0" allow="autoplay; fullscreen"></iframe><div class="video-info"><h3>@${getUserById(v.auteur).name}</h3><p>${v.legende}</p></div>${hBS ? '<div class="seen-badge">Vu</div>' : ''}</div>`); });
         setTimeout(observeVideos, 500);
     }
-    
     function animateLike(c) { const o = c.querySelector('.like-overlay'); o.classList.remove('animate'); void o.offsetWidth; o.classList.add('animate'); }
-    
-    function openMediaView(id, type) {
-        const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content');
-        let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id);
-        if(it) {
-            c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${it.auteur}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(it.id)?'saved':''}" onclick="toggleSave('${it.id}', this)"><i class="${savedItems.includes(it.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`;
-            o.style.display = 'block'; document.body.classList.add('has-overlay');
-        }
-    }
+    function openMediaView(id, type) { const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content'); let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(it) { c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${getUserById(it.auteur).name}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${savedItems.includes(it.id)?'saved':''}" onclick="toggleSave('${it.id}', this)"><i class="${savedItems.includes(it.id)?'fas':'far'} fa-bookmark"></i></button></div></article>`; o.style.display = 'block'; document.body.classList.add('has-overlay'); } }
     function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
-    
     function toggleSettings(s) { if(s) { document.getElementById('settings-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); } else { document.getElementById('settings-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); } updateSettingsUI(); }
-    
-    function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return; Object.keys(CONFIG_USERS).forEach(u => { if(u.includes(q)) { r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${u}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(u)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${u}</b></button>`); } }); }
-    
-    function toggleSave(id, btn) {
-        const icon = btn.querySelector('i');
-        if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); icon.classList.replace('fas', 'far'); btn.classList.remove('saved'); }
-        else { savedItems.push(id); icon.classList.replace('far', 'fas'); btn.classList.add('saved'); }
-        localStorage.setItem('metaSaved', JSON.stringify(savedItems)); renderMyProfile();
-    }
-    
+    function toggleSave(id, btn) { const icon = btn.querySelector('i'); if (savedItems.includes(id)) { savedItems = savedItems.filter(i => i !== id); icon.classList.replace('fas', 'far'); btn.classList.remove('saved'); } else { savedItems.push(id); icon.classList.replace('far', 'fas'); btn.classList.add('saved'); } localStorage.setItem('metaSaved', JSON.stringify(savedItems)); renderMyProfile(); }
     function setThemeMode(mode) { let cA = localStorage.getItem('metaThemeAccent') || 'gold'; if(mode === 'light' && (cA === 'white' || cA === 'gold')) cA = 'black'; if(mode === 'dark' && cA === 'black') cA = 'gold'; applyTheme(mode, cA); updateSettingsUI(); }
     function setThemeAccent(accent) { const m = localStorage.getItem('metaThemeMode') || 'dark'; applyTheme(m, accent); updateSettingsUI(); }
     function updateSettingsUI() { const m = localStorage.getItem('metaThemeMode') || 'dark'; const a = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', m === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', m === 'light'); const p = document.getElementById('settings-color-picker'); p.innerHTML = ''; let c = (m === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; c.forEach(c => { p.innerHTML += `<div class="picker-circle ${c.class} ${(c.id === a)?'active':''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
+    // --- IA LOGIC ---
+    function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
+    function openAIPage() { document.getElementById('ai-page').classList.add('active'); setTimeout(() => document.getElementById('ai-text-input').focus(), 100); }
+    function closeAIPage() { document.getElementById('ai-page').classList.remove('active'); }
+    function addAIMessage(text, sender) { const area = document.getElementById('ai-msg-area'); const div = document.createElement('div'); div.className = `ai-msg-bubble ${sender}`; div.innerText = text; area.appendChild(div); area.scrollTop = area.scrollHeight; }
+    async function sendAIRequest() { const text = currentInput.trim(); if (!text) return; addAIMessage(text, 'user'); document.getElementById('ai-text-input').value = ""; updateAIPreview(); addAIMessage("...", 'bot'); try { const response = await fetch(GROQ_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` }, body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] }) }); const data = await response.json(); const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur.", 'bot'); } catch (e) { const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur de connexion.", 'bot'); } }
+
     // --- START ---
     window.addEventListener('load', () => {
         setViewportHeight();
-
-        // --- LOGIQUE SPÉCIALE iOS ---
+        // iOS Fix
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        if (isIos) {
-            // iOS : On force les variables CSS pour Dynamic Island (Top 70px, Bottom 20px)
-            document.documentElement.style.setProperty('--safe-top', '70px');
-            document.documentElement.style.setProperty('--safe-bottom', '20px');
-        } else {
-            // Android/Desktop : On remet les valeurs par défaut (0px)
-            document.documentElement.style.setProperty('--safe-top', '0px');
-            document.documentElement.style.setProperty('--safe-bottom', '0px');
-        }
+        if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } 
+        else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
 
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
-            
-            const standalone = isRunningStandalone();
-            const android = isAndroid();
-
-            if (standalone || android) {
+            const standalone = (window.matchMedia('(display-mode: standalone)').matches || document.referrer.startsWith('android-app://'));
+            if (standalone) {
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-                if(!isMobile()) document.body.classList.add('is-desktop'); else document.body.classList.add('is-mobile');
-            } else if (isMobile()) {
-                document.getElementById('loader').style.display = 'flex';
-                document.getElementById('install-block-content').style.display = 'flex';
-                document.body.classList.add('is-mobile');
+            } else if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex';
             } else {
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
-                document.body.classList.add('is-desktop');
             }
         }, 1500);
     });
-
-    // --- HELPERS ---
-    function isRunningStandalone() { if (window.matchMedia('(display-mode: standalone)').matches) return true; if (window.navigator.standalone === true) return true; if (document.referrer.startsWith('android-app://')) return true; return false; }
-    function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-    function isAndroid() { return /Android/i.test(navigator.userAgent); }
-
 </script>
 </body>
 </html>
