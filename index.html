@@ -16,14 +16,12 @@
     <style>
         :root { 
             --bg-color: #030303; 
-            --white: #0a0a0a; 
             --surface: #111111;
             --border: #222222; 
             --text-main: #ffffff; 
             --text-sec: #888888;
             --accent: #D4AF37;
             --accent-text: #000000;
-            --nav-bg: transparent;
             --card-shadow: 0 10px 30px rgba(0,0,0,0.5);
             --vh: 1vh;
         }
@@ -34,12 +32,10 @@
         
         body.light-mode { 
             --bg-color: #F5F5F7; 
-            --white: #FFFFFF; 
             --surface: #FFFFFF;
             --border: #E0E0E0; 
             --text-main: #1D1D1F; 
             --text-sec: #86868B;
-            --nav-bg: transparent;
             --card-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         body.light-mode[data-accent="black"] { --accent: #1D1D1F; --accent-text: #FFFFFF; }
@@ -58,7 +54,6 @@
             position: fixed; top: 0; left: 0;
         }
         
-        :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
@@ -75,43 +70,35 @@
         #onboarding-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; text-align: center; overflow-y: auto; }
         .ob-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
         .ob-subtitle { font-size: 0.8rem; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 50px; }
-        
         .ob-step { display: none; width: 100%; max-width: 350px; }
         .ob-step.active { display: block; }
-        
         .ob-options { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .ob-btn { padding: 20px; border: 1px solid #333; background: transparent; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 12px; }
         .ob-btn.selected { border-color: var(--accent); background: rgba(255,255,255,0.05); color: var(--accent); }
-
         .color-options { display: flex; justify-content: center; gap: 25px; margin-top: 10px; }
         .color-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s; }
         .color-circle.active { border-color: #fff; transform: scale(1.1); }
-        
         .cc-gold { background: #D4AF37; color: #000; }
         .cc-blue { background: #007AFF; }
         .cc-white { background: #FFF; color: #000; }
         .cc-black { background: #1D1D1F; }
         .cc-grey { background: #555; }
-
         .ob-validate-btn { margin-top: 40px; padding: 15px 40px; background: #fff; color: #000; border: none; font-weight: 600; letter-spacing: 1px; cursor: pointer; border-radius: 12px; }
         .ob-validate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
         /* --- LOGIN --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px; }
         .logo { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; margin-bottom: 60px; letter-spacing: 8px; color: var(--text-main); text-transform: uppercase; text-align: center; width: 100%; }
-        input { width: 100%; max-width: 320px; padding: 20px; background: transparent; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; font-size: 14px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 1px; text-align: center; }
+        input { width: 100%; max-width: 320px; padding: 20px; background: transparent; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; font-size: 14px; color: var(--text-main); font-family: 'Montserrat', sans-serif; text-align: center; }
         input:focus { border-color: var(--accent); }
-        input::placeholder { color: var(--text-sec); }
         .login-btn { width: 100%; max-width: 320px; background: transparent; color: var(--accent); padding: 20px; border: 1px solid var(--accent); border-radius: 12px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; }
         #login-error { color: #ff4d4d; font-size: 0.8rem; margin-top: 15px; display: none; font-weight: 500; }
-        
         .remember-me { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-sec); font-size: 0.8rem; cursor: pointer; }
         .remember-me input { width: auto; margin: 0; transform: scale(0.8); }
 
         /* --- MAIN APP --- */
-        /* HEADER REDUIT */
         header { height: calc(60px + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; flex-shrink: 0; }
-        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
+        header span { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); padding-top: env(safe-area-inset-top); }
         .header-right { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; padding-top: env(safe-area-inset-top); }
 
@@ -121,12 +108,12 @@
         .story-img-wrapper { width: 60px; height: 60px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent); overflow: hidden; display: flex; justify-content: center; align-items: center; padding: 2px; }
         .story-img-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
         .story-img-wrapper i { font-size: 1.2rem; color: var(--text-sec); }
-        .story-name { font-size: 0.65rem; color: var(--text-sec); width: 100%; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+        .story-name { font-size: 0.65rem; color: var(--text-sec); text-align: center; white-space: nowrap; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
 
         #main-app { display: none; flex-direction: column; height: 100%; width: 100%; }
         .content-area { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         
-        .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; background: var(--bg-color); overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; visibility: hidden; opacity: 0; background: var(--bg-color); overflow-y: auto; scrollbar-width: none; }
         .section.active { visibility: visible; opacity: 1; z-index: 1; }
         .section::-webkit-scrollbar { display: none; }
         
@@ -154,16 +141,25 @@
 
         .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + env(safe-area-inset-top)); }
         
-        /* NAVIGATION COLLÉE EN BAS (BOTTOM: 0) */
-        nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 0; display: flex; justify-content: space-around; align-items: center; z-index: 999; background: transparent; transition: transform 0.3s, opacity 0.3s; height: auto; padding-top: 15px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); }
+        /* NAVIGATION COLLÉE EN BAS (BOTTOM: 0 STRICT) */
+        nav { 
+            position: fixed; 
+            bottom: 0; /* COLLÉ EN BAS */
+            left: 0; width: 100%; 
+            display: flex; justify-content: space-around; align-items: center; 
+            z-index: 999; 
+            background: transparent; 
+            transition: transform 0.3s, opacity 0.3s; 
+            height: 60px; /* Hauteur fixe */
+        }
         nav.hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
-        nav::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-color) 10%, transparent 100%); z-index: -1; }
+        nav::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%); z-index: -1; }
         .nav-indicator { position: absolute; top: 0; width: 30px; height: 3px; background: var(--accent); border-radius: 3px; left: 0; }
         nav button.nav-item { background: none; border: none; font-size: 1.4rem; color: var(--text-main); cursor: pointer; width: 60px; height: 50px; display: flex; align-items: center; justify-content: center; }
         nav button.nav-item.active { color: var(--accent); transform: translateY(-2px); }
         body.has-overlay nav { display: none; }
 
-        /* PROFILE & SETTINGS */
+        /* PROFILE */
         .profile-header { padding: 40px 20px; text-align: center; }
         .profile-pic-main { width: 90px; height: 90px; background: #111; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); border: 1px solid var(--accent); }
         .profile-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 25px; color: var(--text-sec); }
@@ -188,7 +184,7 @@
         /* AI BUTTON */
         #ai-btn-header { background: linear-gradient(135deg, #D4AF37, #FFF, #007AFF); width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; cursor: pointer; border: none; }
 
-        /* AI PAGE (PLEINE PAGE) */
+        /* AI PAGE */
         #ai-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 2000; display: none; flex-direction: column; }
         #ai-page.active { display: flex; }
         
@@ -196,16 +192,22 @@
         .ai-top-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
         .ai-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
 
-        .ai-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; /* Espace pour input fixe */ }
-        .ai-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; position: relative; }
+        .ai-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+        .ai-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; }
         .ai-msg-bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 4px; }
         .ai-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; }
         
-        /* INPUT FIXE EN BAS DANS LA PAGE */
-        .ai-input-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; }
+        /* INPUT FIXE AVEC APERCU AU DESSUS */
+        .ai-input-container {
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--surface); border-top: 1px solid var(--border); 
+            padding: 10px 15px;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+            display: flex; flex-direction: column;
+        }
         
-        /* Apercu du message */
-        .ai-msg-preview { min-height: 24px; font-size: 1rem; color: var(--text-main); opacity: 0.9; word-break: break-word; }
+        /* L'aperçu est AVANT l'input dans le HTML, donc au-dessus */
+        .ai-msg-preview { min-height: 24px; font-size: 1rem; color: var(--text-main); margin-bottom: 10px; opacity: 0.9; word-break: break-word; }
         .ai-msg-preview:empty::before { content: "Écrivez votre message..."; color: var(--text-sec); opacity: 0.5; }
         
         .ai-input-row { display: flex; gap: 10px; align-items: center; }
@@ -227,6 +229,7 @@
     </div>
 </div>
 
+<!-- ONBOARDING -->
 <div id="onboarding-screen">
     <div class="ob-title">Meta Officiel</div>
     <div class="ob-subtitle">Personnalisation</div>
@@ -244,6 +247,7 @@
     </div>
 </div>
 
+<!-- LOGIN -->
 <div id="login-screen">
     <div class="logo">Meta Officiel</div>
     <input type="text" id="username" placeholder="NOM D'UTILISATEUR" autocomplete="off">
@@ -253,6 +257,7 @@
     <div id="login-error">Accès Refusé</div>
 </div>
 
+<!-- APP -->
 <div id="app-container">
     <div id="main-app">
         <header class="glass" id="main-header">
@@ -349,16 +354,16 @@
     </div>
 </div>
 
-<!-- AI PAGE (NOUVELLE PAGE DEDIEE) -->
+<!-- AI PAGE -->
 <div id="ai-page">
     <div class="ai-top-bar glass">
         <span class="ai-top-title"><i class="fas fa-wand-magic-sparkles"></i> Meta IA</span>
         <button class="ai-top-close" onclick="toggleAIPage(false)"><i class="fas fa-times"></i></button>
     </div>
+    
     <div id="ai-msg-area" class="ai-msg-area"><div class="ai-msg-bubble bot">Bonjour ! Posez-moi une question.</div></div>
     
-    <!-- INPUT FIXE EN BAS AVEC APERCU -->
-    <div class="ai-input-fixed">
+    <div class="ai-input-container">
         <div id="ai-msg-preview" class="ai-msg-preview"></div>
         <div class="ai-input-row">
             <input type="text" id="ai-text-input" class="ai-text-input" placeholder="Message..." oninput="updateAIPreview()" onkeypress="if(event.key==='Enter')sendAIRequest()">
@@ -368,38 +373,13 @@
 </div>
 
 <script>
-    // ==========================================================
     // CONFIGURATION
-    // ==========================================================
-    
-    // LIEN ANDROID (Non utilisé pour le moment car accès autorisé)
-    const ANDROID_REDIRECT_URL = "https://votre-lien.com"; 
-
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
-
-    const CONFIG_USERS = {
-        "metaservice": { pass: "Pass.123", avatar: "" },
-        "meta actu": { pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1" },
-        "mazine2.0": { pass: "mazine.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1" },
-        "walid_hchm": { pass: "Pass.123", avatar: "" },
-        "user": { pass: "12345", avatar: "" }
-    };
-
-    const LISTE_VIDEOS = [
-        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 },
-        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 },
-        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 },
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 500 }
-    ];
-
-    const LISTE_PHOTOS = [
-        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta actu", date: 9999999 },
-        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 },
-        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 },
-        { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 }
-    ];
+    const CONFIG_USERS = { "metaservice": { pass: "Pass.123", avatar: "" }, "meta actu": { pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1" }, "mazine2.0": { pass: "mazine.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1" }, "walid_hchm": { pass: "Pass.123", avatar: "" }, "user": { pass: "12345", avatar: "" } };
+    const LISTE_VIDEOS = [ { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", legende: "🔥", date: 700 }, { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", legende: "ABO PRIME", date: 600 }, { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", legende: "EL GAZZER ave l'arbre", date: 500 } ];
+    const LISTE_PHOTOS = [ { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta actu", date: 9999999 }, { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } ];
 
     let savedItems = JSON.parse(localStorage.getItem('metaSaved')) || [];
     let seenVideos = JSON.parse(localStorage.getItem('metaSeenVideos')) || [];
@@ -408,61 +388,13 @@
     let currentObMode = 'dark';
     let currentInput = "";
 
-    // --- Logique IA ---
-        
-    function updateAIPreview() {
-        const input = document.getElementById('ai-text-input');
-        const preview = document.getElementById('ai-msg-preview');
-        currentInput = input.value;
-        preview.innerText = currentInput;
-    }
+    // IA LOGIC
+    function updateAIPreview() { const input = document.getElementById('ai-text-input'); const preview = document.getElementById('ai-msg-preview'); currentInput = input.value; preview.innerText = currentInput; }
+    function toggleAIPage(state) { const page = document.getElementById('ai-page'); if(state) { page.classList.add('active'); document.body.classList.add('has-overlay'); setTimeout(() => document.getElementById('ai-text-input').focus(), 100); } else { page.classList.remove('active'); document.body.classList.remove('has-overlay'); } }
+    function addAIMessage(text, sender) { const area = document.getElementById('ai-msg-area'); const div = document.createElement('div'); div.className = `ai-msg-bubble ${sender}`; div.innerText = text; area.appendChild(div); area.scrollTop = area.scrollHeight; }
+    async function sendAIRequest() { const text = currentInput.trim(); if (!text) return; addAIMessage(text, 'user'); document.getElementById('ai-text-input').value = ""; updateAIPreview(); addAIMessage("...", 'bot'); try { const response = await fetch(GROQ_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` }, body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] }) }); const data = await response.json(); const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur.", 'bot'); } catch (e) { const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur.", 'bot'); } }
 
-    function toggleAIPage(state) {
-        const page = document.getElementById('ai-page');
-        if(state) { 
-            page.classList.add('active'); 
-            document.body.classList.add('has-overlay');
-            setTimeout(() => document.getElementById('ai-text-input').focus(), 100);
-        } else { 
-            page.classList.remove('active'); 
-            document.body.classList.remove('has-overlay');
-        }
-    }
-
-    function addAIMessage(text, sender) {
-        const area = document.getElementById('ai-msg-area');
-        const div = document.createElement('div'); div.className = `ai-msg-bubble ${sender}`; div.innerText = text;
-        area.appendChild(div); area.scrollTop = area.scrollHeight;
-    }
-
-    async function sendAIRequest() {
-        const text = currentInput.trim(); if (!text) return;
-        addAIMessage(text, 'user');
-        document.getElementById('ai-text-input').value = "";
-        updateAIPreview();
-        addAIMessage("...", 'bot'); 
-        try {
-            const response = await fetch(GROQ_API_URL, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] })
-            });
-            const data = await response.json();
-            const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove();
-            if (data.choices && data.choices[0]) addAIMessage(data.choices[0].message.content, 'bot'); else addAIMessage("Erreur.", 'bot');
-        } catch (e) { const loadingMsg = document.querySelector('.ai-msg-bubble.bot:last-child'); if(loadingMsg) loadingMsg.remove(); addAIMessage("Erreur.", 'bot'); }
-    }
-
-    /* DETECTION */
-    function isRunningStandalone() {
-        if (window.matchMedia('(display-mode: standalone)').matches) return true;
-        if (window.navigator.standalone === true) return true;
-        if (document.referrer.startsWith('android-app://')) return true;
-        return false;
-    }
-    function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-    function isAndroid() { return /Android/i.test(navigator.userAgent); }
-
-    /* LOGIQUE APP */
+    // APP LOGIC
     function setViewportHeight() { let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`); }
     window.addEventListener('resize', setViewportHeight);
     function applyTheme(mode, accent) { if (mode === 'light') document.body.classList.add('light-mode'); else document.body.classList.remove('light-mode'); document.body.setAttribute('data-accent', accent); localStorage.setItem('metaThemeMode', mode); localStorage.setItem('metaThemeAccent', accent); }
@@ -474,20 +406,7 @@
     function handleLogin() { const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; if (CONFIG_USERS[u] && CONFIG_USERS[u].pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; startApp(); } else { document.getElementById("login-error").style.display = "block"; } }
     function startApp() { document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex"; document.getElementById('ai-btn-header').style.display = 'flex'; document.getElementById("my-name-display").innerText = loggedUser; document.getElementById("my-handle-display").innerText = "@" + loggedUser.replace(/\s+/g, '_'); document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); renderStories(); genererContenu(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); }
     function renderStories() { const storiesList = document.getElementById('stories-list'); storiesList.innerHTML = ""; Object.keys(CONFIG_USERS).forEach(username => { storiesList.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${username}')"><div class="story-img-wrapper">${getAvatar(username)}</div><div class="story-name">${username}</div></button>`); }); }
-    
-    function switchTab(t, i) {
-        document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; document.body.classList.remove('has-overlay');
-        if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; }
-        if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
-        if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; }
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(t + '-section').classList.add('active');
-        document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
-        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex";
-        document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none";
-        const aiBtn = document.getElementById('ai-btn-header'); if(aiBtn) aiBtn.style.display = (t === 'feed') ? 'flex' : 'none';
-        moveIndicator(i);
-        if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100);
-    }
+    function switchTab(t, i) { document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; } if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(t + '-section').classList.add('active'); document.querySelectorAll('nav button').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; const aiBtn = document.getElementById('ai-btn-header'); if(aiBtn) aiBtn.style.display = (t === 'feed') ? 'flex' : 'none'; moveIndicator(i); if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); }
     function moveIndicator(i) { const buttons = document.querySelectorAll('nav button.nav-item'); const indicator = document.getElementById('nav-indicator'); if(buttons[i]) { const rect = buttons[i].getBoundingClientRect(); const navRect = buttons[i].parentElement.getBoundingClientRect(); indicator.style.left = (rect.left - navRect.left + rect.width/2 - 15) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card iframe').forEach(iframe => { iframe.src = ""; }); }
     function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const iframe = entry.target.querySelector('iframe'); if (!iframe) return; const targetSrc = iframe.getAttribute('data-src'); const videoId = entry.target.getAttribute('data-id'); if (entry.isIntersecting) { if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { iframe.contentWindow.postMessage('{"method":"play"}', '*'); }, 200); if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem('metaSeenVideos', JSON.stringify(seenVideos)); const badge = entry.target.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; } } else { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); iframe.src = ""; } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
@@ -509,6 +428,7 @@
     function updateSettingsUI() { const mode = localStorage.getItem('metaThemeMode') || 'dark'; const accent = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', mode === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', mode === 'light'); const picker = document.getElementById('settings-color-picker'); picker.innerHTML = ''; let colors = (mode === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; colors.forEach(c => { const isActive = (c.id === accent); picker.innerHTML += `<div class="picker-circle ${c.class} ${isActive ? 'active' : ''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
 
+    // START
     window.addEventListener('load', () => {
         setViewportHeight();
         setTimeout(() => {
@@ -517,20 +437,17 @@
             const standalone = isRunningStandalone();
             const android = isAndroid();
 
-            // LOGIQUE ANDROID CORRIGEE : ACCES AUTORISE
-            if (standalone || android) { // On ajoute 'android' ici pour autoriser l'accès direct
+            if (standalone || android) {
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
                 if(!isMobile()) document.body.classList.add('is-desktop'); else document.body.classList.add('is-mobile');
                 setupScrollSpy();
             } else if (isMobile()) {
-                // iOS non installé
                 document.getElementById('loader').style.display = 'flex';
                 document.getElementById('install-block-content').style.display = 'flex';
                 document.body.classList.add('is-mobile');
             } else {
-                // PC
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
                 else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; }
@@ -539,6 +456,12 @@
             }
         }, 1500);
     });
+
+    // HELPERS
+    function isRunningStandalone() { if (window.matchMedia('(display-mode: standalone)').matches) return true; if (window.navigator.standalone === true) return true; if (document.referrer.startsWith('android-app://')) return true; return false; }
+    function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
+    function isAndroid() { return /Android/i.test(navigator.userAgent); }
+
 </script>
 </body>
 </html>
