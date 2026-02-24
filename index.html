@@ -179,7 +179,7 @@
         .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
         .msg-info p { font-size: 0.85rem; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* CHAT PAGE (CORRECTION BUG) */
+        /* CHAT PAGE */
         #chat-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
         #chat-page.active { display: flex; }
         .chat-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; }
@@ -300,9 +300,47 @@
             </div>
 
             <!-- OVERLAYS -->
-            <div id="external-profile-overlay" class="overlay-page">...</div>
-            <div id="media-view-overlay" class="overlay-page">...</div>
-            <div id="settings-overlay" class="overlay-page">...</div>
+            <div id="external-profile-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
+                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond';"></span>
+                </div>
+                <div id="ext-header" style="padding: 30px; text-align: center;">
+                    <div id="ext-profile-pic-container" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
+                    <h3 id="ext-display-name" style="font-size: 1.3rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
+                </div>
+                <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
+                <div id="ext-posts-grid" class="content-grid"></div>
+            </div>
+
+            <div id="media-view-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
+                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Détails</span>
+                </div>
+                <div id="media-view-content"></div>
+            </div>
+
+            <div id="settings-overlay" class="overlay-page">
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Paramètres</h2>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-title">Apparence</div>
+                    <div class="settings-row">
+                        <span class="settings-label">Thème</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <span class="settings-label">Couleur</span>
+                        <div id="settings-color-picker" class="picker-colors"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- NAVIGATION -->
@@ -317,7 +355,7 @@
     </div>
 </div>
 
-<!-- CHAT PAGE (HTML COMPLET) -->
+<!-- CHAT PAGE -->
 <div id="chat-page">
     <div class="chat-top-bar glass">
         <span class="chat-top-title"><i class="fas fa-comments"></i> <span id="chat-target-name">Chat</span></span>
@@ -365,11 +403,21 @@
         // Ajoutez vos utilisateurs ici, un par ligne
     ];
 
-    // --- LISTE DES VIDEOS ---
-    const LISTE_VIDEOS = [ { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "🔥", date: 700 }, { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "ABO PRIME", date: 600 }, { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 } ];
-    
-    // --- LISTE DES PHOTOS ---
-    const LISTE_PHOTOS = [ { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 }, { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } ];
+    // --- LISTE DES PHOTOS (LIGNE PAR LIGNE) ---
+    const LISTE_PHOTOS = [ 
+        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 }, 
+        { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, 
+        { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, 
+        { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } 
+    ];
+
+    // --- LISTE DES VIDEOS (LIGNE PAR LIGNE) ---
+    const LISTE_VIDEOS = [ 
+        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, 
+        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "🔥", date: 700 }, 
+        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "ABO PRIME", date: 600 }, 
+        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 } 
+    ];
 
     // VARIABLES
     let loggedUser = localStorage.getItem("metaUser") || "";
