@@ -300,9 +300,47 @@
             </div>
 
             <!-- OVERLAYS -->
-            <div id="external-profile-overlay" class="overlay-page">...</div>
-            <div id="media-view-overlay" class="overlay-page">...</div>
-            <div id="settings-overlay" class="overlay-page">...</div>
+            <div id="external-profile-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
+                    <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond';"></span>
+                </div>
+                <div id="ext-header" style="padding: 30px; text-align: center;">
+                    <div id="ext-profile-pic-container" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
+                    <h3 id="ext-display-name" style="font-size: 1.3rem; font-weight: 400; font-family: 'Cormorant Garamond', serif;"></h3>
+                </div>
+                <div class="profile-tabs"><div class="p-tab active">PUBLICATIONS</div></div>
+                <div id="ext-posts-grid" class="content-grid"></div>
+            </div>
+
+            <div id="media-view-overlay" class="overlay-page">
+                <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="closeMediaView()"><i class="fas fa-arrow-left"></i></button>
+                    <span style="margin-left: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Détails</span>
+                </div>
+                <div id="media-view-content"></div>
+            </div>
+
+            <div id="settings-overlay" class="overlay-page">
+                <div class="glass" style="padding:15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
+                    <button class="header-btn btn-press" onclick="toggleSettings(false)"><i class="fas fa-arrow-left"></i></button>
+                    <h2 style="margin-left: 10px; font-size: 1.1rem; font-family: 'Cormorant Garamond';">Paramètres</h2>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-title">Apparence</div>
+                    <div class="settings-row">
+                        <span class="settings-label">Thème</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('dark')" id="btn-mode-dark">Sombre</button>
+                            <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="setThemeMode('light')" id="btn-mode-light">Clair</button>
+                        </div>
+                    </div>
+                    <div class="settings-row">
+                        <span class="settings-label">Couleur</span>
+                        <div id="settings-color-picker" class="picker-colors"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- NAVIGATION -->
@@ -334,7 +372,17 @@
 </div>
 
 <!-- COMMENTS POPUP -->
-<div id="comments-popup">...</div>
+<div id="comments-popup">
+    <div class="comments-header">
+        Commentaires
+        <button class="comments-close" onclick="closeComments()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="comments-list" class="comments-list"></div>
+    <div class="comments-input-area">
+        <input type="text" id="comment-input" class="comments-input" placeholder="Ajouter un commentaire...">
+        <button class="comments-send" onclick="postComment()">Envoyer</button>
+    </div>
+</div>
 
 <script>
     // ==========================================================
@@ -396,7 +444,7 @@
         // 1. Meta IA
         container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('meta_ai')"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'intelligence artificielle...</p></div></div>`); 
         
-        // 2. METAGODZILLA
+        // 2. METAGODZILLA - Centre d'Aide
         container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('metagodzilla_support')"><div class="msg-avatar" style="background: #2d2d2d;"><i class="fas fa-headset"></i></div><div class="msg-info"><h4>METAGODZILLA – Centre d’Aide</h4><p>Service Client Automatisé</p></div></div>`); 
     }
 
@@ -416,10 +464,13 @@
         document.getElementById('chat-page').classList.add('active'); 
         document.body.classList.add('has-overlay'); 
         renderChatMessages(); 
+        
+        // Scroll automatique vers le bas à l'ouverture
         setTimeout(() => {
             const area = document.getElementById('chat-msg-area');
             area.scrollTop = area.scrollHeight;
         }, 100);
+        
         setTimeout(() => document.getElementById('chat-text-input').focus(), 150); 
     }
 
@@ -429,22 +480,21 @@
         const area = document.getElementById('chat-msg-area'); 
         area.innerHTML = ""; 
         const chatKey = `chat_${loggedUser}_${currentChatTarget}`; 
-        let msgs = JSON.parse(localStorage.getItem(chatKey)) || []; 
+        const msgs = JSON.parse(localStorage.getItem(chatKey)) || []; 
         
-        // CORRECTION: Si le chat est vide, on crée ET on sauvegarde le message de bienvenue
+        // Message de bienvenue si vide
         if(msgs.length === 0) {
             let welcomeMsg = "Démarrez la conversation.";
             if(currentChatTarget === 'metagodzilla_support') {
+                // CORRECTION: Affiche seulement les requêtes sans les réponses
                 welcomeMsg = `Tape le numéro correspondant à ta question :\n\n1️⃣ Comment se déconnecter ?\n\n2️⃣ Comment changer de thème ?\n\n3️⃣ Comment supprimer mon compte ?\n\n4️⃣ Comment supprimer une publication ?\n\n5️⃣ Comment signaler un problème ou un utilisateur ?`;
             }
-            // On ajoute le message au tableau
-            msgs.push({sender: 'bot', text: welcomeMsg, time: Date.now()});
-            // On le sauvegarde tout de suite dans le localstorage
-            localStorage.setItem(chatKey, JSON.stringify(msgs));
+            area.innerHTML = `<div class="chat-msg-bubble bot">${welcomeMsg}</div>`; 
         }
-        
-        // Affichage des messages
-        msgs.forEach(m => { area.innerHTML += `<div class="chat-msg-bubble ${m.sender}">${m.text}</div>`; }); 
+        else {
+            msgs.forEach(m => { area.innerHTML += `<div class="chat-msg-bubble ${m.sender}">${m.text}</div>`; }); 
+        }
+        // Scroll to bottom after render
         area.scrollTop = area.scrollHeight; 
     }
 
@@ -493,6 +543,7 @@
                 responseText = "Contacte-nous à :\n📩 metaserviceofficiel@gmail.com";
             }
             
+            // Simulation délai réponse
             addChatMsg("...", 'bot');
             setTimeout(() => {
                 removeLastLoading();
@@ -507,7 +558,11 @@
         div.className = `chat-msg-bubble ${sender}`; 
         div.innerText = text; 
         area.appendChild(div); 
+        
+        // Scroll automatique vers le bas à chaque nouveau message
         area.scrollTop = area.scrollHeight; 
+        
+        // Sauvegarde
         if(currentChatTarget) { 
             const chatKey = `chat_${loggedUser}_${currentChatTarget}`; 
             let msgs = JSON.parse(localStorage.getItem(chatKey)) || []; 
@@ -552,11 +607,13 @@
     // --- CONTENU (ALÉATOIRE DANS FEED/VIDEOS) ---
     function genererContenu() { 
         const pD = document.getElementById('photo-list'); const vD = document.getElementById('video-list'); pD.innerHTML = ""; vD.innerHTML = ""; 
+        // Photos : aléatoire
         const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); const sP = shuffleArray([...aP]); const fF = pM ? [pM, ...sP] : sP; 
         fF.forEach(p => { const iS = savedItems.includes(p.id); pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSave('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); }); 
         
+        // Vidéos : aléatoire
         const uV = LISTE_VIDEOS.filter(v => !seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); const sV = LISTE_VIDEOS.filter(v => seenVideos.includes(v.id)).sort((a, b) => b.date - a.date); 
-        const allVids = shuffleArray([...uV, ...sV]);
+        const allVids = shuffleArray([...uV, ...sV]); // Mélange total
         
         allVids.forEach(v => { 
             const hBS = seenVideos.includes(v.id); 
