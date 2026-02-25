@@ -161,28 +161,30 @@
         .chat-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 150px; -webkit-overflow-scrolling: touch; }
         
         /* BULLES */
-        .chat-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; position: relative; }
-        .chat-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; margin-left: auto; }
-        .chat-msg-bubble.other, .chat-msg-bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 4px; margin-right: auto; }
+        .chat-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; position: relative; margin-bottom: 8px; }
         
-        /* DELETE BTN - AMELIORE */
+        /* UTILISATEUR (VOUS) -> DROITE (DORÉ) */
+        .chat-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; margin-left: auto; }
+        
+        /* AUTRE / BOT -> GAUCHE (GRIS) */
+        .chat-msg-bubble.other, .chat-msg-bubble.bot { background: var(--surface); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; margin-right: auto; }
+        
+        /* DELETE BTN */
         .msg-delete-btn { 
             position: absolute; 
-            bottom: -30px; 
+            bottom: -28px; 
             right: 0; 
             font-size: 0.75rem; 
             color: #fff; 
             background: #ff4d4d; 
-            padding: 6px 12px; 
+            padding: 5px 12px; 
             border-radius: 12px; 
             cursor: pointer; 
             display: none; 
             z-index: 5; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             border: none;
-            font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            text-transform: uppercase;
         }
         .chat-msg-bubble.user.show-delete .msg-delete-btn { display: block; }
         
@@ -194,6 +196,20 @@
         .chat-send-btn { background: var(--accent); color: var(--accent-text); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .scroll-down-btn { position: fixed; bottom: 160px; right: 20px; width: 45px; height: 45px; background: var(--surface); border-radius: 50%; display: none; align-items: center; justify-content: center; color: var(--accent); font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 4; border: 1px solid var(--border); }
         .scroll-down-btn.show { display: flex; }
+        
+        /* IN-APP NOTIF POPUP */
+        #in-app-notif { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; z-index: 3000; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        #in-app-notif.show { transform: translate(-50%, -50%) scale(1); }
+        #notif-avatar-large { width: 60px; height: 60px; border-radius: 50%; background: var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; }
+        #notif-title-large { font-size: 1.1rem; margin-bottom: 5px; }
+        #notif-text-large { font-size: 0.9rem; color: var(--text-sec); margin-bottom: 20px; }
+        .notif-btn { padding: 12px 25px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; margin: 5px; }
+        .notif-btn-primary { background: var(--accent); color: var(--accent-text); }
+        .notif-btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+
+        /* Notif Banner Top */
         #notif-banner { position: fixed; top: 0; left: 0; width: 100%; background: var(--surface); color: var(--text-main); padding: 15px; padding-top: calc(20px + var(--safe-top)); z-index: 2000; transform: translateY(-100%); transition: transform 0.3s ease-out; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; }
         #notif-banner.show { transform: translateY(0); }
         #notif-banner .notif-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); flex-shrink: 0; }
@@ -221,7 +237,18 @@
     </div>
 </div>
 
-<!-- NOTIF BANNER -->
+<!-- IN-APP NOTIF POPUP -->
+<div id="in-app-notif">
+    <div id="notif-avatar-large"><i class="fas fa-user"></i></div>
+    <div id="notif-title-large">Nouveau Message</div>
+    <div id="notif-text-large">Cliquez pour voir le message...</div>
+    <div>
+        <button class="notif-btn notif-btn-primary" onclick="handleInAppNotifClick()">Ouvrir</button>
+        <button class="notif-btn notif-btn-secondary" onclick="closeInAppNotif()">Fermer</button>
+    </div>
+</div>
+
+<!-- TOP BANNER -->
 <div id="notif-banner" onclick="handleNotifClick()">
     <div class="notif-avatar"><i class="fas fa-user"></i></div>
     <div class="notif-content">
@@ -351,12 +378,12 @@
                 <div class="settings-group">
                      <div class="settings-title">Notifications</div>
                      <div class="settings-row">
-                         <span class="settings-label">Alertes Push</span>
+                         <span class="settings-label">Alertes In-App</span>
                          <div id="notif-toggle" class="toggle-switch" onclick="toggleNotifSetting()">
                              <div class="toggle-knob"></div>
                          </div>
                      </div>
-                     <p style="font-size:0.7rem; color:var(--text-sec); margin-top:5px; opacity:0.7;">Requis : App installée sur l'écran d'accueil.</p>
+                     <p style="font-size:0.7rem; color:var(--text-sec); margin-top:5px; opacity:0.7;">Fonctionne même sans serveur externe.</p>
                 </div>
             </div>
         </div>
@@ -431,7 +458,8 @@
     let currentChatTarget = null;
     let chatInterval = null; 
     let lastNotifTime = 0;
-    let lastKnownMessages = []; 
+    let lastKnownMessages = ""; 
+    let inAppNotifQueue = []; 
 
     function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
     function getAvatar(userId) { const user = getUserById(userId); if (user && user.avatar) return `<img src="${user.avatar}" alt="${user.name}">`; return `<i class="fas fa-user"></i>`; }
@@ -456,7 +484,7 @@
         document.getElementById('chat-page').classList.add('active'); 
         document.body.classList.add('has-overlay'); 
         if(chatInterval) clearInterval(chatInterval);
-        lastKnownMessages = []; 
+        lastKnownMessages = ""; 
         renderChatMessages(); 
         chatInterval = setInterval(renderChatMessages, 2000);
     }
@@ -491,99 +519,125 @@
             area.innerHTML += `<div class="chat-msg-bubble other">Démarrez la conversation.</div>`;
         } else {
             msgs.forEach(m => { 
-                const cls = (m.sender === 'user' && m.user_id === loggedUser) ? 'user' : 'other'; 
-                if(m.sender === 'bot') cls = 'bot';
-                const msgId = m.id || m.time; 
-                // Bouton effacer stylisé
-                const delBtn = (cls === 'user') ? `<div class="msg-delete-btn" onclick="deleteMsg(event, '${msgId}')">Effacer</div>` : '';
-                area.innerHTML += `<div class="chat-msg-bubble ${cls}" ondblclick="toggleDeleteBtn(this)" data-msg-id="${msgId}">${m.text}${delBtn}</div>`; 
+                // CORRECTION ICI : Identifier correctement qui a envoyé le message
+                // Si c'est l'IA ou le Bot, c'est 'other' (gauche)
+                if(m.sender === 'bot') { 
+                    area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; 
+                } 
+                // Sinon, on regarde si c'est l'utilisateur connecté
+                else if (m.sender === 'user' && m.user_id === loggedUser) {
+                    area.innerHTML += `<div class="chat-msg-bubble user" ondblclick="toggleDeleteBtn(this)">${m.text}<div class="msg-delete-btn" onclick="deleteMsg(event, '${m.id || m.time}')">Effacer</div></div>`;
+                }
+                // Sinon c'est l'autre personne (gauche)
+                else {
+                    area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; 
+                }
             });
         }
-
         if(isAtBottom || msgs.length === 0) area.scrollTop = area.scrollHeight; 
     }
 
     function toggleDeleteBtn(elem) {
-        if(!elem.classList.contains('user')) return;
-        // Toggle l'affichage du bouton
-        const isVisible = elem.classList.contains('show-delete');
-        document.querySelectorAll('.chat-msg-bubble').forEach(b => b.classList.remove('show-delete'));
-        if(!isVisible) elem.classList.add('show-delete');
+        elem.classList.toggle('show-delete');
     }
 
     async function deleteMsg(e, id) {
         e.stopPropagation();
-        if(!confirm("Supprimer ce message ?")) return;
-        
+        if(!confirm("Supprimer ?")) return;
         const bubble = e.target.closest('.chat-msg-bubble');
         if(bubble) bubble.remove();
-
-        // Suppression Supabase
         if(currentChatTarget !== 'meta_ai' && currentChatTarget !== 'metagodzilla_support') {
             const parsedId = parseInt(id);
-            if (!isNaN(parsedId)) {
-                await supabaseClient.from('chats').delete().match({ id: parsedId });
-            }
+            if (!isNaN(parsedId)) { await supabaseClient.from('chats').delete().match({ id: parsedId }); }
         } 
-        
-        // Suppression LocalStorage
         let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || [];
         msgs = msgs.filter(m => (m.time != id)); 
         localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
-        
         lastKnownMessages = ""; 
         renderChatMessages();
     }
 
-    function showNotification(senderId, text) { const user = getUserById(senderId); const name = user ? user.name : "Inconnu"; const banner = document.getElementById('notif-banner'); banner.querySelector('.notif-title').innerText = name; banner.querySelector('.notif-text').innerText = text; banner.querySelector('.notif-avatar').innerHTML = getAvatar(senderId); banner.dataset.sender = senderId; banner.classList.add('show'); setTimeout(() => banner.classList.remove('show'), 3000); }
+    // IN-APP NOTIF SYSTEM
+    function showInAppNotif(senderId, text) {
+        if(localStorage.getItem('metaNotifs') !== 'enabled') return;
+        const user = getUserById(senderId);
+        document.getElementById('notif-avatar-large').innerHTML = getAvatar(senderId);
+        document.getElementById('notif-title-large').innerText = user ? user.name : "Inconnu";
+        document.getElementById('notif-text-large').innerText = text;
+        document.getElementById('in-app-notif').classList.add('show');
+        try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleVwKAJzE2tq+bRIAeM7f4bZkGgCF0eDrvm4YAJjR4Oq8cB0An9Ph6r1xHQCj1OHqvXIjAKbV4eq+cScAptXh6r5xJwCm1eHqvnEnAKbV4eq+cScAptXh6r5xJwCm1eHqvXEnA=').play(); } catch(e){}
+    }
+    
+    function handleInAppNotifClick() {
+        const lastNotif = inAppNotifQueue.shift();
+        closeInAppNotif();
+        if(lastNotif) openChatWith(lastNotif.sender);
+    }
+    
+    function closeInAppNotif() { document.getElementById('in-app-notif').classList.remove('show'); }
+
+    // NOTIF BANNER (TOP SMALL)
+    function showNotification(senderId, text) { 
+        const user = getUserById(senderId); 
+        const name = user ? user.name : "Inconnu"; 
+        const banner = document.getElementById('notif-banner'); 
+        banner.querySelector('.notif-title').innerText = name; 
+        banner.querySelector('.notif-text').innerText = text; 
+        banner.querySelector('.notif-avatar').innerHTML = getAvatar(senderId); 
+        banner.dataset.sender = senderId; 
+        banner.classList.add('show'); 
+        setTimeout(() => banner.classList.remove('show'), 3000); 
+    }
     function handleNotifClick() { const senderId = document.getElementById('notif-banner').dataset.sender; if(senderId) openChatWith(senderId); }
     
     function toggleNotifSetting() {
         const toggle = document.getElementById('notif-toggle');
         const isActive = toggle.classList.contains('active');
         if (isActive) { toggle.classList.remove('active'); localStorage.setItem('metaNotifs', 'disabled'); alert("Notifications désactivées."); } 
-        else { requestPushPermission(); }
-    }
-
-    async function requestPushPermission() {
-        if (!("Notification" in window)) { alert("Ce navigateur ne supporte pas les notifications."); return; }
-        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ("standalone" in window.navigator) && window.navigator.standalone;
-        if (isIos && !isStandalone) { alert("Sur iOS, vous devez d'abord ajouter l'app sur l'écran d'accueil."); return; }
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") { document.getElementById('notif-toggle').classList.add('active'); localStorage.setItem('metaNotifs', 'enabled'); alert("Notifications activées !"); } 
-        else { document.getElementById('notif-toggle').classList.remove('active'); localStorage.setItem('metaNotifs', 'disabled'); alert("Autorisation refusée."); }
+        else { toggle.classList.add('active'); localStorage.setItem('metaNotifs', 'enabled'); alert("Notifications activées !"); }
     }
     
     async function checkNotifs() {
         if(localStorage.getItem('metaNotifs') !== 'enabled') return;
-        if (!loggedUser || Notification.permission !== "granted" || document.hasFocus()) return; 
+        if (!loggedUser) return; 
         const { data } = await supabaseClient.from('chats').select('*').eq('target_id', loggedUser).order('created_at', { ascending: false }).limit(1);
         if(data && data.length > 0) {
-             const lastMsg = data[0]; const lastTime = new Date(lastMsg.created_at).getTime();
-             if(Date.now() - lastTime < 5000 && lastTime > lastNotifTime) { lastNotifTime = lastTime; const user = getUserById(lastMsg.user_id); new Notification("Nouveau message de " + (user ? user.name : "Inconnu"), { body: lastMsg.text, icon: user && user.avatar ? user.avatar : '' }); }
+             const lastMsg = data[0]; 
+             const lastTime = new Date(lastMsg.created_at).getTime();
+             if(Date.now() - lastTime < 3000 && lastTime > lastNotifTime) { 
+                 lastNotifTime = lastTime; 
+                 inAppNotifQueue.push({sender: lastMsg.user_id, text: lastMsg.text});
+                 showInAppNotif(lastMsg.user_id, lastMsg.text); 
+                 showNotification(lastMsg.user_id, lastMsg.text);
+             }
         }
     }
-    setInterval(checkNotifs, 5000);
+    setInterval(checkNotifs, 2000);
 
     function updateChatPreview() { currentInput = document.getElementById('chat-text-input').value; document.getElementById('chat-msg-preview').innerText = currentInput; }
+    
     async function sendChatMsg() { 
         const text = currentInput.trim(); if(!text || !currentChatTarget) return; 
         const area = document.getElementById('chat-msg-area');
+        
+        // 1. Afficher le message utilisateur (DROITE - USER)
         area.innerHTML += `<div class="chat-msg-bubble user" ondblclick="toggleDeleteBtn(this)">${text}</div>`;
         scrollChatBottom(); 
         lastKnownMessages = ""; 
         document.getElementById('chat-text-input').value = ""; 
         updateChatPreview(); 
 
+        // 2. Sauvegarder
         if(currentChatTarget !== 'meta_ai' && currentChatTarget !== 'metagodzilla_support') {
             await supabaseClient.from('chats').insert({ user_id: loggedUser, target_id: currentChatTarget, sender: 'user', text: text });
         } else {
             let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || [];
-            msgs.push({sender: 'user', text: text, time: Date.now()});
+            // On sauvegarde avec sender 'user' et user_id
+            msgs.push({sender: 'user', user_id: loggedUser, text: text, time: Date.now()});
             localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
         }
 
+        // 3. Réponses
         if(currentChatTarget === 'meta_ai') { 
             area.innerHTML += `<div class="chat-msg-bubble bot">...</div>`; scrollChatBottom();
             try { 
@@ -595,7 +649,9 @@
                 msgs.push({sender: 'bot', text: botText, time: Date.now()});
                 localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
                 lastKnownMessages = ""; scrollChatBottom();
-            } catch(e) { document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Erreur."; } 
+            } catch(e) { 
+                document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Je suis un peu lent, veuillez réessayer."; 
+            } 
         } else if (currentChatTarget === 'metagodzilla_support') {
             let r = "Je ne comprends pas."; if(text === '1') r = "Profil > Déconnexion."; else if(text === '2') r = "Profil > Paramètres."; else if(['3','4','5'].includes(text)) r = "Contact: metaserviceofficiel@gmail.com";
             area.innerHTML += `<div class="chat-msg-bubble bot">${r}</div>`; 
@@ -622,12 +678,14 @@
         if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } 
         renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); 
         
-        // DEMANDE NOTIF AU DEMARRAGE
-        setTimeout(() => {
-            if(localStorage.getItem('metaNotifs') !== 'enabled' && Notification.permission === 'default') {
-                 requestPushPermission();
-            }
-        }, 1000);
+        if(localStorage.getItem('metaNotifs') !== 'enabled') {
+            setTimeout(() => {
+               if(confirm("Voulez-vous activer les notifications pour ne rien rater ?")) {
+                   document.getElementById('notif-toggle').classList.add('active');
+                   localStorage.setItem('metaNotifs', 'enabled');
+               }
+            }, 1500);
+        }
     }
     
     function switchTab(t, i) { 
