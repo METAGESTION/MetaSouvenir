@@ -408,6 +408,7 @@
     let currentChatTarget = null;
     let chatInterval = null; 
     let lastNotifTime = 0;
+    let lastKnownMessages = []; // Pour la stabilité du chat
 
     // UTILS
     function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
@@ -432,40 +433,82 @@
         currentChatTarget = targetId; 
         let name = "Chat"; 
         if(targetId === 'meta_ai') name = "Meta IA"; else if(targetId === 'metagodzilla_support') name = "METAGODZILLA"; else name = getUserById(targetId).name; 
+        
         document.getElementById('chat-target-name').innerText = name; 
         document.getElementById('chat-page').classList.add('active'); 
         document.body.classList.add('has-overlay'); 
         if(chatInterval) clearInterval(chatInterval);
-        chatInterval = setInterval(renderChatMessages, 2000);
+        // Refresh rapide au début, puis lent
         renderChatMessages(); 
+        chatInterval = setInterval(renderChatMessages, 2000);
     }
     function closeChatPage() { if(chatInterval) clearInterval(chatInterval); document.getElementById('chat-page').classList.remove('active'); document.body.classList.remove('has-overlay'); renderMessagesList(); }
     
     async function renderChatMessages() { 
         const area = document.getElementById('chat-msg-area'); 
-        area.innerHTML = ""; 
+        const isAtBottom = area.scrollHeight - area.scrollTop <= area.clientHeight + 50;
+        
+        let msgs = [];
+        
+        // 1. Charger les messages
         if(currentChatTarget === 'meta_ai' || currentChatTarget === 'metagodzilla_support') {
-            let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || [];
-            if(msgs.length === 0) { area.innerHTML += `<div class="chat-msg-bubble bot">${currentChatTarget === 'metagodzilla_support' ? "1️⃣ Déconnexion\n2️⃣ Thème\n3️⃣ Compte\n4️⃣ Publication\n5️⃣ Problème" : "Bonjour !"}</div>`; }
-            else msgs.forEach(m => { area.innerHTML += `<div class="chat-msg-bubble ${m.sender}">${m.text}</div>`; });
+            const chatKey = `chat_${loggedUser}_${currentChatTarget}`;
+            msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
+            // Ajouter message accueil si vide pour MetaGodzilla
+            if(currentChatTarget === 'metagodzilla_support' && msgs.length === 0) {
+                // On ne fait rien ici, on affichera le message d'accueil par défaut sans le sauver
+            }
         } else {
             const { data } = await supabaseClient.from('chats').select('*').or(`and(user_id.eq.${loggedUser},target_id.eq.${currentChatTarget}),and(user_id.eq.${currentChatTarget},target_id.eq.${loggedUser})`).order('created_at', { ascending: true });
-            let msgs = data || [];
-            if(msgs.length === 0) area.innerHTML += `<div class="chat-msg-bubble other">Démarrez la conversation.</div>`;
-            else msgs.forEach(m => { 
+            msgs = data || [];
+        }
+
+        // 2. Vérifier si le contenu a changé
+        const newContent = JSON.stringify(msgs);
+        if (newContent === lastKnownMessages) return; // Pas de changement, on ne touche pas au DOM
+        lastKnownMessages = newContent;
+
+        // 3. Mise à jour du DOM
+        area.innerHTML = ""; 
+        if(currentChatTarget === 'metagodzilla_support' && msgs.length === 0) {
+             area.innerHTML += `<div class="chat-msg-bubble bot">Tape le numéro correspondant à ta question :\n\n1️⃣ Comment se déconnecter ?\n\n2️⃣ Comment changer de thème ?\n\n3️⃣ Comment supprimer mon compte ?\n\n4️⃣ Comment supprimer une publication ?\n\n5️⃣ Comment signaler un problème ?</div>`;
+        } else if (msgs.length === 0) {
+            area.innerHTML += `<div class="chat-msg-bubble other">Démarrez la conversation.</div>`;
+        } else {
+            msgs.forEach(m => { 
                 const cls = (m.sender === 'user' && m.user_id === loggedUser) ? 'user' : 'other'; 
+                if(m.sender === 'bot') cls = 'bot';
                 area.innerHTML += `<div class="chat-msg-bubble ${cls}">${m.text}</div>`; 
-                if(m.sender === 'user' && m.user_id !== loggedUser) { const msgTime = new Date(m.created_at).getTime(); if(Date.now() - msgTime < 3000 && msgTime > lastNotifTime) { showNotification(m.user_id, m.text); lastNotifTime = msgTime; } }
             });
         }
-        area.scrollTop = area.scrollHeight; 
+
+        if(isAtBottom) area.scrollTop = area.scrollHeight; 
     }
 
     // NOTIF
     function showNotification(senderId, text) { const user = getUserById(senderId); const name = user ? user.name : "Inconnu"; const banner = document.getElementById('notif-banner'); banner.querySelector('.notif-title').innerText = name; banner.querySelector('.notif-text').innerText = text; banner.querySelector('.notif-avatar').innerHTML = getAvatar(senderId); banner.dataset.sender = senderId; banner.classList.add('show'); setTimeout(() => banner.classList.remove('show'), 3000); }
     function handleNotifClick() { const senderId = document.getElementById('notif-banner').dataset.sender; if(senderId) openChatWith(senderId); }
-    async function requestPushPermission() { if (!("Notification" in window)) return; const permission = await Notification.requestPermission(); if (permission === "granted") alert("Notifications activées !"); }
-    async function checkNotifs() { if (!loggedUser || Notification.permission !== "granted" || document.hasFocus()) return; const { data } = await supabaseClient.from('chats').select('*').eq('target_id', loggedUser).order('created_at', { ascending: false }).limit(1); if(data && data.length > 0) { const lastMsg = data[0]; const lastTime = new Date(lastMsg.created_at).getTime(); if(Date.now() - lastTime < 5000 && lastTime > lastNotifTime) { lastNotifTime = lastTime; const user = getUserById(lastMsg.user_id); new Notification("Nouveau message de " + (user ? user.name : "Inconnu"), { body: lastMsg.text, icon: user && user.avatar ? user.avatar : '' }); } } }
+    
+    async function requestPushPermission() {
+        if (!("Notification" in window)) { alert("Ce navigateur ne supporte pas les notifications."); return; }
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") { alert("Notifications activées ! Vous serez averti des nouveaux messages."); }
+        else { alert("Veuillez autoriser les notifications dans les réglages de votre appareil."); }
+    }
+    
+    async function checkNotifs() {
+        if (!loggedUser || Notification.permission !== "granted" || document.hasFocus()) return; 
+        const { data } = await supabaseClient.from('chats').select('*').eq('target_id', loggedUser).order('created_at', { ascending: false }).limit(1);
+        if(data && data.length > 0) {
+             const lastMsg = data[0];
+             const lastTime = new Date(lastMsg.created_at).getTime();
+             if(Date.now() - lastTime < 5000 && lastTime > lastNotifTime) {
+                 lastNotifTime = lastTime;
+                 const user = getUserById(lastMsg.user_id);
+                 new Notification("Nouveau message de " + (user ? user.name : "Inconnu"), { body: lastMsg.text, icon: user && user.avatar ? user.avatar : '' });
+             }
+        }
+    }
     setInterval(checkNotifs, 5000);
 
     // RESTE
@@ -473,8 +516,11 @@
     async function sendChatMsg() { 
         const text = currentInput.trim(); if(!text || !currentChatTarget) return; 
         const area = document.getElementById('chat-msg-area');
+        
+        // Afficher message utilisateur immédiatement
         area.innerHTML += `<div class="chat-msg-bubble user">${text}</div>`;
         area.scrollTop = area.scrollHeight;
+        lastKnownMessages = ""; // Force refresh
         document.getElementById('chat-text-input').value = ""; 
         updateChatPreview(); 
 
@@ -496,11 +542,13 @@
                 let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || [];
                 msgs.push({sender: 'bot', text: botText, time: Date.now()});
                 localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
+                lastKnownMessages = ""; 
             } catch(e) { document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Erreur."; } 
         } else if (currentChatTarget === 'metagodzilla_support') {
             let r = "Je ne comprends pas."; if(text === '1') r = "Profil > Déconnexion."; else if(text === '2') r = "Profil > Paramètres."; else if(['3','4','5'].includes(text)) r = "Contact: metaserviceofficiel@gmail.com";
             area.innerHTML += `<div class="chat-msg-bubble bot">${r}</div>`; area.scrollTop = area.scrollHeight;
             let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || []; msgs.push({sender: 'bot', text: r, time: Date.now()}); localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
+            lastKnownMessages = ""; 
         }
     }
 
@@ -513,7 +561,18 @@
     function selectObColor(color, elem) { document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active'); selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false; }
     function validateOnboarding() { if (!selectedObColor) return; applyTheme(currentObMode, selectedObColor); document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; }
     async function handleLogin() { const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u); if (user && user.pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; await loadSavedItems(); startApp(); } else { document.getElementById("login-error").style.display = "block"; } }
-    async function startApp() { document.getElementById("login-screen").style.display = "none"; document.getElementById("main-app").style.display = "flex"; document.querySelector("header").style.display = "flex"; const user = getUserById(loggedUser); if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); }
+    
+    async function startApp() { 
+        document.getElementById("login-screen").style.display = "none"; 
+        document.getElementById("main-app").style.display = "flex"; 
+        document.querySelector("header").style.display = "flex"; 
+        const user = getUserById(loggedUser); 
+        if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } 
+        renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); 
+        // Demande notification au démarrage
+        setTimeout(() => { if (Notification.permission === 'default') requestPushPermission(); }, 1000);
+    }
+    
     function switchTab(t, i) { document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; closeChatPage(); document.body.classList.remove('has-overlay'); if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; } if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; moveIndicator(i); if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); }
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card').forEach(vc => { vc.classList.remove('playing'); const iframe = vc.querySelector('iframe'); if(iframe) iframe.src = ""; }); }
@@ -524,7 +583,7 @@
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
     function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
     
-    // GENERATION CONTENU (SIMPLIFIEE POUR EVITER BUGS)
+    // GENERATION CONTENU
     function renderContent() { 
         const pD = document.getElementById('photo-list'); 
         const vD = document.getElementById('video-list'); 
