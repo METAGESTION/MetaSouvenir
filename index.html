@@ -60,8 +60,7 @@
         input:focus { border-color: var(--accent); }
         .login-btn { width: 100%; max-width: 320px; background: transparent; color: var(--accent); padding: 20px; border: 1px solid var(--accent); border-radius: 12px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; }
         #login-error { color: #ff4d4d; font-size: 0.8rem; margin-top: 15px; display: none; font-weight: 500; }
-        .remember-me { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-sec); font-size: 0.8rem; cursor: pointer; }
-        .remember-me input { width: auto; margin: 0; transform: scale(0.8); }
+        /* Removed remember-me checkbox style as it's auto */
 
         /* Main App */
         header { height: calc(60px + var(--safe-top)); padding-top: var(--safe-top); border-bottom: 1px solid var(--border); display: none; justify-content: center; align-items: center; position: relative; padding-left: 15px; padding-right: 15px; background: transparent; z-index: 100; flex-shrink: 0; }
@@ -110,7 +109,8 @@
         .video-info h3 { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-size: 1.2rem; }
         .seen-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 10px; border-radius: 20px; font-size: 0.6rem; text-transform: uppercase; z-index: 5; }
 
-        .overlay-page { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + var(--safe-top)); }
+        .overlay-page { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 600; overflow-y: auto; padding-top: calc(35px + var(--safe-top)); transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); visibility: hidden; }
+        .overlay-page.active { transform: translateX(0); visibility: visible; }
         
         /* NAVIGATION */
         nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; align-items: center; z-index: 999; height: 60px; padding-bottom: var(--safe-bottom); background: var(--bg-color); border-top: 1px solid var(--border); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
@@ -144,6 +144,12 @@
         .picker-circle.active { border-color: var(--text-main); transform: scale(1.1); }
         .empty-state { grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: var(--text-sec); }
 
+        /* TOGGLE SWITCH */
+        .toggle-switch { width: 50px; height: 28px; background-color: var(--border); border-radius: 14px; position: relative; cursor: pointer; transition: background-color 0.3s; }
+        .toggle-switch.active { background-color: var(--accent); }
+        .toggle-knob { width: 22px; height: 22px; background-color: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .toggle-switch.active .toggle-knob { transform: translateX(22px); }
+
         /* MESSAGES */
         #messages-section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background: var(--bg-color); overflow-y: auto; }
         .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--bg-color); z-index: 10; }
@@ -158,24 +164,27 @@
         .msg-info p { font-size: 0.85rem; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* CHAT PAGE */
-        #chat-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; }
-        #chat-page.active { display: flex; }
+        #chat-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+        #chat-page.active { display: flex; transform: translateY(0); }
         .chat-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--bg-color); z-index: 2; }
         .chat-top-title { font-size: 1.1rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
         .chat-top-close { background: none; border: none; color: var(--text-sec); cursor: pointer; font-size: 1.3rem; padding: 5px; }
-        .chat-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 120px; }
+        .chat-msg-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 150px; -webkit-overflow-scrolling: touch; }
         
         /* BULLES */
         .chat-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
         .chat-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; margin-left: auto; }
         .chat-msg-bubble.other, .chat-msg-bubble.bot { background: var(--surface); align-self: flex-start; border-bottom-left-radius: 4px; margin-right: auto; }
         
-        .chat-input-container { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(15px + var(--safe-bottom)); display: flex; flex-direction: column; z-index: 3; }
+        .chat-input-container { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(25px + var(--safe-bottom)); display: flex; flex-direction: column; z-index: 3; }
         .chat-msg-preview { min-height: 24px; font-size: 1rem; color: var(--text-main); margin-bottom: 10px; opacity: 0.9; word-break: break-word; }
         .chat-msg-preview:empty::before { content: "Écrivez votre message..."; color: var(--text-sec); opacity: 0.5; }
         .chat-input-row { display: flex; gap: 10px; align-items: center; }
         .chat-text-input { flex: 1; background: var(--bg-color); border: 1px solid var(--border); border-radius: 20px; padding: 12px 15px; color: var(--text-main); font-size: 1rem; outline: none; }
         .chat-send-btn { background: var(--accent); color: var(--accent-text); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+        .scroll-down-btn { position: fixed; bottom: 160px; right: 20px; width: 45px; height: 45px; background: var(--surface); border-radius: 50%; display: none; align-items: center; justify-content: center; color: var(--accent); font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 4; border: 1px solid var(--border); }
+        .scroll-down-btn.show { display: flex; }
 
         /* NOTIF BANNER */
         #notif-banner { position: fixed; top: 0; left: 0; width: 100%; background: var(--surface); color: var(--text-main); padding: 15px; padding-top: calc(20px + var(--safe-top)); z-index: 2000; transform: translateY(-100%); transition: transform 0.3s ease-out; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; }
@@ -193,7 +202,7 @@
     <div class="loader-icon"></div>
     <div class="loader-text">Meta Officiel</div>
     <div id="install-block-content" style="display:none; flex-direction: column; align-items: center;">
-        <div class="install-block-text">Pour une expérience optimale, veuillez ajouter l'application à votre écran d'accueil.<br><br>Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"</div>
+        <div class="install-block-text">Pour recevoir des notifications sur iOS, vous devez ajouter l'application à votre écran d'accueil.<br><br>Safari : Partage <i class="fas fa-share" style="color: var(--accent);"></i> > "Sur l'écran d'accueil"</div>
     </div>
 </div>
 
@@ -229,7 +238,8 @@
     <div class="logo">Meta Officiel</div>
     <input type="text" id="username" placeholder="NOM D'UTILISATEUR" autocomplete="off">
     <input type="password" id="password" placeholder="MOT DE PASSE">
-    <label class="remember-me"><input type="checkbox" id="remember-me"> Rester connecté</label>
+    <!-- Auto-connect: Hidden checkbox always checked -->
+    <input type="checkbox" id="remember-me" checked style="display:none;">
     <button class="login-btn btn-press" onclick="handleLogin()" style="margin-top: 20px;">Connexion</button>
     <div id="login-error">Accès Refusé</div>
 </div>
@@ -328,9 +338,12 @@
                 <div class="settings-group">
                      <div class="settings-title">Notifications</div>
                      <div class="settings-row">
-                         <span class="settings-label">Activer les alertes</span>
-                         <button class="ob-btn" style="padding:8px 15px; font-size:0.7rem; border-radius:10px;" onclick="requestPushPermission()">Activer</button>
+                         <span class="settings-label">Alertes Push</span>
+                         <div id="notif-toggle" class="toggle-switch" onclick="toggleNotifSetting()">
+                             <div class="toggle-knob"></div>
+                         </div>
                      </div>
+                     <p style="font-size:0.7rem; color:var(--text-sec); margin-top:5px; opacity:0.7;">Requis : App installée sur l'écran d'accueil pour iOS.</p>
                 </div>
             </div>
         </div>
@@ -354,6 +367,7 @@
         <button class="chat-top-close" onclick="closeChatPage()"><i class="fas fa-arrow-left"></i></button>
     </div>
     <div id="chat-msg-area" class="chat-msg-area"></div>
+    <div id="scroll-down-btn" class="scroll-down-btn" onclick="scrollChatBottom()"><i class="fas fa-chevron-down"></i></div>
     <div class="chat-input-container">
         <div id="chat-msg-preview" class="chat-msg-preview"></div>
         <div class="chat-input-row">
@@ -408,7 +422,7 @@
     let currentChatTarget = null;
     let chatInterval = null; 
     let lastNotifTime = 0;
-    let lastKnownMessages = []; // Pour la stabilité du chat
+    let lastKnownMessages = []; 
 
     // UTILS
     function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
@@ -438,37 +452,38 @@
         document.getElementById('chat-page').classList.add('active'); 
         document.body.classList.add('has-overlay'); 
         if(chatInterval) clearInterval(chatInterval);
-        // Refresh rapide au début, puis lent
+        lastKnownMessages = []; 
         renderChatMessages(); 
         chatInterval = setInterval(renderChatMessages, 2000);
     }
     function closeChatPage() { if(chatInterval) clearInterval(chatInterval); document.getElementById('chat-page').classList.remove('active'); document.body.classList.remove('has-overlay'); renderMessagesList(); }
     
+    function scrollChatBottom() {
+        const area = document.getElementById('chat-msg-area');
+        area.scrollTop = area.scrollHeight;
+        document.getElementById('scroll-down-btn').classList.remove('show');
+    }
+    
     async function renderChatMessages() { 
         const area = document.getElementById('chat-msg-area'); 
-        const isAtBottom = area.scrollHeight - area.scrollTop <= area.clientHeight + 50;
-        
+        const isAtBottom = area.scrollHeight - area.scrollTop <= area.clientHeight + 100;
+        const btn = document.getElementById('scroll-down-btn');
+        if(!isAtBottom) btn.classList.add('show'); else btn.classList.remove('show');
+
         let msgs = [];
         
-        // 1. Charger les messages
         if(currentChatTarget === 'meta_ai' || currentChatTarget === 'metagodzilla_support') {
             const chatKey = `chat_${loggedUser}_${currentChatTarget}`;
             msgs = JSON.parse(localStorage.getItem(chatKey)) || [];
-            // Ajouter message accueil si vide pour MetaGodzilla
-            if(currentChatTarget === 'metagodzilla_support' && msgs.length === 0) {
-                // On ne fait rien ici, on affichera le message d'accueil par défaut sans le sauver
-            }
         } else {
             const { data } = await supabaseClient.from('chats').select('*').or(`and(user_id.eq.${loggedUser},target_id.eq.${currentChatTarget}),and(user_id.eq.${currentChatTarget},target_id.eq.${loggedUser})`).order('created_at', { ascending: true });
             msgs = data || [];
         }
 
-        // 2. Vérifier si le contenu a changé
         const newContent = JSON.stringify(msgs);
-        if (newContent === lastKnownMessages) return; // Pas de changement, on ne touche pas au DOM
+        if (newContent === lastKnownMessages) return; 
         lastKnownMessages = newContent;
 
-        // 3. Mise à jour du DOM
         area.innerHTML = ""; 
         if(currentChatTarget === 'metagodzilla_support' && msgs.length === 0) {
              area.innerHTML += `<div class="chat-msg-bubble bot">Tape le numéro correspondant à ta question :\n\n1️⃣ Comment se déconnecter ?\n\n2️⃣ Comment changer de thème ?\n\n3️⃣ Comment supprimer mon compte ?\n\n4️⃣ Comment supprimer une publication ?\n\n5️⃣ Comment signaler un problème ?</div>`;
@@ -482,21 +497,53 @@
             });
         }
 
-        if(isAtBottom) area.scrollTop = area.scrollHeight; 
+        if(isAtBottom || msgs.length === 0) area.scrollTop = area.scrollHeight; 
     }
 
     // NOTIF
     function showNotification(senderId, text) { const user = getUserById(senderId); const name = user ? user.name : "Inconnu"; const banner = document.getElementById('notif-banner'); banner.querySelector('.notif-title').innerText = name; banner.querySelector('.notif-text').innerText = text; banner.querySelector('.notif-avatar').innerHTML = getAvatar(senderId); banner.dataset.sender = senderId; banner.classList.add('show'); setTimeout(() => banner.classList.remove('show'), 3000); }
     function handleNotifClick() { const senderId = document.getElementById('notif-banner').dataset.sender; if(senderId) openChatWith(senderId); }
     
+    // TOGGLE NOTIF SETTING
+    function toggleNotifSetting() {
+        const toggle = document.getElementById('notif-toggle');
+        const isActive = toggle.classList.contains('active');
+        if (isActive) {
+            toggle.classList.remove('active');
+            localStorage.setItem('metaNotifs', 'disabled');
+            alert("Notifications désactivées.");
+        } else {
+            requestPushPermission();
+        }
+    }
+
     async function requestPushPermission() {
         if (!("Notification" in window)) { alert("Ce navigateur ne supporte pas les notifications."); return; }
+        
+        // Check iOS Install status
+        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ("standalone" in window.navigator) && window.navigator.standalone;
+        
+        if (isIos && !isStandalone) {
+            alert("Sur iOS, vous devez d'abord ajouter l'app sur l'écran d'accueil pour activer les notifications.");
+            return;
+        }
+
         const permission = await Notification.requestPermission();
-        if (permission === "granted") { alert("Notifications activées ! Vous serez averti des nouveaux messages."); }
-        else { alert("Veuillez autoriser les notifications dans les réglages de votre appareil."); }
+        if (permission === "granted") {
+            document.getElementById('notif-toggle').classList.add('active');
+            localStorage.setItem('metaNotifs', 'enabled');
+            alert("Notifications activées !");
+        } else {
+            document.getElementById('notif-toggle').classList.remove('active');
+            localStorage.setItem('metaNotifs', 'disabled');
+            alert("Autorisation refusée. Allez dans les réglages de votre navigateur pour autoriser.");
+        }
     }
     
     async function checkNotifs() {
+        // Only check if setting is enabled
+        if(localStorage.getItem('metaNotifs') !== 'enabled') return;
         if (!loggedUser || Notification.permission !== "granted" || document.hasFocus()) return; 
         const { data } = await supabaseClient.from('chats').select('*').eq('target_id', loggedUser).order('created_at', { ascending: false }).limit(1);
         if(data && data.length > 0) {
@@ -517,10 +564,9 @@
         const text = currentInput.trim(); if(!text || !currentChatTarget) return; 
         const area = document.getElementById('chat-msg-area');
         
-        // Afficher message utilisateur immédiatement
         area.innerHTML += `<div class="chat-msg-bubble user">${text}</div>`;
-        area.scrollTop = area.scrollHeight;
-        lastKnownMessages = ""; // Force refresh
+        scrollChatBottom(); 
+        lastKnownMessages = ""; 
         document.getElementById('chat-text-input').value = ""; 
         updateChatPreview(); 
 
@@ -533,7 +579,7 @@
         }
 
         if(currentChatTarget === 'meta_ai') { 
-            area.innerHTML += `<div class="chat-msg-bubble bot">...</div>`; area.scrollTop = area.scrollHeight;
+            area.innerHTML += `<div class="chat-msg-bubble bot">...</div>`; scrollChatBottom();
             try { 
                 const response = await fetch(GROQ_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` }, body: JSON.stringify({ model: MODEL_NAME, messages: [{role: "user", content: text}] }) }); 
                 const data = await response.json(); 
@@ -543,12 +589,14 @@
                 msgs.push({sender: 'bot', text: botText, time: Date.now()});
                 localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
                 lastKnownMessages = ""; 
+                scrollChatBottom();
             } catch(e) { document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Erreur."; } 
         } else if (currentChatTarget === 'metagodzilla_support') {
             let r = "Je ne comprends pas."; if(text === '1') r = "Profil > Déconnexion."; else if(text === '2') r = "Profil > Paramètres."; else if(['3','4','5'].includes(text)) r = "Contact: metaserviceofficiel@gmail.com";
-            area.innerHTML += `<div class="chat-msg-bubble bot">${r}</div>`; area.scrollTop = area.scrollHeight;
+            area.innerHTML += `<div class="chat-msg-bubble bot">${r}</div>`; 
             let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || []; msgs.push({sender: 'bot', text: r, time: Date.now()}); localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
             lastKnownMessages = ""; 
+            scrollChatBottom();
         }
     }
 
@@ -560,7 +608,7 @@
     let selectedObColor = null;
     function selectObColor(color, elem) { document.querySelectorAll('#ob-color-container .color-circle').forEach(e => e.classList.remove('active')); elem.classList.add('active'); selectedObColor = color; document.getElementById('ob-validate-btn').disabled = false; }
     function validateOnboarding() { if (!selectedObColor) return; applyTheme(currentObMode, selectedObColor); document.getElementById('onboarding-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; }
-    async function handleLogin() { const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u); if (user && user.pass === p) { if (document.getElementById("remember-me").checked) localStorage.setItem("metaUser", u); else localStorage.removeItem("metaUser"); loggedUser = u; seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; await loadSavedItems(); startApp(); } else { document.getElementById("login-error").style.display = "block"; } }
+    async function handleLogin() { const u = document.getElementById("username").value.trim().toLowerCase(); const p = document.getElementById("password").value; const user = getUserById(u); if (user && user.pass === p) { localStorage.setItem("metaUser", u); loggedUser = u; seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; await loadSavedItems(); startApp(); } else { document.getElementById("login-error").style.display = "block"; } }
     
     async function startApp() { 
         document.getElementById("login-screen").style.display = "none"; 
@@ -569,16 +617,36 @@
         const user = getUserById(loggedUser); 
         if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } 
         renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); 
-        // Demande notification au démarrage
-        setTimeout(() => { if (Notification.permission === 'default') requestPushPermission(); }, 1000);
+        // Init Notif Toggle State
+        const notifState = localStorage.getItem('metaNotifs');
+        const toggle = document.getElementById('notif-toggle');
+        if(notifState === 'enabled' && Notification.permission === 'granted') toggle.classList.add('active');
+        else toggle.classList.remove('active');
     }
     
-    function switchTab(t, i) { document.getElementById('settings-overlay').style.display = 'none'; document.getElementById('external-profile-overlay').style.display = 'none'; document.getElementById('media-view-overlay').style.display = 'none'; closeChatPage(); document.body.classList.remove('has-overlay'); if (t === 'settings') { document.getElementById('settings-overlay').style.display = 'block'; updateSettingsUI(); document.body.classList.add('has-overlay'); return; } if (t === 'external-profile') { document.getElementById('external-profile-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } if (t === 'media-view') { document.getElementById('media-view-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); return; } document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; moveIndicator(i); if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); }
+    function switchTab(t, i) { 
+        document.getElementById('settings-overlay').classList.remove('active'); 
+        document.getElementById('external-profile-overlay').classList.remove('active'); 
+        document.getElementById('media-view-overlay').classList.remove('active'); 
+        closeChatPage(); 
+        document.body.classList.remove('has-overlay'); 
+        if (t === 'settings') { document.getElementById('settings-overlay').classList.add('active'); updateSettingsUI(); document.body.classList.add('has-overlay'); return; } 
+        if (t === 'external-profile') { document.getElementById('external-profile-overlay').classList.add('active'); document.body.classList.add('has-overlay'); return; } 
+        if (t === 'media-view') { document.getElementById('media-view-overlay').classList.add('active'); document.body.classList.add('has-overlay'); return; } 
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
+        if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); 
+        document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); 
+        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; 
+        document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; 
+        moveIndicator(i); 
+        if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); 
+    }
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card').forEach(vc => { vc.classList.remove('playing'); const iframe = vc.querySelector('iframe'); if(iframe) iframe.src = ""; }); }
     function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const card = entry.target; const videoId = card.getAttribute('data-id'); if (entry.isIntersecting) { if(!card.classList.contains('playing')) { card.classList.add('playing'); const iframe = card.querySelector('iframe'); const targetSrc = iframe.getAttribute('data-src'); if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200); } if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem(`seen_${loggedUser}`, JSON.stringify(seenVideos)); const badge = card.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; } } else { if(card.classList.contains('playing')) { card.classList.remove('playing'); const iframe = card.querySelector('iframe'); try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} iframe.src = ""; } } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
-    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }); o.style.display = 'block'; document.body.classList.add('has-overlay'); }
-    function closeExternalProfile() { document.getElementById('external-profile-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); }
+    
+    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }); o.classList.add('active'); document.body.classList.add('has-overlay'); }
+    function closeExternalProfile() { document.getElementById('external-profile-overlay').classList.remove('active'); document.body.classList.remove('has-overlay'); }
     function renderMyProfile() { const gP = document.getElementById('my-posts-grid'); const gS = document.getElementById('my-saved-grid'); gP.innerHTML = ""; gS.innerHTML = ""; const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); document.getElementById('stat-posts').innerText = mP.length; document.getElementById('stat-saved').innerText = savedItems.length; if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else { savedItems.forEach(id => { let item = LISTE_PHOTOS.find(p => p.id === id); let type = 'photo'; if(!item) { item = LISTE_VIDEOS.find(v => v.id === id); type = 'video'; } if(item) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${item.id}', '${type}')">${type==='photo'?`<img src="${item.url}">`:`<img src="${item.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); } }); } }
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
     function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -590,7 +658,6 @@
         pD.innerHTML = ""; 
         vD.innerHTML = ""; 
         
-        // Photos
         const pM = LISTE_PHOTOS.find(p => p.id === "meta_actu_fixe"); 
         const aP = LISTE_PHOTOS.filter(p => p.id !== "meta_actu_fixe"); 
         const sP = shuffleArray([...aP]); 
@@ -601,7 +668,6 @@
             pD.insertAdjacentHTML('beforeend', `<article class="post"><div class="post-user" onclick="openExternalProfile('${p.auteur}')"><div class="mini-avatar">${getAvatar(p.auteur)}</div> ${getUserById(p.auteur).name}</div><div class="post-img-container" ondblclick="animateLike(this)"><img src="${p.url}"><div class="like-overlay"><i class="fas fa-heart" style="font-size: 4rem;"></i></div></div><div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSaveSupabase('${p.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`); 
         }); 
         
-        // Videos
         const allVids = shuffleArray([...LISTE_VIDEOS]);
         allVids.forEach(v => { 
             const hBS = seenVideos.includes(v.id); 
@@ -612,9 +678,9 @@
     }
 
     function animateLike(c) { const o = c.querySelector('.like-overlay'); o.classList.remove('animate'); void o.offsetWidth; o.classList.add('animate'); }
-    async function openMediaView(id, type) { const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content'); let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(it) { const iS = savedItems.includes(it.id); c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${getUserById(it.auteur).name}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSaveSupabase('${it.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`; o.style.display = 'block'; document.body.classList.add('has-overlay'); }}
-    function closeMediaView() { document.getElementById('media-view-overlay').style.display = 'none'; document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
-    function toggleSettings(s) { if(s) { document.getElementById('settings-overlay').style.display = 'block'; document.body.classList.add('has-overlay'); } else { document.getElementById('settings-overlay').style.display = 'none'; document.body.classList.remove('has-overlay'); } updateSettingsUI(); }
+    async function openMediaView(id, type) { const o = document.getElementById('media-view-overlay'); const c = document.getElementById('media-view-content'); let it = (type === 'photo') ? LISTE_PHOTOS.find(p => p.id === id) : LISTE_VIDEOS.find(v => v.id === id); if(it) { const iS = savedItems.includes(it.id); c.innerHTML = `<article class="post"><div class="post-user" onclick="openExternalProfile('${it.auteur}')"><div class="mini-avatar">${getAvatar(it.auteur)}</div> ${getUserById(it.auteur).name}</div>${type==='photo'?`<img src="${it.url}" style="width:100%">`:`<iframe src="${it.vimeo_url}&autoplay=1" style="width:100%;height:450px;" allow="autoplay; fullscreen"></iframe>`}<div class="post-actions"><button class="action-btn btn-press ${iS ? 'saved' : ''}" onclick="toggleSaveSupabase('${it.id}', this)"><i class="${iS ? 'fas' : 'far'} fa-bookmark"></i></button></div></article>`; o.classList.add('active'); document.body.classList.add('has-overlay'); }}
+    function closeMediaView() { document.getElementById('media-view-overlay').classList.remove('active'); document.querySelectorAll('#media-view-content iframe').forEach(f => f.src = ""); document.body.classList.remove('has-overlay'); }
+    function toggleSettings(s) { if(s) { document.getElementById('settings-overlay').classList.add('active'); document.body.classList.add('has-overlay'); updateSettingsUI(); } else { document.getElementById('settings-overlay').classList.remove('active'); document.body.classList.remove('has-overlay'); } }
     function setThemeMode(mode) { let cA = localStorage.getItem('metaThemeAccent') || 'gold'; if(mode === 'light' && (cA === 'white' || cA === 'gold')) cA = 'black'; if(mode === 'dark' && cA === 'black') cA = 'gold'; applyTheme(mode, cA); updateSettingsUI(); }
     function setThemeAccent(accent) { const m = localStorage.getItem('metaThemeMode') || 'dark'; applyTheme(m, accent); updateSettingsUI(); }
     function updateSettingsUI() { const m = localStorage.getItem('metaThemeMode') || 'dark'; const a = localStorage.getItem('metaThemeAccent') || 'gold'; document.getElementById('btn-mode-dark').classList.toggle('selected', m === 'dark'); document.getElementById('btn-mode-light').classList.toggle('selected', m === 'light'); const p = document.getElementById('settings-color-picker'); p.innerHTML = ''; let c = (m === 'dark') ? [{id:'gold', class:'cc-gold'}, {id:'blue', class:'cc-blue'}, {id:'white', class:'cc-white'}] : [{id:'black', class:'cc-black'}, {id:'blue', class:'cc-blue'}, {id:'grey', class:'cc-grey'}]; c.forEach(c => { p.innerHTML += `<div class="picker-circle ${c.class} ${(c.id === a)?'active':''}" onclick="setThemeAccent('${c.id}')"></div>`; }); }
@@ -626,13 +692,37 @@
         setViewportHeight();
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIos) { document.documentElement.style.setProperty('--safe-top', '70px'); document.documentElement.style.setProperty('--safe-bottom', '20px'); } else { document.documentElement.style.setProperty('--safe-top', '0px'); document.documentElement.style.setProperty('--safe-bottom', '0px'); }
+        
+        // AUTO LOGIN
         if(loggedUser) { await loadSavedItems(); seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; }
+        
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches; const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true); const isAndroidApp = document.referrer.startsWith('android-app://'); const appLaunched = isStandalone || isIosWebApp || isAndroidApp; const isAndroid = /Android/i.test(navigator.userAgent);
-            if (appLaunched || isAndroid) { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
-            else if (isIos) { document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex'; }
-            else { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
+            
+            // If app is launched or Android, skip install block
+            if (appLaunched || isAndroid) { 
+                const hasPrefs = localStorage.getItem('metaThemeMode'); 
+                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; 
+                else { 
+                    applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); 
+                    if(loggedUser) startApp(); 
+                    else document.getElementById('login-screen').style.display = 'flex'; 
+                } 
+            }
+            else if (isIos) { 
+                document.getElementById('loader').style.display = 'flex'; 
+                document.getElementById('install-block-content').style.display = 'flex'; 
+            }
+            else { 
+                const hasPrefs = localStorage.getItem('metaThemeMode'); 
+                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; 
+                else { 
+                    applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); 
+                    if(loggedUser) startApp(); 
+                    else document.getElementById('login-screen').style.display = 'flex'; 
+                } 
+            }
         }, 1500);
     });
 </script>
