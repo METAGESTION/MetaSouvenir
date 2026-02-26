@@ -443,29 +443,31 @@
 
     const CONFIG_USERS = [
         { id: "metaservice", pass: "Pass.123", avatar: "", name: "Meta Service" },
-        { id: "meta_actu", pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", name: "Meta Actu" },
+        { id: "meta_actu", pass: "Pass.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=whedypzjbj&view&v=1&PHPSESSID=6a5abacfc85fc24782be0d442de527f6ff5fe8ab", name: "Meta Actu" },
         { id: "mazine2.0", pass: "mazine.123", avatar: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", name: "Mazine 2.0" },
         { id: "walid_hchm", pass: "Pass.123", avatar: "", name: "Walid Hchm" },
-        { id: "user", pass: "12345", avatar: "", name: "Utilisateur" }
+        { id: "user", pass: "12345", avatar: "", name: "Utilisateur" },
+		{ id: "khoumali", pass: "Kamil.123", avatar: "", name: "Kamil" }
     ];
 
     const LISTE_PHOTOS = [ 
-        { id: "meta_actu_fixe", url: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", auteur: "meta_actu", date: 9999999 }, 
+        { id: "meta_actu_fixe", url: "https://fv5-6.files.fm/thumb_show.php?i=5et5d7yket&view&v=1&PHPSESSID=6a5abacfc85fc24782be0d442de527f6ff5fe8ab", auteur: "meta_actu", date: 9999999 }, 
         { id: "p1", url: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", auteur: "mazine2.0", date: 550 }, 
         { id: "p2", url: "https://fv5-5.files.fm/thumb_show.php?i=rw3ztkktpt&view&v=1", auteur: "mazine2.0", date: 350 }, 
         { id: "p3", url: "https://fv5-5.files.fm/thumb_show.php?i=tbpxeusv7p&view&v=1", auteur: "user", date: 150 } 
     ];
 
     const LISTE_VIDEOS = [ 
-        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, 
-        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "🔥", date: 700 }, 
-        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "ABO PRIME", date: 600 }, 
-        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 } 
-    ];
+        { id: "v0", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=9A7DD0EC-8A1F-4F23-ADE0-47D7AC52C80E_jix31x", thumb: "https://cdn-icons-png.flaticon.com/512/4503/4503915.png", legende: "Baston Abdelkabir vs El Gazzer", date: 800 }, 
+        { id: "v1", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_23.04.46_inqawp", thumb: "https://cdn-icons-png.flaticon.com/512/4503/4503915.png", legende: "🔥", date: 700 }, 
+        { id: "v2", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-09_at_23.40.08_zxllg0", thumb: "https://cdn-icons-png.flaticon.com/512/4503/4503915.png", legende: "ABO PRIME", date: 600 }, 
+        { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://cdn-icons-png.flaticon.com/512/4503/4503915.png", legende: "EL GAZZER", date: 500 }, 
+        { id: "v4", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-26_at_17.57.07_hmu6ev", thumb: "https://cdn-icons-png.flaticon.com/512/4503/4503915.png", legende: "Mazine vs Abo", date: 400 }
+   ];
 
     const SHOP_ITEMS = [
-        { id: "s1", name: "Abonnement Prime", price: "9.99€/mois", img: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", link: "#" },
-        { id: "s2", name: "Badge Vérifié", price: "4.99€", img: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", link: "#" }
+        { id: "s1", name: "Jumu3a 27/Février/2026", price: "Mosquée - Al Adarrisa Anfa : Gratuit", img: "https://www.habous.gov.ma/fr/images/stories/activitesSM/sm_le_roi-priere_du_vendredi_-m.jpg", link: "@" },
+       
     ];
 
     let loggedUser = localStorage.getItem("metaUser") || "";
