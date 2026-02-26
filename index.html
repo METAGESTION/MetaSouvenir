@@ -423,7 +423,8 @@
     const SUPABASE_KEY = 'sb_publishable_pQp8C1jXKYac8Wwc9m8v4Q_j2c7xokr';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const GROQ_API_KEY = "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"; 
+    // NOUVELLE CLE API
+    const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
 
@@ -537,9 +538,7 @@
         if(isAtBottom || msgs.length === 0) area.scrollTop = area.scrollHeight; 
     }
 
-    function toggleDeleteBtn(elem) {
-        elem.classList.toggle('show-delete');
-    }
+    function toggleDeleteBtn(elem) { elem.classList.toggle('show-delete'); }
 
     async function deleteMsg(e, id) {
         e.stopPropagation();
@@ -650,7 +649,7 @@
                 localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
                 lastKnownMessages = ""; scrollChatBottom();
             } catch(e) { 
-                document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Je suis un peu lent, veuillez réessayer."; 
+                document.querySelector('.chat-msg-bubble.bot:last-child').innerText = "Erreur de connexion."; 
             } 
         } else if (currentChatTarget === 'metagodzilla_support') {
             let r = "Je ne comprends pas."; if(text === '1') r = "Profil > Déconnexion."; else if(text === '2') r = "Profil > Paramètres."; else if(['3','4','5'].includes(text)) r = "Contact: metaserviceofficiel@gmail.com";
