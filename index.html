@@ -304,6 +304,16 @@
                 <div style="padding:15px; position:sticky; top:0; z-index:10; background:var(--bg-color);"><input type="text" id="search-input" style="width:100%; background:transparent; border-bottom:1px solid var(--border); border-top:none; border-left:none; border-right:none; text-align:left; font-size:1rem;" placeholder="Rechercher..." oninput="filtrerRecherche()"></div>
                 <div id="search-results" style="padding-bottom: 100px;"></div>
             </div>
+            
+            <!-- BOUTIQUE SECTION -->
+            <div id="shop-section" class="section">
+                 <div class="msg-list-header glass">
+                    <span class="msg-list-title">Boutique</span>
+                    <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="shop-grid" id="shop-grid-content"></div>
+            </div>
+
             <div id="videos-section" class="section"><div id="video-list" style="height: 100%;"></div></div>
             
             <div id="messages-section" class="section">
@@ -312,15 +322,6 @@
                     <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
                 </div>
                 <div id="msg-list-content" class="msg-list-content"></div>
-            </div>
-
-            <!-- BOUTIQUE SECTION -->
-            <div id="shop-section" class="section">
-                 <div class="msg-list-header glass">
-                    <span class="msg-list-title">Boutique</span>
-                    <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="shop-grid" id="shop-grid-content"></div>
             </div>
 
             <div id="own-profile-section" class="section">
@@ -400,13 +401,15 @@
         </div>
 
         <!-- NAVIGATION -->
+        <!-- BOUTIQUE ICI (Index 2) -->
         <nav id="main-nav">
             <div class="nav-indicator" id="nav-indicator"></div>
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('videos', 2)"><i class="fas fa-clapperboard"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('messages', 3)"><i class="fas fa-paper-plane"></i><div class="nav-notif-badge" id="nav-msg-badge"></div></button>
-            <button class="nav-item btn-press" onclick="switchTab('own-profile', 4)"><i class="fas fa-circle-user"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('shop', 2)"><i class="fas fa-store"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('videos', 3)"><i class="fas fa-clapperboard"></i><div class="nav-notif-badge" id="nav-msg-badge"></div></button>
+            <button class="nav-item btn-press" onclick="switchTab('messages', 4)"><i class="fas fa-paper-plane"></i><div class="nav-notif-badge" id="nav-msg-badge"></div></button>
+            <button class="nav-item btn-press" onclick="switchTab('own-profile', 5)"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
 </div>
@@ -783,14 +786,9 @@
     function updateHeader(t) {
         const left = document.getElementById('header-left-content');
         const right = document.getElementById('header-right-content');
-        const title = document.getElementById('header-title');
-        
         left.innerHTML = "";
         right.innerHTML = "";
-
-        if(t === 'feed') {
-            right.innerHTML = `<button class="header-btn btn-press" onclick="switchTab('shop', 5)"><i class="fas fa-store"></i></button>`;
-        } else if (t === 'own-profile') {
+        if (t === 'own-profile') {
             right.innerHTML = `<button class="header-btn btn-press" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>`;
         }
     }
@@ -802,22 +800,27 @@
         if (t === 'media-view') { document.getElementById('media-view-overlay').classList.add('active'); document.body.classList.add('has-overlay'); return; } 
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
         if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); 
+        
+        // Gestion Nav : On map l'index 'i' avec les boutons visuels
+        // Si i=2 (Boutique), on active le bouton 2 visuellement
+        // Si i=3 (Vidéos), on active le bouton 3 visuellement
+        // Mais vu qu'on a 6 boutons, on doit mapper correctement :
+        // 0:Feed, 1:Search, 2:Shop, 3:Videos, 4:Messages, 5:Profile
+        // Donc i correspond directement à l'index du bouton dans le HTML
         document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => { 
-            let navIdx = i;
-            if(i===5) navIdx = 0; 
-            btn.classList.toggle('active', idx === navIdx); 
+            btn.classList.toggle('active', idx === i); 
         });
         
         updateHeader(t);
         
         document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; 
-        moveIndicator(i < 5 ? i : 0); 
+        moveIndicator(i); 
         if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); 
     }
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card').forEach(vc => { vc.classList.remove('playing'); const iframe = vc.querySelector('iframe'); if(iframe) iframe.src = ""; }); }
     function observeVideos() { if (videoObserver) videoObserver.disconnect(); const cards = document.querySelectorAll('.video-card'); videoObserver = new IntersectionObserver((entries) => { entries.forEach(entry => { const card = entry.target; const videoId = card.getAttribute('data-id'); if (entry.isIntersecting) { if(!card.classList.contains('playing')) { card.classList.add('playing'); const iframe = card.querySelector('iframe'); const targetSrc = iframe.getAttribute('data-src'); if(iframe.src === "" || iframe.src !== targetSrc) iframe.src = targetSrc; setTimeout(() => { try { iframe.contentWindow.postMessage('{"method":"play"}', '*'); } catch(e) {} }, 200); } if(videoId && !seenVideos.includes(videoId)) { seenVideos.push(videoId); localStorage.setItem(`seen_${loggedUser}`, JSON.stringify(seenVideos)); const badge = card.querySelector('.seen-badge'); if(badge) badge.style.display = 'none'; } } else { if(card.classList.contains('playing')) { card.classList.remove('playing'); const iframe = card.querySelector('iframe'); try { iframe.contentWindow.postMessage('{"method":"pause"}', '*'); } catch(e) {} iframe.src = ""; } } }); }, { threshold: 0.6 }); cards.forEach(card => videoObserver.observe(card)); }
-    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 4); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }); o.classList.add('active'); document.body.classList.add('has-overlay'); }
+    function openExternalProfile(userId) { if(userId === loggedUser) { switchTab('own-profile', 5); return; } const user = getUserById(userId); if(!user) return; const o = document.getElementById('external-profile-overlay'); document.getElementById('ext-user-title').innerText = user.name; document.getElementById('ext-display-name').innerText = user.name; document.getElementById('ext-profile-pic-container').innerHTML = getAvatar(userId); const g = document.getElementById('ext-posts-grid'); g.innerHTML = ""; const m = [...LISTE_PHOTOS.filter(p => p.auteur === userId).map(p => ({...p, type:'photo'})), ...LISTE_VIDEOS.filter(v => v.auteur === userId).map(v => ({...v, type:'video'}))].sort((a,b) => b.date - a.date); if (m.length === 0) g.innerHTML = `<div class="empty-state">Aucune publication</div>`; else m.forEach(m => { g.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${m.id}', '${m.type}')">${m.type==='photo'?`<img src="${m.url}">`:`<img src="${m.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); }); o.classList.add('active'); document.body.classList.add('has-overlay'); }
     function closeExternalProfile() { document.getElementById('external-profile-overlay').classList.remove('active'); document.body.classList.remove('has-overlay'); }
     function renderMyProfile() { const gP = document.getElementById('my-posts-grid'); const gS = document.getElementById('my-saved-grid'); gP.innerHTML = ""; gS.innerHTML = ""; const mP = LISTE_PHOTOS.filter(p => p.auteur === loggedUser); document.getElementById('stat-posts').innerText = mP.length; document.getElementById('stat-saved').innerText = savedItems.length; if (mP.length === 0) gP.innerHTML = `<div class="empty-state">Aucune publication</div>`; else mP.forEach(p => { gP.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${p.id}', 'photo')"><img src="${p.url}"></button>`); }); if (savedItems.length === 0) gS.innerHTML = `<div class="empty-state">Aucun élément enregistré</div>`; else { savedItems.forEach(id => { let item = LISTE_PHOTOS.find(p => p.id === id); let type = 'photo'; if(!item) { item = LISTE_VIDEOS.find(v => v.id === id); type = 'video'; } if(item) { gS.insertAdjacentHTML('beforeend', `<button class="grid-item" onclick="switchTab('media-view'); openMediaView('${item.id}', '${type}')">${type==='photo'?`<img src="${item.url}">`:`<img src="${item.thumb}"><i class="vid-icon fas fa-play"></i>`}</button>`); } }); } }
     function switchMyTab(t) { document.getElementById('my-tab-pub').classList.toggle('active', t === 'info'); document.getElementById('my-tab-saved').classList.toggle('active', t === 'saved'); document.getElementById('my-posts-grid').style.display = t === 'info' ? 'grid' : 'none'; document.getElementById('my-saved-grid').style.display = t === 'saved' ? 'grid' : 'none'; }
@@ -840,30 +843,26 @@
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
     function renderStories() { const container = document.getElementById('stories-list'); container.innerHTML = ""; CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); }); }
 
-    // START LOGIC (CORRIGÉ)
+    // START
     window.addEventListener('load', async () => {
         setViewportHeight();
         
-        // Initialisation des données utilisateur
         if(loggedUser) { 
             await loadSavedItems(); 
             seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; 
         }
         
-        // Démarrage différé pour laisser l'écran de chargement s'afficher
         setTimeout(() => {
             window.scrollTo(0, 0);
             document.body.style.transform = 'scale(1)';
             document.getElementById('loader').style.display = 'none';
             
-            // Détection du mode d'affichage
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true);
             const isAndroidApp = document.referrer.startsWith('android-app://');
             const appLaunched = isStandalone || isIosWebApp || isAndroidApp;
             const isAndroid = /Android/i.test(navigator.userAgent);
             
-            // Logique de démarrage
             if (appLaunched || isAndroid) {
                 const hasPrefs = localStorage.getItem('metaThemeMode');
                 if (!hasPrefs) {
