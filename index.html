@@ -7,15 +7,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#030303">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" type="image/png" href="https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1&PHPSESSID=6a5abacfc85fc24782be0d442de527f6ff5fe8ab">
-    <link rel="apple-touch-icon" href="https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1&PHPSESSID=6a5abacfc85fc24782be0d442de527f6ff5fe8ab">
+    <link rel="icon" type="image/png" href="https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1">
+    <link rel="apple-touch-icon" href="https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1">
     <title>Meta Officiel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --bg-color: #030303; --surface: #111111; --border: #222222; --text-main: #ffffff; --text-sec: #888888; --accent: #D4AF37; --accent-text: #000000; --card-shadow: 0 10px 30px rgba(0,0,0,0.5); --vh: 1vh; --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
+        :root { --bg-color: #030303; --surface: #111111; --border: #222222; --text-main: #ffffff; --text-sec: #888888; --accent: #D4AF37; --accent-text: #000000; --card-shadow: 0 10px 30px rgba(0,0,0,0.5); --vh: 1vh; --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); --online-color: #00C853; --notif-red: #FF3B30; }
         body[data-accent="gold"] { --accent: #D4AF37; --accent-text: #000000; }
         body[data-accent="blue"] { --accent: #007AFF; --accent-text: #ffffff; }
         body[data-accent="white"] { --accent: #FFFFFF; --accent-text: #000000; }
@@ -30,9 +30,9 @@
         .btn-press:active { transform: scale(0.96); opacity: 0.8; transition: 0.1s; }
         .glass { backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
 
-        /* LOADER & INSTALL */
+        /* LOADER */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 30px; }
-        .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1&PHPSESSID=6a5abacfc85fc24782be0d442de527f6ff5fe8ab'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 50, 0.3); margin-bottom: 20px; }
+        .loader-icon { width: 80px; height: 80px; border-radius: 20px; background-image: url('https://fv5-6.files.fm/thumb_show.php?i=8sr6uzk8mq&view&v=1'); background-size: cover; background-position: center; box-shadow: 0 0 20px rgba(212, 175, 50, 0.3); margin-bottom: 20px; }
         .loader-text { margin-top: 15px; font-family: 'Cormorant Garamond', serif; color: var(--accent); letter-spacing: 4px; font-size: 0.9rem; text-transform: uppercase; text-align: center; }
         .install-block-text { margin-top: 30px; font-size: 0.85rem; color: #fff; text-align: center; max-width: 320px; line-height: 1.8; }
         .install-steps { text-align: left; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid #333; }
@@ -114,9 +114,13 @@
         .overlay-page.active { transform: translateX(0); visibility: visible; }
         nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; align-items: center; z-index: 999; height: 65px; padding-bottom: var(--safe-bottom); background: var(--bg-color); border-top: 1px solid var(--border); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
         .nav-indicator { position: absolute; top: 0; width: 25px; height: 2px; background: var(--accent); border-radius: 3px; left: 0; }
-        nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; width: 50px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        nav button.nav-item { background: none; border: none; font-size: 1.2rem; color: var(--text-main); cursor: pointer; width: 50px; height: 40px; display: flex; align-items: center; justify-content: center; position: relative; }
         nav button.nav-item.active { color: var(--accent); transform: translateY(-1px); }
         body.has-overlay nav { display: none; }
+        
+        /* NAV NOTIF BADGE */
+        .nav-notif-badge { position: absolute; top: 5px; right: 12px; width: 8px; height: 8px; background-color: var(--notif-red); border-radius: 50%; display: none; }
+        
         .profile-header { padding: 40px 20px; text-align: center; }
         .profile-pic-main { width: 90px; height: 90px; background: #111; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent); border: 1px solid var(--accent); }
         .profile-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 25px; color: var(--text-sec); }
@@ -142,17 +146,26 @@
         .toggle-switch.active { background-color: var(--accent); }
         .toggle-knob { width: 22px; height: 22px; background-color: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .toggle-switch.active .toggle-knob { transform: translateX(22px); }
+        
+        /* MESSAGES LIST */
         #messages-section { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background: var(--bg-color); overflow-y: auto; }
         .msg-list-header { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; background: var(--bg-color); z-index: 10; }
         .msg-list-title { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
         .msg-list-content { padding-top: 15px; padding-bottom: 100px; }
-        .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+        .msg-list-item { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; position: relative; }
         .msg-list-item:active { background: var(--surface); }
-        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; flex-shrink: 0; }
+        .msg-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 1.2rem; overflow: hidden; flex-shrink: 0; position: relative; }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .msg-info { flex: 1; }
-        .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
-        .msg-info p { font-size: 0.85rem; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .msg-info h4 { font-size: 1rem; font-weight: 500; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .msg-info p { font-size: 0.85rem; color: var(--text-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        
+        /* ONLINE INDICATOR */
+        .online-dot { width: 10px; height: 10px; background-color: var(--online-color); border-radius: 50%; display: inline-block; box-shadow: 0 0 5px var(--online-color); }
+        
+        /* Unread Notif */
+        .unread-indicator { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; background-color: var(--notif-red); border-radius: 50%; }
+        
         #chat-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 1100; display: none; flex-direction: column; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
         #chat-page.active { display: flex; transform: translateY(0); }
         .chat-top-bar { padding: 15px; border-bottom: 1px solid var(--border); min-height: 60px; padding-top: calc(20px + var(--safe-top)); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: var(--bg-color); z-index: 2; }
@@ -162,30 +175,11 @@
         
         /* BULLES */
         .chat-msg-bubble { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; position: relative; margin-bottom: 8px; }
-        
-        /* UTILISATEUR (VOUS) -> DROITE (DORÉ) */
         .chat-msg-bubble.user { background: var(--accent); color: var(--accent-text); align-self: flex-end; border-bottom-right-radius: 4px; margin-left: auto; }
-        
-        /* AUTRE / BOT -> GAUCHE (GRIS) */
         .chat-msg-bubble.other, .chat-msg-bubble.bot { background: var(--surface); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; margin-right: auto; }
         
         /* DELETE BTN */
-        .msg-delete-btn { 
-            position: absolute; 
-            bottom: -28px; 
-            right: 0; 
-            font-size: 0.75rem; 
-            color: #fff; 
-            background: #ff4d4d; 
-            padding: 5px 12px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            display: none; 
-            z-index: 5; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            border: none;
-            font-weight: 600;
-        }
+        .msg-delete-btn { position: absolute; bottom: -28px; right: 0; font-size: 0.75rem; color: #fff; background: #ff4d4d; padding: 5px 12px; border-radius: 12px; cursor: pointer; display: none; z-index: 5; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: none; font-weight: 600; }
         .chat-msg-bubble.user.show-delete .msg-delete-btn { display: block; }
         
         .chat-input-container { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); padding: 10px 15px; padding-bottom: calc(25px + var(--safe-bottom)); display: flex; flex-direction: column; z-index: 3; }
@@ -197,10 +191,8 @@
         .scroll-down-btn { position: fixed; bottom: 160px; right: 20px; width: 45px; height: 45px; background: var(--surface); border-radius: 50%; display: none; align-items: center; justify-content: center; color: var(--accent); font-size: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 4; border: 1px solid var(--border); }
         .scroll-down-btn.show { display: flex; }
         
-        /* IN-APP NOTIF POPUP */
-        #in-app-notif { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; z-index: 3000; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
+        /* IN-APP NOTIF */
+        #in-app-notif { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; z-index: 3000; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #in-app-notif.show { transform: translate(-50%, -50%) scale(1); }
         #notif-avatar-large { width: 60px; height: 60px; border-radius: 50%; background: var(--accent); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; }
         #notif-title-large { font-size: 1.1rem; margin-bottom: 5px; }
@@ -209,13 +201,22 @@
         .notif-btn-primary { background: var(--accent); color: var(--accent-text); }
         .notif-btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
 
-        /* Notif Banner Top */
+        /* Notif Banner */
         #notif-banner { position: fixed; top: 0; left: 0; width: 100%; background: var(--surface); color: var(--text-main); padding: 15px; padding-top: calc(20px + var(--safe-top)); z-index: 2000; transform: translateY(-100%); transition: transform 0.3s ease-out; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; }
         #notif-banner.show { transform: translateY(0); }
         #notif-banner .notif-avatar { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--accent-text); flex-shrink: 0; }
         #notif-banner .notif-content { flex: 1; }
         #notif-banner .notif-title { font-weight: 600; font-size: 0.9rem; }
         #notif-banner .notif-text { font-size: 0.8rem; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 250px; }
+
+        /* BOUTIQUE */
+        .shop-grid { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 20px; padding-bottom: 100px; }
+        .shop-card { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .shop-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .shop-info { padding: 15px; }
+        .shop-title { font-size: 1rem; font-weight: 600; margin-bottom: 5px; }
+        .shop-price { font-size: 1.2rem; color: var(--accent); font-weight: 700; margin-bottom: 15px; }
+        .shop-btn { width: 100%; padding: 12px; background: var(--accent); color: var(--accent-text); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body oncontextmenu="return false;" data-accent="gold">
@@ -288,11 +289,9 @@
 <div id="app-container">
     <div id="main-app">
         <header class="glass" id="main-header">
-            <div class="header-left"><div style="width:35px;"></div></div>
-            <span>Meta Officiel</span>
-            <div class="header-right">
-                <button id="global-cog" class="header-btn btn-press" style="display:none;" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>
-            </div>
+            <div class="header-left" id="header-left-content"></div>
+            <span id="header-title">Meta Officiel</span>
+            <div class="header-right" id="header-right-content"></div>
         </header>
 
         <div class="content-area">
@@ -315,6 +314,15 @@
                 <div id="msg-list-content" class="msg-list-content"></div>
             </div>
 
+            <!-- BOUTIQUE SECTION -->
+            <div id="shop-section" class="section">
+                 <div class="msg-list-header glass">
+                    <span class="msg-list-title">Boutique</span>
+                    <button class="header-btn btn-press" onclick="switchTab('feed', 0)"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="shop-grid" id="shop-grid-content"></div>
+            </div>
+
             <div id="own-profile-section" class="section">
                 <div class="profile-header">
                     <div id="my-profile-pic-container" class="profile-pic-main"><i class="fas fa-user"></i></div>
@@ -334,11 +342,14 @@
                 <div id="my-saved-grid" class="content-grid" style="display:none;"></div>
             </div>
 
-            <!-- OVERLAYS -->
+            <!-- EXTERNAL PROFILE OVERLAY -->
             <div id="external-profile-overlay" class="overlay-page">
                 <div class="glass" style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border);">
                     <button class="header-btn btn-press" onclick="closeExternalProfile()"><i class="fas fa-arrow-left"></i></button>
                     <span id="ext-user-title" style="margin-left: 10px; font-weight: 600; font-family: 'Cormorant Garamond';"></span>
+                    <div style="margin-left:auto;">
+                        <button class="header-btn btn-press" onclick="reportUser()" title="Signaler"><i class="fas fa-flag"></i></button>
+                    </div>
                 </div>
                 <div id="ext-header" style="padding: 30px; text-align: center;">
                     <div id="ext-profile-pic-container" style="width: 80px; height: 80px; background: #222; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; border: 1px solid var(--accent);"><i class="fas fa-user"></i></div>
@@ -394,7 +405,7 @@
             <button class="nav-item btn-press active" onclick="switchTab('feed', 0)"><i class="fas fa-house"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('search', 1)"><i class="fas fa-magnifying-glass"></i></button>
             <button class="nav-item btn-press" onclick="switchTab('videos', 2)"><i class="fas fa-clapperboard"></i></button>
-            <button class="nav-item btn-press" onclick="switchTab('messages', 3)"><i class="fas fa-paper-plane"></i></button>
+            <button class="nav-item btn-press" onclick="switchTab('messages', 3)"><i class="fas fa-paper-plane"></i><div class="nav-notif-badge" id="nav-msg-badge"></div></button>
             <button class="nav-item btn-press" onclick="switchTab('own-profile', 4)"><i class="fas fa-circle-user"></i></button>
         </nav>
     </div>
@@ -423,7 +434,6 @@
     const SUPABASE_KEY = 'sb_publishable_pQp8C1jXKYac8Wwc9m8v4Q_j2c7xokr';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // NOUVELLE CLE API
     const GROQ_API_KEY = "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"; 
     const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -450,6 +460,11 @@
         { id: "v3", auteur: "mazine2.0", vimeo_url: "https://player.cloudinary.com/embed/?cloud_name=di3uavh7l&public_id=WhatsApp_Video_2026-02-08_at_22.24.50_vgmvka", thumb: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", legende: "EL GAZZER", date: 500 } 
     ];
 
+    const SHOP_ITEMS = [
+        { id: "s1", name: "Abonnement Prime", price: "9.99€/mois", img: "https://fv5-5.files.fm/thumb_show.php?i=hdv4muhgpy&view&v=1", link: "#" },
+        { id: "s2", name: "Badge Vérifié", price: "4.99€", img: "https://fv5-5.files.fm/thumb_show.php?i=gp3yrtpv2u&view&v=1", link: "#" }
+    ];
+
     let loggedUser = localStorage.getItem("metaUser") || "";
     let savedItems = []; 
     let seenVideos = [];
@@ -461,6 +476,7 @@
     let lastNotifTime = 0;
     let lastKnownMessages = ""; 
     let inAppNotifQueue = []; 
+    let onlineUsers = []; 
 
     function getUserById(id) { return CONFIG_USERS.find(u => u.id === id); }
     function getAvatar(userId) { const user = getUserById(userId); if (user && user.avatar) return `<img src="${user.avatar}" alt="${user.name}">`; return `<i class="fas fa-user"></i>`; }
@@ -468,13 +484,100 @@
     async function loadSavedItems() { if(!loggedUser) return; const { data, error } = await supabaseClient.from('saved_items').select('item_id').eq('user_id', loggedUser); if (!error) savedItems = data.map(i => i.item_id); }
     async function toggleSaveSupabase(id, btn) { const icon = btn.querySelector('i'); const isSaved = savedItems.includes(id); if (isSaved) { await supabaseClient.from('saved_items').delete().match({ user_id: loggedUser, item_id: id }); savedItems = savedItems.filter(i => i !== id); if(icon) icon.classList.replace('fas', 'far'); if(btn) btn.classList.remove('saved'); } else { await supabaseClient.from('saved_items').insert({ user_id: loggedUser, item_id: id }); savedItems.push(id); if(icon) icon.classList.replace('far', 'fas'); if(btn) btn.classList.add('saved'); } renderMyProfile(); }
 
-    function renderMessagesList() { 
+    function reportUser() {
+        if(confirm("Signaler un contenu ou un utilisateur ?")) {
+            openChatWith('metaservice');
+            setTimeout(() => { currentInput = "Signalement : Je souhaite signaler un problème."; sendChatMsg(); }, 500);
+        }
+    }
+
+    function renderShop() {
+        const grid = document.getElementById('shop-grid-content');
+        grid.innerHTML = "";
+        SHOP_ITEMS.forEach(item => {
+            grid.innerHTML += `
+                <div class="shop-card">
+                    <img src="${item.img}" class="shop-img">
+                    <div class="shop-info">
+                        <div class="shop-title">${item.name}</div>
+                        <div class="shop-price">${item.price}</div>
+                        <button class="shop-btn" onclick="alert('Redirection vers paiement...')">Acheter</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    async function updateOnlineStatus() {
+        if(!loggedUser) return;
+        await supabaseClient.from('online_users').upsert({ user_id: loggedUser, last_seen: new Date().toISOString() }, { onConflict: 'user_id' });
+    }
+    async function getOnlineUsers() {
+        const { data } = await supabaseClient.from('online_users').select('user_id');
+        onlineUsers = data ? data.map(u => u.user_id) : [];
+        const t = new Date(Date.now() - 30000).toISOString();
+        await supabaseClient.from('online_users').delete().lt('last_seen', t);
+    }
+
+    async function checkUnreadMsgs() {
+        if(!loggedUser) return [];
+        const { data, error } = await supabaseClient.from('chats').select('user_id', { count: 'exact' }).eq('target_id', loggedUser).is('read_at', null);
+        if(error) console.error("Erreur check unread:", error);
+        return data || [];
+    }
+
+    // MESSAGES LIST
+    async function renderMessagesList() { 
         const container = document.getElementById('msg-list-content'); 
         container.innerHTML = ""; 
-        container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('meta_ai')"><div class="msg-avatar"><i class="fas fa-wand-magic-sparkles"></i></div><div class="msg-info"><h4>Meta IA</h4><p>Discutez avec l'IA...</p></div></div>`); 
-        container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('metagodzilla_support')"><div class="msg-avatar" style="background: #2d2d2d;"><i class="fas fa-headset"></i></div><div class="msg-info"><h4>METAGODZILLA</h4><p>Centre d’Aide</p></div></div>`); 
-        CONFIG_USERS.forEach(user => { if(user.id === loggedUser) return; container.insertAdjacentHTML('beforeend', `<div class="msg-list-item" onclick="openChatWith('${user.id}')"><div class="msg-avatar">${getAvatar(user.id)}</div><div class="msg-info"><h4>${user.name}</h4><p>Discuter</p></div></div>`); });
+
+        await getOnlineUsers();
+        const unread = await checkUnreadMsgs();
+        const unreadSet = new Set(unread.map(u => u.user_id));
+
+        // Update Nav Badge
+        const navBadge = document.getElementById('nav-msg-badge');
+        if(unread.length > 0) navBadge.style.display = 'block'; else navBadge.style.display = 'none';
+
+        let chatPreviews = [];
+        const { data: lastMsgs } = await supabaseClient.from('chats').select('user_id, target_id, text, created_at, sender').or(`user_id.eq.${loggedUser},target_id.eq.${loggedUser}`).order('created_at', { ascending: false });
+        
+        CONFIG_USERS.forEach(user => { 
+            if(user.id === loggedUser) return; 
+
+            let lastMsg = null; let lastTime = 0; let unreadCount = 0; let isOnline = onlineUsers.includes(user.id);
+
+            if(lastMsgs) {
+                const relevantMsgs = lastMsgs.filter(m => (m.user_id === user.id && m.target_id === loggedUser) || (m.target_id === user.id && m.user_id === loggedUser));
+                if(relevantMsgs.length > 0) {
+                    lastMsg = relevantMsgs[0]; lastTime = new Date(lastMsg.created_at).getTime();
+                    unreadCount = relevantMsgs.filter(m => m.target_id === loggedUser && !m.read_at).length;
+                }
+            }
+
+            chatPreviews.push({
+                id: user.id, name: user.name, avatar: getAvatar(user.id), online: isOnline,
+                unread: unreadCount > 0, lastTime: lastTime,
+                lastText: lastMsg ? (lastMsg.sender === 'user' && lastMsg.user_id === loggedUser ? `Vous: ${lastMsg.text}` : lastMsg.text) : "Discuter",
+                isSpecial: false
+            });
+        });
+
+        chatPreviews.unshift({ id: 'meta_ai', name: "Meta IA", avatar: `<i class="fas fa-wand-magic-sparkles"></i>`, online: false, unread: false, lastTime: 999999999, lastText: "Discutez avec l'IA...", isSpecial: true });
+        chatPreviews.unshift({ id: 'metagodzilla_support', name: "METAGODZILLA", avatar: `<i class="fas fa-headset"></i>`, online: false, unread: false, lastTime: 999999998, lastText: "Centre d’Aide", isSpecial: true });
+
+        chatPreviews.sort((a, b) => { if(a.isSpecial && !b.isSpecial) return -1; if(!a.isSpecial && b.isSpecial) return 1; return b.lastTime - a.lastTime; });
+
+        chatPreviews.forEach(c => {
+            let html = `<div class="msg-list-item" onclick="openChatWith('${c.id}')">`;
+            if(c.unread) html += `<div class="unread-indicator"></div>`;
+            html += `<div class="msg-avatar" style="${c.id === 'metagodzilla_support' ? 'background: #2d2d2d;' : ''}">${c.avatar}</div><div class="msg-info"><h4>${c.name}`;
+            if(c.online) html += ` <span class="online-dot"></span>`;
+            html += `</h4><p>${c.lastText}</p></div></div>`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
     }
+    
     function filtrerRecherche() { const q = document.getElementById('search-input').value.toLowerCase(); const r = document.getElementById('search-results'); r.innerHTML = ""; if(q.length < 1) return; CONFIG_USERS.forEach(user => { if(user.name.toLowerCase().includes(q) || user.id.toLowerCase().includes(q)) { r.insertAdjacentHTML('beforeend', `<button style="padding:20px; cursor:pointer; background:transparent; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:15px; width:100%; text-align:left;" onclick="openExternalProfile('${user.id}')"><div class="mini-avatar" style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#222; display:flex; align-items:center; justify-content:center;">${getAvatar(user.id)}</div> <b style="color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; font-size: 0.85rem;">${user.name}</b></button>`); } }); }
 
     function openChatWith(targetId) { 
@@ -488,6 +591,11 @@
         lastKnownMessages = ""; 
         renderChatMessages(); 
         chatInterval = setInterval(renderChatMessages, 2000);
+
+        // MARQUER COMME LU
+        if(targetId !== 'meta_ai' && targetId !== 'metagodzilla_support') {
+            supabaseClient.from('chats').update({ read_at: new Date().toISOString() }).is('read_at', null).eq('target_id', loggedUser).eq('user_id', targetId).then(() => { renderMessagesList(); });
+        }
     }
     function closeChatPage() { if(chatInterval) clearInterval(chatInterval); document.getElementById('chat-page').classList.remove('active'); document.body.classList.remove('has-overlay'); renderMessagesList(); }
     
@@ -520,19 +628,11 @@
             area.innerHTML += `<div class="chat-msg-bubble other">Démarrez la conversation.</div>`;
         } else {
             msgs.forEach(m => { 
-                // CORRECTION ICI : Identifier correctement qui a envoyé le message
-                // Si c'est l'IA ou le Bot, c'est 'other' (gauche)
-                if(m.sender === 'bot') { 
-                    area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; 
-                } 
-                // Sinon, on regarde si c'est l'utilisateur connecté
+                if(m.sender === 'bot') { area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; } 
                 else if (m.sender === 'user' && m.user_id === loggedUser) {
-                    area.innerHTML += `<div class="chat-msg-bubble user" ondblclick="toggleDeleteBtn(this)">${m.text}<div class="msg-delete-btn" onclick="deleteMsg(event, '${m.id || m.time}')">Effacer</div></div>`;
+                     area.innerHTML += `<div class="chat-msg-bubble user" ondblclick="toggleDeleteBtn(this)">${m.text}<div class="msg-delete-btn" onclick="deleteMsg(event, '${m.id || m.time}')">Effacer</div></div>`;
                 }
-                // Sinon c'est l'autre personne (gauche)
-                else {
-                    area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; 
-                }
+                else { area.innerHTML += `<div class="chat-msg-bubble other">${m.text}</div>`; }
             });
         }
         if(isAtBottom || msgs.length === 0) area.scrollTop = area.scrollHeight; 
@@ -556,7 +656,6 @@
         renderChatMessages();
     }
 
-    // IN-APP NOTIF SYSTEM
     function showInAppNotif(senderId, text) {
         if(localStorage.getItem('metaNotifs') !== 'enabled') return;
         const user = getUserById(senderId);
@@ -575,7 +674,6 @@
     
     function closeInAppNotif() { document.getElementById('in-app-notif').classList.remove('show'); }
 
-    // NOTIF BANNER (TOP SMALL)
     function showNotification(senderId, text) { 
         const user = getUserById(senderId); 
         const name = user ? user.name : "Inconnu"; 
@@ -608,8 +706,10 @@
                  inAppNotifQueue.push({sender: lastMsg.user_id, text: lastMsg.text});
                  showInAppNotif(lastMsg.user_id, lastMsg.text); 
                  showNotification(lastMsg.user_id, lastMsg.text);
+                 renderMessagesList(); 
              }
         }
+        await updateOnlineStatus();
     }
     setInterval(checkNotifs, 2000);
 
@@ -619,24 +719,20 @@
         const text = currentInput.trim(); if(!text || !currentChatTarget) return; 
         const area = document.getElementById('chat-msg-area');
         
-        // 1. Afficher le message utilisateur (DROITE - USER)
         area.innerHTML += `<div class="chat-msg-bubble user" ondblclick="toggleDeleteBtn(this)">${text}</div>`;
         scrollChatBottom(); 
         lastKnownMessages = ""; 
         document.getElementById('chat-text-input').value = ""; 
         updateChatPreview(); 
 
-        // 2. Sauvegarder
         if(currentChatTarget !== 'meta_ai' && currentChatTarget !== 'metagodzilla_support') {
             await supabaseClient.from('chats').insert({ user_id: loggedUser, target_id: currentChatTarget, sender: 'user', text: text });
         } else {
             let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || [];
-            // On sauvegarde avec sender 'user' et user_id
             msgs.push({sender: 'user', user_id: loggedUser, text: text, time: Date.now()});
             localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
         }
 
-        // 3. Réponses
         if(currentChatTarget === 'meta_ai') { 
             area.innerHTML += `<div class="chat-msg-bubble bot">...</div>`; scrollChatBottom();
             try { 
@@ -657,6 +753,7 @@
             let msgs = JSON.parse(localStorage.getItem(`chat_${loggedUser}_${currentChatTarget}`)) || []; msgs.push({sender: 'bot', text: r, time: Date.now()}); localStorage.setItem(`chat_${loggedUser}_${currentChatTarget}`, JSON.stringify(msgs));
             lastKnownMessages = ""; scrollChatBottom();
         }
+        renderMessagesList(); 
     }
 
     // APP LOGIC
@@ -675,18 +772,29 @@
         document.querySelector("header").style.display = "flex"; 
         const user = getUserById(loggedUser); 
         if(user) { document.getElementById("my-name-display").innerText = user.name; document.getElementById("my-handle-display").innerText = "@" + user.id; document.getElementById("my-profile-pic-container").innerHTML = getAvatar(loggedUser); } 
-        renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); switchTab('feed', 0); updateSettingsUI(); 
-        
+        renderStories(); renderMessagesList(); renderContent(); renderMyProfile(); renderShop(); switchTab('feed', 0); updateSettingsUI(); 
+        await updateOnlineStatus();
         if(localStorage.getItem('metaNotifs') !== 'enabled') {
-            setTimeout(() => {
-               if(confirm("Voulez-vous activer les notifications pour ne rien rater ?")) {
-                   document.getElementById('notif-toggle').classList.add('active');
-                   localStorage.setItem('metaNotifs', 'enabled');
-               }
-            }, 1500);
+            setTimeout(() => { if(confirm("Voulez-vous activer les notifications ?")) { document.getElementById('notif-toggle').classList.add('active'); localStorage.setItem('metaNotifs', 'enabled'); } }, 1500);
         }
     }
     
+    // GESTION HEADER
+    function updateHeader(t) {
+        const left = document.getElementById('header-left-content');
+        const right = document.getElementById('header-right-content');
+        const title = document.getElementById('header-title');
+        
+        left.innerHTML = "";
+        right.innerHTML = "";
+
+        if(t === 'feed') {
+            right.innerHTML = `<button class="header-btn btn-press" onclick="switchTab('shop', 5)"><i class="fas fa-store"></i></button>`;
+        } else if (t === 'own-profile') {
+            right.innerHTML = `<button class="header-btn btn-press" onclick="toggleSettings(true)"><i class="fas fa-cog"></i></button>`;
+        }
+    }
+
     function switchTab(t, i) { 
         document.getElementById('settings-overlay').classList.remove('active'); document.getElementById('external-profile-overlay').classList.remove('active'); document.getElementById('media-view-overlay').classList.remove('active'); closeChatPage(); document.body.classList.remove('has-overlay'); 
         if (t === 'settings') { document.getElementById('settings-overlay').classList.add('active'); updateSettingsUI(); document.body.classList.add('has-overlay'); return; } 
@@ -694,8 +802,17 @@
         if (t === 'media-view') { document.getElementById('media-view-overlay').classList.add('active'); document.body.classList.add('has-overlay'); return; } 
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
         if(document.getElementById(t + '-section')) document.getElementById(t + '-section').classList.add('active'); 
-        document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i)); 
-        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; document.getElementById('global-cog').style.display = (t === 'own-profile') ? "block" : "none"; moveIndicator(i); if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); 
+        document.querySelectorAll('nav button.nav-item').forEach((btn, idx) => { 
+            let navIdx = i;
+            if(i===5) navIdx = 0; 
+            btn.classList.toggle('active', idx === navIdx); 
+        });
+        
+        updateHeader(t);
+        
+        document.getElementById('main-header').style.display = (t === 'videos') ? "none" : "flex"; 
+        moveIndicator(i < 5 ? i : 0); 
+        if (t !== 'videos') stopAllVideos(); else setTimeout(observeVideos, 100); 
     }
     function moveIndicator(i) { const b = document.querySelectorAll('nav button.nav-item'); const ind = document.getElementById('nav-indicator'); if(b[i]) { const r = b[i].getBoundingClientRect(); const nR = b[i].parentElement.getBoundingClientRect(); ind.style.left = (r.left - nR.left + r.width/2 - 12.5) + 'px'; } }
     function stopAllVideos() { document.querySelectorAll('.video-card').forEach(vc => { vc.classList.remove('playing'); const iframe = vc.querySelector('iframe'); if(iframe) iframe.src = ""; }); }
@@ -723,17 +840,53 @@
     function handleLogout() { localStorage.removeItem("metaUser"); location.reload(); }
     function renderStories() { const container = document.getElementById('stories-list'); container.innerHTML = ""; CONFIG_USERS.forEach(user => { container.insertAdjacentHTML('beforeend', `<button class="story-bubble btn-press" onclick="openExternalProfile('${user.id}')"><div class="story-img-wrapper">${getAvatar(user.id)}</div><div class="story-name">${user.name}</div></button>`); }); }
 
-    // START
+    // START LOGIC (CORRIGÉ)
     window.addEventListener('load', async () => {
         setViewportHeight();
-        setTimeout(() => { window.scrollTo(0, 0); document.body.style.transform = 'scale(1)'; }, 100);
-        if(loggedUser) { await loadSavedItems(); seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; }
+        
+        // Initialisation des données utilisateur
+        if(loggedUser) { 
+            await loadSavedItems(); 
+            seenVideos = JSON.parse(localStorage.getItem(`seen_${loggedUser}`)) || []; 
+        }
+        
+        // Démarrage différé pour laisser l'écran de chargement s'afficher
         setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.body.style.transform = 'scale(1)';
             document.getElementById('loader').style.display = 'none';
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches; const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true); const isAndroidApp = document.referrer.startsWith('android-app://'); const appLaunched = isStandalone || isIosWebApp || isAndroidApp; const isAndroid = /Android/i.test(navigator.userAgent);
-            if (appLaunched || isAndroid) { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
-            else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) { document.getElementById('loader').style.display = 'flex'; document.getElementById('install-block-content').style.display = 'flex'; }
-            else { const hasPrefs = localStorage.getItem('metaThemeMode'); if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex'; else { applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent')); if(loggedUser) startApp(); else document.getElementById('login-screen').style.display = 'flex'; } }
+            
+            // Détection du mode d'affichage
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const isIosWebApp = ("standalone" in window.navigator) && (window.navigator.standalone === true);
+            const isAndroidApp = document.referrer.startsWith('android-app://');
+            const appLaunched = isStandalone || isIosWebApp || isAndroidApp;
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            // Logique de démarrage
+            if (appLaunched || isAndroid) {
+                const hasPrefs = localStorage.getItem('metaThemeMode');
+                if (!hasPrefs) {
+                    document.getElementById('onboarding-screen').style.display = 'flex';
+                } else {
+                    applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
+                    if(loggedUser) startApp();
+                    else document.getElementById('login-screen').style.display = 'flex';
+                }
+            }
+            else if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                document.getElementById('loader').style.display = 'flex';
+                document.getElementById('install-block-content').style.display = 'flex';
+            }
+            else {
+                const hasPrefs = localStorage.getItem('metaThemeMode');
+                if (!hasPrefs) document.getElementById('onboarding-screen').style.display = 'flex';
+                else {
+                    applyTheme(hasPrefs, localStorage.getItem('metaThemeAccent'));
+                    if(loggedUser) startApp();
+                    else document.getElementById('login-screen').style.display = 'flex';
+                }
+            }
         }, 1500);
     });
 </script>
